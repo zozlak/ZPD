@@ -1,0 +1,61 @@
+--------------------
+Zmiany w ZPD 0.5.4 (2014-03-25)
+
+-	Aktualizacja funkcji sprawdz_zrownanie():
+	-	korekta w sposobie weryfikacji ilorazów punktów
+
+--------------------
+Zmiany w ZPD 0.5.2 (2014-01-09)
+
+-	Aktualizacja funkcji sprawdz_zrownanie():
+	-	dostosowanie do aktualnego sposobu przechowywania w bazie identyfikatorów
+		uczniów (w tablicy "obserwacje_id")
+	-	dodanie weryfikacji sum i ilorazów punktów
+
+--------------------
+Zmiany w ZPD 0.5.1 (2013-12-03)
+
+- Korekta sposobu konstruowania identyfikatora 'zrwn' przez funkcję 
+	wydziel_testy(), tak by był on zgodny z analogicznym identyfikatorem
+	konstruowanym przez klasę PHP BazaObserwacji wykorzystywaną do importu danych
+
+--------------------
+Zmiany w ZPD 0.5
+
+- Funkcja wydziel_testy() do podziału plików danych z badań zrównujących na 
+	pliki testów
+- Funkcja wczytaj_spss() do automatycznej wstępnej obróbki wczytywanych plików
+  SPSS
+- Funkcja sprawdz_zrownanie() do weryfikacji poprawności importu zrównywania
+  do bazy danych
+
+--------------------
+Zmiany w ZPD 0.4
+
+- Funkcje do obsługi skal:
+	-	stworz_skale()
+	-	znajdz_skale()
+	-	edytuj_skale()
+-	Wprowadzenie (jednolitej) obsługi wyjątków.
+
+--------------------
+Zmiany w ZPD 0.3.1
+
+-	Funkcje pobierz_arkusz(), pobierz_czesc_egzaminu(), pobierz_test(), 
+	pobierz_zrownywanie() dopuszczają parametr "idSkali" równy NULL
+
+--------------------
+Zmiany w ZPD 0.3
+
+-	Dodanie do funkcji pobierz_arkusz(), pobierz_czesc_egzaminu(), 
+	pobierz_test(), pobierz_zrownywanie() parametrow "idSkali" oraz "skroc"
+	umozliwiajacych przeksztalcanie pobieranych wynikow (zlaczanie kryteriow
+	oceny i/lub skracanie skal) stosownie do definicji skali.
+-	Dodanie funkcji pobierz_dane_jednoroczne_gimnazjum()
+-	Dodanie pełnej weryfikacji formalnej poprawności argumentów funkcji
+	pobierz_arkusz(), pobierz_czesc_egzaminu(), pobierz_test() oraz 
+	pobierz_zrownywanie(). Uwaga, nie oznacza to, że poprawności semantycznej,
+	np. cały czas można podać rodzaj czy część egzaminu których nie ma w bazie
+	i nie będzie to traktowane jako błąd (choć oczywiście pobranych zostanie
+	0 wierszy)
+

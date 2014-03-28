@@ -1,0 +1,33 @@
+\name{edytuj_skale}
+\alias{edytuj_skale}
+\title{Zapisuje elementy skali do bazy danych}
+\usage{
+  edytuj_skale(idSkali, elementy, nadpisz = FALSE,
+    zrodloDanychODBC = "EWD")
+}
+\arguments{
+  \item{idSkali}{identyfikator skali, ktora ma zostac
+  zapisana (typowo uzyskany z funkcji "stworz_skale()")}
+
+  \item{elementy}{ramka danych opisujaca elementy skali -
+  patrz http://zpd.ibe.edu.pl/doku.php?id=odbcskale}
+
+  \item{nadpisz}{czy nadpisac skale, jesli jest juz
+  zdefiniowana w bazie danych}
+
+  \item{zrodloDanychODBC}{nazwa zrodla danych ODBC, ktorego
+  nalezy uzyc}
+}
+\value{
+  data.frame
+}
+\description{
+  Patrz http://zpd.ibe.edu.pl/doku.php?id=odbcskale
+}
+\details{
+  _
+}
+\examples{
+a=1
+}
+

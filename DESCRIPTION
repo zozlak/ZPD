@@ -1,0 +1,22 @@
+Package: ZPD
+Title: Tools for a Polish examination data and item bank database
+Description: Tools for a Polish examination data and item bank database
+Version: 0.5.4
+Author: Mateusz Zoltak <zozlak@zozlak.org>
+Maintainer: Mateusz Zoltak <zozlak@zozlak.org>
+Depends:
+    RODBC,
+    plyr,
+    foreign,
+    stringr
+License: LGPL-3
+Collate:
+    'functions.r'
+    'get_data.r'
+    'klucze_obce.r'
+    'scales.r'
+    'sprawdz_zrownanie.r'
+    'wczytaj_spss.R'
+    'wydziel_testy.r'
+NeedsCompilation: no
+Encoding: UTF-8
