@@ -1,4 +1,19 @@
 --------------------
+Zmiany w ZPD 0.6 (2014-04-??)
+
+-	Nowe funkcje:
+	-	przygotuj_mature_popr() - sprawdza zgodność zmiennych z planem testu w
+    bazie i zamienia nazwy kolumn na strawne dla skryptu 'import_test.php'
+	- sprawdz_podwojne_ocenianie() - sprawdza zgodność zbioru podwójnego
+	  oceniania z danymi wszystkich uczniów [weryfikacja zbiorów z badań
+    zrównujących]
+  - sprawdz_realizacje() - sprawdza poprawność zbioru podsumowującego
+    realizację i jego zgodność ze zbiorem danych wszystkich uczniów 
+    [weryfikacja zbiorów z badań zrównujących]
+- Poprawki
+	- sprawdz_zrownanie() teraz radzi sobie z ujednolicaniem kodów specjalnych
+  
+--------------------
 Zmiany w ZPD 0.5.4 (2014-03-25)
 
 -	Aktualizacja funkcji sprawdz_zrownanie():

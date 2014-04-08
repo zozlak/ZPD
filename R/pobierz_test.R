@@ -1,4 +1,4 @@
-#  Copyright 2013 Mateusz Zoltak
+#	Copyright 2013 Mateusz Zoltak
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published by
@@ -31,30 +31,54 @@
 #    jesli nie - napisz do Free Software Foundation, Inc., 59 Temple
 #    Place, Fifth Floor, Boston, MA  02110-1301  USA
 
-#' @title Wczytuje wskazany plik SPSS stosujac standardowe przeksztalcenia
-#' @description 
-#' Funkcja:
-#' \itemize{
-#' 	\item wczytuje plik SPSS z to.data.frame=T, use.missings=F, trim.factor.names=T
-#' 	\item zamienia nazwy wszystkich zmiennych na pisane malymi literami
-#' 	\item zamienia wszystkie factor-y na zwykle zmienne typu character
-#' 	\item wykonuje str_trim() na wszystkich zmiennych
-#' }
-#' @param plik sciezka do pliku SPSS
-#' @return [data.frame] wczytane dane
-#' @examples
-#' \dontrun{
-#' 	wczytaj_spss('gim10_07.sav')
-#' }
+#' @title Pobiera ramke danych z wynikami egzaminacyjnymi wskazanego testu
+#' @description
+#' _
+#' @param idTestu identyfikator, ktorego wyniki maja zostac pobrane
+#' @param punktuj wybor, czy dane maja byc pobrane w postaci dystraktorow, czy punktow
+#' @param idSkali identyfikator skali, ktora ma zostac zastosowana do danych
+#' @param skroc czy do danych zastosowac skrocenia skal opisane w skali
+#' @param zrodloDanychODBC nazwa zrodla danych ODBC, ktorego nalezy uzyc
+#' @return data frame
 #' @export
-wczytaj_spss = function(plik){
-  dane = read.spss(plik, to.data.frame=T, use.missings=F, trim.factor.names=T)
-  names(dane) = tolower(names(dane))
-  for(i in 1:ncol(dane)){
-    if(is.factor(dane[, i]))
-      dane[, i] = as.character(dane[, i])
-    if(is.character(dane[, i]))
-      dane[, i] = str_trim(dane[, i])
-  }
-  return(dane)
+pobierz_test=function(
+	idTestu, 
+	punktuj=TRUE, 
+	idSkali=NULL,
+	skroc=TRUE,
+	zrodloDanychODBC='EWD'
+){
+	P=odbcConnect(zrodloDanychODBC, readOnlyOptimize=T)
+	tryCatch({
+		if(!is.numeric(idTestu) | !is.vector(idTestu) | length(idTestu)>1)
+			stop('idTestu nie jest liczba')
+		if(!is.logical(punktuj) | !is.vector(punktuj) | length(punktuj)>1)
+			stop('punktuj nie jest wartoscia logiczna')
+		if((!is.numeric(idSkali) | !is.vector(idSkali) | length(idSkali)>1) & !is.null(idSkali))
+			stop('idSkali nie jest liczba')
+		if(!is.logical(skroc) | !is.vector(skroc) | length(skroc)>1)
+			stop('skroc nie jest wartoscia logiczna')
+		if(punktuj){
+			punktuj='true'
+		} else punktuj='false'
+		if(skroc){
+			skroc='true'
+		} else skroc='false'
+		if(is.null(idSkali)){
+			idSkali='null'
+		} else idSkali=as.character(idSkali)
+		
+		tmp=.sqlQuery(P, sprintf("SELECT zbuduj_widok_testu('tmp', %d, %s, %s, %s);", 
+														 idTestu, 
+														 punktuj,
+														 idSkali,
+														 skroc))
+		dane=.sqlQuery(P, "SELECT * FROM tmp")
+		odbcClose(P)
+		return(dane)
+	},
+	error=function(e){
+		odbcClose(P)
+		.stop(e)
+	})
 }

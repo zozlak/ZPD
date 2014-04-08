@@ -32,15 +32,15 @@
 #    Place, Fifth Floor, Boston, MA  02110-1301  USA
 
 #' @title Dzieli plik danych z badan zrownujacych na testy
-#' @description
+#' @description 
 #' Funkcja:
-#' - filtruje rekordy pasujace do zadanego zeszytu
-#' - zmienia nazwy kolumn z wynikami zadan na id_kryteriow
-#' - dodaje kolumne "zrwn" zawierajace kolumne "id_ucz" przeksztalcona do postaci uzywanego w bazie identyfikatora "zrwn"
-#' - dubluje kolumne "id_szk" pod nazwa "id_szk_oke"
-#' - zapisuje tak odfiltrowany i skonwertowany zbior pod nazwa "id_testu.csv"
-#' @details
-#' _
+#' \itemize{
+#' 	\item filtruje rekordy pasujace do zadanego zeszytu
+#' 	\item zmienia nazwy kolumn z wynikami zadan na id_kryteriow
+#' 	\item dodaje kolumne "zrwn" zawierajace kolumne "id_ucz" przeksztalcona do postaci uzywanego w bazie identyfikatora "zrwn"
+#'  \item dubluje kolumne "id_szk" pod nazwa "id_szk_oke"
+#'  \item zapisuje tak odfiltrowany i skonwertowany zbior pod nazwa "id_testu.csv"
+#' }
 #' @param dane ramka danych
 #' @param zeszyt string z nazwa zeszytu (taka, jak w kolumnie wskazywanej przez "kolIdZeszytu")
 #' @param zeszytBaza string z nazwa zeszytu w bazie danych ("zrownywanie;RODZAJ_EGZ;ROK;KOD")
@@ -50,9 +50,31 @@
 #' @param prefiksZadan prefiks kolumn zawierajacych wyniki zadan dla danego zeszytu
 #' @param rok rok testu zrownujacego (niezbedny do skonstruowania identyfikatora 'zrwn')
 #' @param zrodloDanychODBC nazwa zrodla danych ODBC
-#' @return void
+#' @return [void]
 #' @examples
-#' a=1
+#' \dontrun{
+#' 	# podział wyników zrównywania sprawdzianu 2014 na testy
+#'	dane = wczytaj_ibe('spr.csv', 'spr_c.csv', oo='-2', tp='-1')
+#'	names(dane) = tolower(names(dane))
+#'	dane$"zbiór zrównywanie" = paste('s 2014', dane$id_ucz, sep='|')
+#'	dane$klasa = dane$id_kl
+#'	dane$kod_u = sub('^.*-[^0-9]', '\\1', dane$id_ucz)
+#'	kolUdzial = grep('^udzial$', names(dane))
+#'	for(i in 1:1){
+#'		for(j in c('A', 'B')){
+#'			wydziel_testy(
+#'					dane = dane, 
+#'					zeszyt = sprintf('S-%d%s-14', i, j),
+#'					zeszytBaza = sprintf('zrównywanie;sprawdzian;2014;%d%s', i,  j), 
+#'					kolIdZeszytu = grep('^id_zt$', names(dane)), 
+#'					kolUdzial = kolUdzial,
+#'					kolIdSzkOKE = grep('^id_szk$', names(dane)),
+#'					prefiksZadan = sprintf('z%d_[1-9]', i),
+#'					rok = 2014
+#'			)
+#'		}
+#'	}
+#' }
 #' @export
 wydziel_testy = function(dane, zeszyt, zeszytBaza, kolIdZeszytu, kolUdzial, kolIdSzkOKE, prefiksZadan, rok, zrodloDanychODBC='EWD'){
 	P = odbcConnect(zrodloDanychODBC)
@@ -61,7 +83,7 @@ wydziel_testy = function(dane, zeszyt, zeszytBaza, kolIdZeszytu, kolUdzial, kolI
 	
 	dane[, kolIdZeszytu] = gsub(' ', '', dane[, kolIdZeszytu])
 	filtrW = dane[, kolIdZeszytu]==zeszyt & !is.na(dane[, kolIdZeszytu]) & dane[, kolUdzial]=='tak' & !is.na(dane[, kolUdzial])
-	dane=dane[filtrW, ]
+	dane = dane[filtrW, ]
 	
 	idTestu = sqlQuery(P, sprintf("SELECT id_testu FROM testy WHERE opis ILIKE '%s'", zeszytBaza))[1,1]
 	kryteria = as.character(sqlQuery(P, sprintf("SELECT 'k_'||id_kryterium::text 

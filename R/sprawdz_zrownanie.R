@@ -1,4 +1,4 @@
-#	Copyright 2013 Mateusz Zoltak
+#	Copyright 2013 Mateusz Żółtak
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published by
@@ -34,18 +34,20 @@
 #' @title Weryfikuje, czy dane zrownania zostaly poprawnie zaimportowane do bazy
 #' @description
 #' Funkcja:
-#' - pobiera dane wskazanego zrownania (rodzaj egzaminu i rok) z bazy
-#' - dla kazdego testu zrownujacego sprawdza jego dane w bazie z plikiem "id_testu.csv"
+#' \itemize{
+#' 	\item pobiera dane wskazanego zrownania (rodzaj egzaminu i rok) z bazy
+#' 	\item dla kazdego testu zrownujacego sprawdza jego dane w bazie z plikiem "id_testu.csv"
 #'   pliki te powinny sie znajdowac w katalogu roboczym
-#' @details
-#' _
+#' }
 #' @param rodzajEgzaminu rodzaj egzaminu
 #' @param rok rok badania zrownujacego
 #' @param zrodloDanychODBC nazwa zrodla danych ODBC
 #' @param kolumnaId nazwa kolumny przechowujacej "zewnetrzne id"
-#' @return logical
+#' @return [logical] TRUE, gdy dane zweryfikowane poprawnie, FALSE w p.p.
 #' @examples
-#' a=1
+#' \dontrun{
+#' 	sprawdz_zrownanie('sprawdzian', 2014, 'zbiór.zrównywanie')
+#' }
 #' @export
 sprawdz_zrownanie = function(rodzajEgzaminu, rok, kolumnaId, zrodloDanychODBC='EWD'){
   
@@ -122,8 +124,8 @@ sprawdz_zrownanie = function(rodzajEgzaminu, rok, kolumnaId, zrodloDanychODBC='E
 					for(j in 1:nrow(wartosci)){
 						daneTmp[daneTmp[, i] %in% wartosci$dystraktor[j], i] = wartosci$kolejnosc[j]
 					}
-					daneTmp[daneTmp[, i] %in% c('Brak odpowiedzi', 'brak odpowiedzi', 'odmowa odpowiedzi'), i] = -1
-					daneTmp[daneTmp[, i] %in% c('Wielokrotne zaznaczenie', 'wielokrotne zaznaczenie', 'trudno powiedzieć'), i] = -2
+					daneTmp[daneTmp[, i] %in% c('Brak odpowiedzi', 'brak odpowiedzi', 'odmowa odpowiedzi', '-8'), i] = -1
+					daneTmp[daneTmp[, i] %in% c('Wielokrotne zaznaczenie', 'wielokrotne zaznaczenie', 'trudno powiedzieć', '-9'), i] = -2
 					#-->
 					
 					filtr = is.na(daneTmp[, i])

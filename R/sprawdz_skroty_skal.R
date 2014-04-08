@@ -1,4 +1,4 @@
-#  Copyright 2013 Mateusz Zoltak
+#	Copyright 2013 Mateusz Zoltak
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published by
@@ -31,30 +31,31 @@
 #    jesli nie - napisz do Free Software Foundation, Inc., 59 Temple
 #    Place, Fifth Floor, Boston, MA  02110-1301  USA
 
-#' @title Wczytuje wskazany plik SPSS stosujac standardowe przeksztalcenia
-#' @description 
-#' Funkcja:
-#' \itemize{
-#' 	\item wczytuje plik SPSS z to.data.frame=T, use.missings=F, trim.factor.names=T
-#' 	\item zamienia nazwy wszystkich zmiennych na pisane malymi literami
-#' 	\item zamienia wszystkie factor-y na zwykle zmienne typu character
-#' 	\item wykonuje str_trim() na wszystkich zmiennych
-#' }
-#' @param plik sciezka do pliku SPSS
-#' @return [data.frame] wczytane dane
-#' @examples
-#' \dontrun{
-#' 	wczytaj_spss('gim10_07.sav')
-#' }
-#' @export
-wczytaj_spss = function(plik){
-  dane = read.spss(plik, to.data.frame=T, use.missings=F, trim.factor.names=T)
-  names(dane) = tolower(names(dane))
-  for(i in 1:ncol(dane)){
-    if(is.factor(dane[, i]))
-      dane[, i] = as.character(dane[, i])
-    if(is.character(dane[, i]))
-      dane[, i] = str_trim(dane[, i])
-  }
-  return(dane)
+#' @title Sprawdza poprawnosc i tworzy w bazie brakujace skroty skal
+#' @description
+#' _
+#' @param skroty wektor wartosci id_skrotu
+#' @param P obiekt otwartego polaczenie ODBC
+#' @return [logical] TRUE w wypadku powodzenia funkcji
+sprawdz_skroty_skal = function(skroty, P){
+	skrotyBaza=.sqlQuery(P, "SELECT id_skrotu FROM skroty_skal")[, 1]
+	skroty=gsub(',', '.', skroty)
+	tmp=unique(skroty[!(skroty %in% skrotyBaza) & !is.na(skroty)])
+	tmp=strsplit(tmp, '[|]')
+	for(i in tmp){
+		idSkrotu=paste(i, collapse='|')
+		i=strsplit(i, '[;]')
+		we=as.numeric(i[[1]])
+		wy=as.numeric(i[[2]])
+		if(length(we)!=length(wy))
+			stop(sprintf('"%s" nie jest poprawnym identyfikatorem skrotu skali - rozne liczby wartosci wejsciowych i wyjsciowych', idSkrotu))
+		if(any(is.na(we) | is.na(wy)))
+			stop(sprintf('"%s" nie jest poprawnym identyfikatorem skrotu skali - co najmniej jedna z wartosci wejsciowych lub wyjsciowych nie jest liczba', idSkrotu))
+		.sqlQuery(P, sprintf("INSERT INTO skroty_skal (id_skrotu) VALUES ('%s')", .e(idSkrotu)))
+		for(j in 1:length(we)){
+			.sqlQuery(P, sprintf("INSERT INTO skroty_skal_mapowania (id_skrotu, wartosc, nowa_wartosc) VALUES ('%s', %f, %f)",
+													 idSkrotu, we[j], wy[j]))
+		}
+		return(TRUE)
+	}
 }

@@ -31,41 +31,23 @@
 #    jesli nie - napisz do Free Software Foundation, Inc., 59 Temple
 #    Place, Fifth Floor, Boston, MA  02110-1301  USA
 
-#' @title Wyparsowuje znaki konca stringu
+#' @title Zwraca wektor pozwalajacy identyfikowac pseudokryteria
 #' @description
-#' Funkcja do wyparsowywania niebezpiecznych znakow przy budowaniu zapytan SQL
+#' Nazwy elementow zwracanego wektora to id_pseudokryterium
+#' Elementy zwracanego wektora to posortowane rosnaco id_kryterium
+#' nalezacych do danego pseudokryterium, zlaczone w lancuch znakow
+#' separatorem '|'
 #' @details
 #' _
-#' @param str lancuch znakow do wyparsowania
-#' @return character
-.e=function(str){
-	return(gsub("'", "''", str))
-}
-
-#' @title Wykonuje zapytanie sql i obsluguje bledy
-#' @description
-#' _
-#' @details
-#' _
-#' @param P otwarte polaczenie ODBC
-#' @param sql polecenie SQL do wykonania
-#' @return data.frame
-.sqlQuery=function(P, sql){
-	odbcClearError(P)
-	tmp=sqlQuery(P, sql, errors=F, stringsAsFactors=F, dec='.')
-	blad=odbcGetErrMsg(P)
-	if(length(blad)>0)
-		stop(tmp[1])
-	return(tmp)
-}
-
-#' @title Ponownie rzuca przekazanym wyjatkiem zachowujac jego pierwotne wywolanie
-#' @description
-#' _
-#' @details
-#' _
-#' @param e wyjatek przechwycony funkcja tryCatch()
-#' @return void
-.stop=function(e){
-	stop(paste(deparse(conditionCall(e)), conditionMessage(e), sep='\n'), call.=F)
+#' @param P otwarte połączenie ODBC
+#' @return character wektor pseudokryteriow znajdujacych sie w bazie
+pobierz_pseudokryteria = function(P){
+	wynik = sqlQuery(P, "SELECT id_pseudokryterium, id_kryterium FROM pseudokryteria_oceny_kryteria ORDER BY id_kryterium")
+	wynik = by(wynik, wynik$id_pseudokryterium, function(x){
+		return(paste(x$id_kryterium, collapse='|'))
+	})
+	tmp = names(wynik)
+	wynik = as.character(unlist(wynik))
+	names(wynik) = tmp
+	return(wynik)	
 }
