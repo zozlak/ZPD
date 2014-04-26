@@ -14,7 +14,6 @@ Collate:
     'przygotuj_mature_popr.R'
     'sprawdz_podwojne_ocenianie.R'
     'sprawdz_realizacje.R'
-    'sprawdz_zrownanie.r'
     'wczytaj_ibe.R'
     'wczytaj_spss.R'
     'edytuj_skale.R'
@@ -29,5 +28,6 @@ Collate:
     'wydziel_testy.R'
     'znajdz_pseudokryteria.R'
     'znajdz_skale.R'
+    'sprawdz_zrownanie.R'
 NeedsCompilation: no
 Encoding: UTF-8

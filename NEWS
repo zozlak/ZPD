@@ -1,5 +1,5 @@
 --------------------
-Zmiany w ZPD 0.6 (2014-04-??)
+Zmiany w ZPD 0.6 (2014-04-26)
 
 -	Nowe funkcje:
 	-	przygotuj_mature_popr() - sprawdza zgodność zmiennych z planem testu w
@@ -12,6 +12,7 @@ Zmiany w ZPD 0.6 (2014-04-??)
     [weryfikacja zbiorów z badań zrównujących]
 - Poprawki
 	- sprawdz_zrownanie() teraz radzi sobie z ujednolicaniem kodów specjalnych
+	- stworz_skale() dostosowane do zmiany w nazwach tablic w bazie
   
 --------------------
 Zmiany w ZPD 0.5.4 (2014-03-25)

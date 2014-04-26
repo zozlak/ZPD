@@ -71,7 +71,7 @@ stworz_skale = function(
 		if(czyEgzamin>0 & czyEgzamin<3)
 			stop('rodzajEgzaminu, czescEgzaminu oraz rok musza byc zdefiniowane wszystkie na raz lub wszystkie musza miec wartosc NULL')
 		if(czyEgzamin==0){
-			if(1!=.sqlQuery(P, sprintf("SELECT count(*) FROM egzaminy WHERE rodzaj_egzaminu='%s' AND czesc_egzaminu='%s' AND date_part('year', data_egzaminu)=%d",
+			if(1!=.sqlQuery(P, sprintf("SELECT count(*) FROM sl_egzaminy WHERE rodzaj_egzaminu='%s' AND czesc_egzaminu='%s' AND date_part('year', data_egzaminu)=%d",
 																 .e(rodzajEgzaminu), .e(czescEgzaminu), rok))[1, 1]){
 				stop(sprintf("w bazie nie ma egzaminu '%s', '%s', %d", rodzajEgzaminu, czescEgzaminu, rok))
 			}
@@ -85,7 +85,7 @@ stworz_skale = function(
 		}else{
 			.sqlQuery(P, sprintf("INSERT INTO skale (id_skali, opis, nazwa, rodzaj_egzaminu, czesc_egzaminu, data_egzaminu) 
 														SELECT %d, '%s', '%s', rodzaj_egzaminu, czesc_egzaminu, data_egzaminu
-														FROM egzaminy WHERE rodzaj_egzaminu='%s' AND czesc_egzaminu='%s' AND date_part('year', data_egzaminu)=%d;",
+														FROM sl_egzaminy WHERE rodzaj_egzaminu='%s' AND czesc_egzaminu='%s' AND date_part('year', data_egzaminu)=%d;",
 													 idSkali, .e(opis), .e(nazwa), .e(rodzajEgzaminu), .e(czescEgzaminu), rok))
 		}
 		odbcEndTran(P, TRUE)
