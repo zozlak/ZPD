@@ -53,6 +53,11 @@
 .sqlQuery = function(P, sql){
 	odbcClearError(P)
 	tmp = sqlQuery(P, sql, errors=F, stringsAsFactors=F, dec='.')
+	if(!is.data.frame(tmp)){
+		if(tmp[1] == -2){
+			return(NULL) # brak danych
+		}
+	}
 	blad = odbcGetErrMsg(P)
 	if(length(blad) > 0){
 		stop(tmp[1])

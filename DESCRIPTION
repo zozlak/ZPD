@@ -1,7 +1,7 @@
 Package: ZPD
 Title: Tools for a Polish examination data and item bank database
 Description: Tools for a Polish examination data and item bank database
-Version: 0.6.0
+Version: 0.6.1
 Author: Mateusz Zoltak <zozlak@zozlak.org>
 Maintainer: Mateusz Zoltak <zozlak@zozlak.org>
 Depends:
@@ -29,5 +29,7 @@ Collate:
     'znajdz_pseudokryteria.R'
     'znajdz_skale.R'
     'sprawdz_zrownanie.R'
+    'stworz_test.R'
+    'znajdz_testy.R'
 NeedsCompilation: no
 Encoding: UTF-8

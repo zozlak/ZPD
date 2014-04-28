@@ -1,4 +1,11 @@
 --------------------
+Zmiany w ZPD 0.6.1 (2014-04-28)
+
+- Nowe funkcje:
+  - znajdz_testy() - wyszukuje w bazie testy
+	- stworz_test() - tworzy w bazie nowy test
+
+--------------------
 Zmiany w ZPD 0.6 (2014-04-26)
 
 -	Nowe funkcje:
