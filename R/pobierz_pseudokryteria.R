@@ -40,7 +40,7 @@
 #' @details
 #' _
 #' @param P otwarte połączenie ODBC
-#' @return character wektor pseudokryteriow znajdujacych sie w bazie
+#' @return [character] wektor pseudokryteriow znajdujacych sie w bazie
 pobierz_pseudokryteria = function(P){
 	wynik = sqlQuery(P, "SELECT id_pseudokryterium, id_kryterium FROM pseudokryteria_oceny_kryteria ORDER BY id_kryterium")
 	wynik = by(wynik, wynik$id_pseudokryterium, function(x){

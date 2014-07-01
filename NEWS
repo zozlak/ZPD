@@ -1,4 +1,11 @@
 --------------------
+Zmiany w ZPD 0.6.1 (2014-06-27)
+
+- Nowe funkcje:
+  - agreguj_pwe() - oblicza agregaty PWE z PV
+	- oblicz_wariancje_populacji() - oblicza wariancje populacji z PV
+
+--------------------
 Zmiany w ZPD 0.6.1 (2014-04-28)
 
 - Nowe funkcje:
