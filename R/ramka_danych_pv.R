@@ -40,8 +40,6 @@
 #' @param kolPozostale nazwy wszystkich innych kolumn, które mają zostać zachowane
 #' @return [data.frame] dane w postaci długiej (z kolumnami "nr_pv" i "wynik")
 ramka_danych_pv = function(dane, kolPV='^[pP][vV]_[0-9]+|wynik$', kolNrPV='nr_pv', kolPozostale=NULL){
-	require(reshape)
-
 	dane = as.data.frame(dane)
 	
 	kolPV = grep(kolPV, names(dane), value=T)

@@ -50,9 +50,9 @@
 #' @param P otwarte polaczenie ODBC
 #' @param sql polecenie SQL do wykonania
 #' @return data.frame
-.sqlQuery = function(P, sql){
+.sqlQuery = function(P, sql, dane = NULL){
 	odbcClearError(P)
-	tmp = sqlQuery(P, sql, errors=F, stringsAsFactors=F, dec='.')
+	tmp = sqlExecute(P, sql, dane, fetch=T, errors=F, stringsAsFactors=F, dec='.')
 	if(!is.data.frame(tmp)){
 		if(tmp[1] == -2){
 			return(NULL) # brak danych

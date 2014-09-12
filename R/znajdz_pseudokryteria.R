@@ -68,14 +68,14 @@ znajdz_pseudokryteria = function(kryteria, opisy, P){
 			}
 			
 			idPkryt[i] = .sqlQuery(P, "SELECT nextval('pseudokryteria_id_pseudokryterium_seq');")[1, 1]
-			.sqlQuery(P, sprintf("INSERT INTO pseudokryteria_oceny (id_pseudokryterium, opis) VALUES (%d, '%s');",
-													 idPkryt[i], .e(opisy[i])))
+			.sqlQuery(P, "INSERT INTO pseudokryteria_oceny (id_pseudokryterium, opis) VALUES (?, ?);",
+										list(idPkryt[i], opisy[i]))
 			for(j in wiersz){
 				if(is.na(j)){
 					next
 				}
-				.sqlQuery(P, sprintf("INSERT INTO pseudokryteria_oceny_kryteria (id_pseudokryterium, id_kryterium) VALUES (%d, %s);",
-														 idPkryt[i], as.character(j)))
+				.sqlQuery(P, "INSERT INTO pseudokryteria_oceny_kryteria (id_pseudokryterium, id_kryterium) VALUES (?, ?);",
+										list(idPkryt[i], j))
 			}
 		}
 	}	

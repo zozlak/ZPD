@@ -82,14 +82,14 @@ wydziel_testy = function(dane, zeszyt, zeszytBaza, kolIdZeszytu, kolUdzial, kolI
 	cat(sprintf('%s\n', zeszyt))
 	
 	dane[, kolIdZeszytu] = gsub(' ', '', dane[, kolIdZeszytu])
-	filtrW = dane[, kolIdZeszytu]==zeszyt & !is.na(dane[, kolIdZeszytu]) & dane[, kolUdzial]=='tak' & !is.na(dane[, kolUdzial])
+	filtrW = dane[, kolIdZeszytu] == zeszyt & !is.na(dane[, kolIdZeszytu]) & dane[, kolUdzial] == 'tak' & !is.na(dane[, kolUdzial])
 	dane = dane[filtrW, ]
 	
-	idTestu = sqlQuery(P, sprintf("SELECT id_testu FROM testy WHERE opis ILIKE '%s'", zeszytBaza))[1,1]
-	kryteria = as.character(sqlQuery(P, sprintf("SELECT 'k_'||id_kryterium::text 
-																							 FROM testy_kryteria JOIN kryteria_oceny USING (id_kryterium)
-																							 WHERE id_testu=%d 
-																							 ORDER BY kolejnosc, opis, id_kryterium", idTestu))[, 1])
+	idTestu = sqlQuery(P, "SELECT id_testu FROM testy WHERE opis ILIKE ?", zeszytBaza)[1,1]
+	kryteria = as.character(sqlQuery(P, "SELECT 'k_'||id_kryterium::text 
+																			 FROM testy_kryteria JOIN kryteria_oceny USING (id_kryterium)
+																			 WHERE id_testu = ? 
+																			 ORDER BY kolejnosc, opis, id_kryterium", idTestu)[, 1])
 	
 	for(i in names(dane)){
 		tmp = grep(sprintf('^%s_pkt$', i), names(dane)) # czy jest taka sama kolumna, tylko z sufiksem "_pkt"?

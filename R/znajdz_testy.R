@@ -58,7 +58,7 @@ znajdz_testy = function(
 	ewd=NULL,
 	zrodloDanychODBC='EWD'
 ){
-	zapytanie = paste0("
+	zapytanie = "
 		SELECT *
 		FROM
 			(
@@ -73,13 +73,14 @@ znajdz_testy = function(
 					LEFT OUTER JOIN arkusze USING (arkusz)
 						LEFT OUTER JOIN sl_czesci_egzaminow USING (rodzaj_egzaminu, czesc_egzaminu)
 			) AS t
-	")
+	"
 		
 	param = list(
 		'opis'=opis, 'rodzaj_egzaminu'=rodzajEgzaminu, 'czesc_egzaminu'=czescEgzaminu,
 		'rok'=rok, 'arkusz'=arkusz, 'prefiks'=prefiks, 'data'=data, 'ewd'=ewd
 	)
 	warunek = ""
+	parametry = list()
 	for(kol in names(param)){
 		wartosc = param[[kol]]
 		if(is.null(wartosc) | !is.vector(wartosc)){
@@ -88,10 +89,8 @@ znajdz_testy = function(
 		if(is.logical(wartosc)){
 			wartosc = tolower(as.character(wartosc)) # na wypadek np. podania wartości kolumny "ewd" jako typu logicznego
 		}
-		warunek = paste0(
-			warunek,
-			" AND ", kol, "::text ~ '", .e(wartosc[1]), "'"
-		)
+		warunek = paste0(warunek, " AND ", kol, "::text ~ ?")
+		parametry = append(parametry, wartosc[1])
 	}
 	
 	if(warunek != ""){
@@ -101,9 +100,9 @@ znajdz_testy = function(
 		)
 	}
 		
-	P=odbcConnect(zrodloDanychODBC)
+	P = odbcConnect(zrodloDanychODBC)
 	tryCatch({
-		tmp = .sqlQuery(P, zapytanie)
+		tmp = .sqlQuery(P, zapytanie, parametry)
 		odbcClose(P)
 		return(tmp)
 	},

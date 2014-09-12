@@ -64,33 +64,46 @@ znajdz_skale = function(
 		stop('parametr "dokladnie" nie jest pojedyncza wartoscia logiczna')
 	
 	if(dokladnie){
-		operator=' = '
-		wzorzec=''
+		operator = ' = '
+		wzorzec = ''
 	} else{
-		operator=' ILIKE '
-		wzorzec='%'
+		operator = ' ILIKE '
+		wzorzec = '%'
 	}
 	
-	warunek=''
-	if(!is.null(nazwa))
-		if(nazwa!='')
-			warunek=paste(warunek, sprintf("nazwa %s '%s%s%s'", operator, wzorzec, nazwa, wzorzec), sep=' AND ')
-	if(!is.null(rodzajEgzaminu))
-		if(rodzajEgzaminu!='')
-			warunek=paste(warunek, sprintf("rodzaj_egzaminu %s '%s%s%s'", operator, wzorzec, rodzajEgzaminu, wzorzec), sep=' AND ')
-	if(!is.null(czescEgzaminu))
-		if(czescEgzaminu!='')
-			warunek=paste(warunek, sprintf("czesc_egzaminu %s '%s%s%s'", operator, wzorzec, czescEgzaminu, wzorzec), sep=' AND ')
-	if(!is.null(rok))
-		if(rok!='')
-			warunek=paste(warunek, sprintf("date_part('year', data_egzaminu)=%d", rok), sep=' AND ')
-	if(nchar(warunek)>0)
-		warunek=paste('WHERE', substring(warunek, 5))
+	warunek = ''
+	parametry = list()
+	if(!is.null(nazwa)){
+		if(nazwa != ''){
+			warunek = paste(warunek, sprintf("nazwa %s ?", operator), sep=' AND ')
+			parametry = append(parametry, paste0(wzorzec, nazwa, wzorzec))
+		}
+	}
+	if(!is.null(rodzajEgzaminu)){
+		if(rodzajEgzaminu != ''){
+			warunek = paste(warunek, sprintf("rodzaj_egzaminu %s ?", operator), sep=' AND ')
+			parametry = append(parametry, paste0(wzorzec, rodzajEgzaminu, wzorzec))
+		}
+	}
+	if(!is.null(czescEgzaminu)){
+		if(czescEgzaminu != ''){
+			warunek = paste(warunek, sprintf("czesc_egzaminu %s ?", operator), sep=' AND ')
+			parametry = append(parametry, paste0(wzorzec, czescEgzaminu, wzorzec))
+		}
+	}
+	if(!is.null(rok)){
+		if(rok != ''){
+			warunek = paste(warunek, "extract(year from data_egzaminu) = ?", sep=' AND ')
+			parametry = append(parametry, rok)
+		}
+	}
+	if(nchar(warunek) > 0)
+		warunek = paste('WHERE', substring(warunek, 5))
 	
-	P=odbcConnect(zrodloDanychODBC)
+	P = odbcConnect(zrodloDanychODBC)
 	tryCatch({
 		tmp=.sqlQuery(P, sprintf("SELECT * FROM skale %s;", warunek))
-		if(jednoznacznie & nrow(tmp)>1)
+		if(jednoznacznie & nrow(tmp) > 1)
 			stop('znaleziono wiecej niz jedna skale pasujaca do podanych kryteriow')
 		odbcClose(P)
 		return(tmp)

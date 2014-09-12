@@ -54,7 +54,7 @@ pobierz_czesc_egzaminu=function(
 	skroc=TRUE,
 	zrodloDanychODBC='EWD'
 ){
-	P=odbcConnect(as.character(zrodloDanychODBC))
+	P = odbcConnect(as.character(zrodloDanychODBC))
 	tryCatch({
 		if(!is.character(rodzajEgzaminu) | !is.vector(rodzajEgzaminu) | length(rodzajEgzaminu)>1)
 			stop('rodzajEgzaminu nie jest lancuchem znakow')
@@ -70,28 +70,27 @@ pobierz_czesc_egzaminu=function(
 			stop('idSkali nie jest liczba')
 		if(!is.logical(skroc) | !is.vector(skroc) | length(skroc)>1)
 			stop('skroc nie jest wartoscia logiczna')
-		if(czyEwd){
-			czyEwd='true'	
-		} else czyEwd='false'
-		if(punktuj){
-			punktuj='true'
-		} else punktuj='false'
-		if(skroc){
-			skroc='true'
-		} else skroc='false'
-		if(is.null(idSkali)){
-			idSkali='null'
-		} else idSkali=as.character(idSkali)
+		if(!is.null(idSkali))
+			idSkali = as.character(idSkali)
+		else idSkali = NA
 		
-		tmp=.sqlQuery(P, sprintf("SELECT zbuduj_widok_czesci_egzaminu('tmp', '%s', '%s', %d, %s, %s, %s, %s);", 
-														 .e(rodzajEgzaminu),
-														 .e(czescEgzaminu),
-														 rokEgzaminu, 
-														 czyEwd, 
-														 punktuj,
-														 idSkali,
-														 skroc))
-		dane=.sqlQuery(P, "SELECT * FROM tmp")
+		ile = .sqlQuery(
+			P,
+			"SELECT count(*) 
+			FROM testy JOIN arkusze USING (arkusz) 
+			WHERE rodzaj_egzaminu = ? AND czesc_egzaminu = ? AND extract(year FROM data_egzaminu) = ? AND ewd = ?",
+			list(rodzajEgzaminu, czescEgzaminu, rokEgzaminu, czyEwd)			
+		)
+		if(ile[1, 1] == 0){
+			stop('brak danych w bazie')
+		}
+		
+		tmp = .sqlQuery(
+			P, 
+			"SELECT zbuduj_widok_czesci_egzaminu('tmp', ?, ?, ?, ?, ?, ?, ?);", 
+			list(rodzajEgzaminu, czescEgzaminu, rokEgzaminu, czyEwd, punktuj, idSkali, skroc)
+		)
+		dane = .sqlQuery(P, "SELECT * FROM tmp")
 		odbcClose(P)
 		return(dane)
 	},

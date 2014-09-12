@@ -48,7 +48,7 @@ pobierz_test=function(
 	skroc=TRUE,
 	zrodloDanychODBC='EWD'
 ){
-	P=odbcConnect(zrodloDanychODBC, readOnlyOptimize=T)
+	P = odbcConnect(zrodloDanychODBC, readOnlyOptimize=T)
 	tryCatch({
 		if(!is.numeric(idTestu) | !is.vector(idTestu) | length(idTestu)>1)
 			stop('idTestu nie jest liczba')
@@ -58,22 +58,21 @@ pobierz_test=function(
 			stop('idSkali nie jest liczba')
 		if(!is.logical(skroc) | !is.vector(skroc) | length(skroc)>1)
 			stop('skroc nie jest wartoscia logiczna')
-		if(punktuj){
-			punktuj='true'
-		} else punktuj='false'
-		if(skroc){
-			skroc='true'
-		} else skroc='false'
-		if(is.null(idSkali)){
-			idSkali='null'
-		} else idSkali=as.character(idSkali)
+		if(!is.null(idSkali))
+			idSkali = as.character(idSkali)
+		else idSkali = NA
 		
-		tmp=.sqlQuery(P, sprintf("SELECT zbuduj_widok_testu('tmp', %d, %s, %s, %s);", 
-														 idTestu, 
-														 punktuj,
-														 idSkali,
-														 skroc))
-		dane=.sqlQuery(P, "SELECT * FROM tmp")
+		ile = .sqlQuery(P, "SELECT count(*) FROM testy WHERE id_testu = ?", idTestu)
+		if(ile[1, 1] == 0){
+			stop('w bazie nie ma takiego testu')
+		}
+		
+		tmp = .sqlQuery(
+			P, 
+			"SELECT zbuduj_widok_testu('tmp', ?, ?, ?, ?);", 
+			list(idTestu, punktuj, idSkali, skroc)
+		)
+		dane = .sqlQuery(P, "SELECT * FROM tmp")
 		odbcClose(P)
 		return(dane)
 	},

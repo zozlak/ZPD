@@ -50,10 +50,10 @@ pobierz_arkusz=function(
 	skroc=TRUE,
 	zrodloDanychODBC='EWD'
 ){
-	P=odbcConnect(zrodloDanychODBC, readOnlyOptimize=T)
+	P = odbcConnect(zrodloDanychODBC, readOnlyOptimize=T)
 	tryCatch({
-		if(!is.numeric(idArkusza) | !is.vector(idArkusza) | length(idArkusza)>1)
-			stop('idArkusza nie jest liczba')
+		if(!is.character(idArkusza) | !is.vector(idArkusza) | length(idArkusza)>1)
+			stop('idArkusza nie jest lancuchem znakow')
 		if(!is.logical(czyEwd) | !is.vector(czyEwd) | length(czyEwd)>1)
 			stop('czyEwd nie jest wartoscia logiczna')
 		if(!is.logical(punktuj) | !is.vector(punktuj) | length(punktuj)>1)
@@ -62,26 +62,25 @@ pobierz_arkusz=function(
 			stop('idSkali nie jest liczba')
 		if(!is.logical(skroc) | !is.vector(skroc) | length(skroc)>1)
 			stop('skroc nie jest wartoscia logiczna')
-		if(czyEwd){
-			czyEwd='true'
-		} else czyEwd='false'
-		if(punktuj){
-			punktuj='true'
-		} else punktuj='false'
-		if(skroc){
-			skroc='true'
-		} else skroc='false'
-		if(is.null(idSkali)){
-			idSkali='null'
-		} else idSkali=as.character(idSkali)
+		if(!is.null(idSkali))
+			idSkali = as.character(idSkali)
+		else idSkali = NA
 		
-		tmp=.sqlQuery(P, sprintf("SELECT zbuduj_widok_arkusza('tmp', '%s', %s, %s, %s, %s);",
-														 .e(idArkusza), 
-														 czyEwd, 
-														 punktuj,
-														 idSkali,
-														 skroc))
-		dane=.sqlQuery(P, "SELECT * FROM tmp")
+		ile = .sqlQuery(
+			P, 
+			"SELECT count(*) FROM arkusze JOIN testy USING (arkusz) WHERE arkusz = ? AND ewd = ?", 
+			list(idArkusza, czyEwd)
+		)
+		if(ile[1, 1] == 0){
+			stop('w bazie nie ma takiego arkusza')
+		}
+		
+		tmp = .sqlQuery(
+			P, 
+			"SELECT zbuduj_widok_arkusza('tmp', ?, ?, ?, ?, ?);",
+			list(idArkusza, czyEwd, punktuj, idSkali, skroc)
+		)
+		dane = .sqlQuery(P, "SELECT * FROM tmp")
 		odbcClose(P)
 		return(dane)
 	},

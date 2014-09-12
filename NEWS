@@ -1,5 +1,13 @@
 --------------------
-Zmiany w ZPD 0.6.1 (2014-06-27)
+Zmiany w ZPD 0.6.3 (2014-07-29)
+
+- Dodanie zrozumiałego raportowania o nieistnieniu danych w bazie przez funkcje
+  pobierz_czesc_egzaminu(), pobierz_arkusz(), pobierz_zrownywanie(),
+  pobierz_test()
+- Rozpoczęcie migracji na RODBCext i zapytania parametryzowane
+
+--------------------
+Zmiany w ZPD 0.6.2 (2014-06-27)
 
 - Nowe funkcje:
   - agreguj_pwe() - oblicza agregaty PWE z PV

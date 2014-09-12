@@ -73,10 +73,10 @@ stworz_test = function(
 		.sqlQuery(P, "BEGIN;")
 		
 		idTestu = .sqlQuery(P, "SELECT nextval('testy_id_testu_seq')")[1, 1]
-		.sqlQuery(P, sprintf(
-			"INSERT INTO testy (id_testu, opis, data, ewd) VALUES (%s, '%s', '%s', %s)",
-			.e(idTestu), .e(opis), .e(data), ifelse(ewd, 'true', 'false')
-		))
+		.sqlQuery(P,
+			"INSERT INTO testy (id_testu, opis, data, ewd) VALUES (?, ?, ?, ?)",
+			list(idTestu, opis, data, ewd)
+		)
 		
 		if(!is.null(idTestow)){
 			idTestow = as.numeric(idTestow)
@@ -85,14 +85,15 @@ stworz_test = function(
 				.sqlQuery(P, "CREATE TEMPORARY SEQUENCE tmp_kolejnosc")
 				.sqlQuery(P, sprintf(
 					"INSERT INTO testy_kryteria (id_testu, id_kryterium, kolejnosc) 
-						SELECT %d, t.*, nextval('tmp_kolejnosc')
+						SELECT ?, t.*, nextval('tmp_kolejnosc')
 						FROM
 							(
 								SELECT DISTINCT id_kryterium 
 								FROM testy_kryteria 
 								WHERE id_testu IN (%s)
 							) AS t",
-					idTestu, paste0(idTestow, collapse=', ')
+					paste0(idTestow, collapse=', '),
+					idTestu
 				))
 			}
 		}
