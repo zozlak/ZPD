@@ -53,8 +53,11 @@
 #' 	zapisz_spss(mtcars, 'mtcars.sav')
 #' }
 #' @export
-zapisz_spss = function(dane, plik){
+zapisz_spss = function(dane, plik, katalogTmp = NULL){
   dane = as.data.frame(dane)
+  if(is.null(katalogTmp)){
+  	katalogTmp = tempdir()
+  }
   
   skrypt = paste0(
     "GET DATA /TYPE=TXT /FILE='%s' /ARRANGEMENT=DELIMITED",
@@ -72,7 +75,7 @@ zapisz_spss = function(dane, plik){
     collapse = ' '
   )
   
-  plikiTmp = tempfile(fileext = c('.csv', '.sps'))
+  plikiTmp = tempfile(fileext = c('.csv', '.sps'), tmpdir = katalogTmp)
   write.csv(dane[, ], plikiTmp[1], row.names = F, na = '')
   writeLines(sprintf(skrypt, plikiTmp[1], kolumny, plik), plikiTmp[2])
   system(sprintf("pspp -b '%s'", plikiTmp[2]))

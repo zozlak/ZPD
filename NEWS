@@ -1,4 +1,11 @@
 --------------------
+Zmiany w ZPD 0.6.5 (2014-??-??)
+
+- Dodanie parametru "katalogTmp" w funkcji zapisz_spss(), aby móc wskazać
+  miejsce tworzenia tymczasowego pliku danych
+
+
+--------------------
 Zmiany w ZPD 0.6.4 (2014-09-13)
 
 - Dodanie funkcji zapisz_spss(), która używając pod spodem PSPP zapisuje
