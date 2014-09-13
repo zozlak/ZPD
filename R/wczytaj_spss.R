@@ -48,7 +48,7 @@
 #' }
 #' @export
 wczytaj_spss = function(plik){
-  dane = read.spss(plik, to.data.frame=T, use.missings=F, trim.factor.names=T)
+  dane = suppressWarnings(suppressMessages(read.spss(plik, to.data.frame=T, use.missings=F, trim.factor.names=T)))
   names(dane) = tolower(names(dane))
   for(i in 1:ncol(dane)){
     if(is.factor(dane[, i]))

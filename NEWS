@@ -1,4 +1,12 @@
 --------------------
+Zmiany w ZPD 0.6.4 (2014-09-13)
+
+- Dodanie funkcji zapisz_spss(), która używając pod spodem PSPP zapisuje
+  ramki danych do formatu SAV
+- Obłożenie foreign::read.spss() w funkcji wczytaj_spss() suppressWarnings()
+  oraz suppressMessages()
+
+--------------------
 Zmiany w ZPD 0.6.3 (2014-07-29)
 
 - Dodanie zrozumiałego raportowania o nieistnieniu danych w bazie przez funkcje
@@ -76,7 +84,7 @@ Zmiany w ZPD 0.4
 	-	edytuj_skale()
 -	Wprowadzenie (jednolitej) obsługi wyjątków.
 
---------------------
+--------------------4:02 an 
 Zmiany w ZPD 0.3.1
 
 -	Funkcje pobierz_arkusz(), pobierz_czesc_egzaminu(), pobierz_test(), 
