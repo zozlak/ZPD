@@ -46,14 +46,17 @@
 #'  \item string N, gdzie N jest odczytywane za pomocą stringr::str_length()
 #'  \item numeric N,M, gdzie N i M są odczytywane w przemyślny sposób
 #' }
+#' @param dane ramka danych do zapisania
 #' @param plik nazwa docelowego pliku SAV
-#' @return [NULL]
+#' @param katalogTmp katalog, w którym zapisane zostaną tymczasowy plik CSV i skrypt SPS
+#' @param sprzatnij czy usuwać pliki tymczasowe; jeśli nie zostaną zwrócone ścieżki do nich
+#' @return [vector] NULL lub ścieżki do plików tymczasowych (patrz parametr "sprzatnij")
 #' @examples
 #' \dontrun{
 #' 	zapisz_spss(mtcars, 'mtcars.sav')
 #' }
 #' @export
-zapisz_spss = function(dane, plik, katalogTmp = NULL){
+zapisz_spss = function(dane, plik, katalogTmp = NULL, sprzatnij = TRUE){
   dane = as.data.frame(dane)
   if(is.null(katalogTmp)){
   	katalogTmp = tempdir()
@@ -79,7 +82,13 @@ zapisz_spss = function(dane, plik, katalogTmp = NULL){
   write.csv(dane[, ], plikiTmp[1], row.names = F, na = '')
   writeLines(sprintf(skrypt, plikiTmp[1], kolumny, plik), plikiTmp[2])
   system(sprintf("pspp -b '%s'", plikiTmp[2]))
-  unlink(plikiTmp)
+  
+  if(sprzatnij){
+    unlink(plikiTmp)
+    return(NULL)
+  }else{
+    return(plikiTmp)
+  }
 }
 
 typDanych = function(kolumna){
@@ -112,9 +121,9 @@ typDanych = function(kolumna){
   if(is.infinite(wMax)){
     N = 1
   }else{
-    tmp = c(0, unlist(lapply(10, '^', 1:20)))
+    tmp = c(0, unlist(lapply(10, '^', 1:15)))
     N = max((1:21)[wMax >= tmp])
-    N = M + max((1:21)[wMax >= tmp])
+    N = M + N
   }
   if(N > 13){
     return(paste0('A', N))

@@ -52,7 +52,7 @@ ramka_danych_pv = function(dane, kolPV='^[pP][vV]_[0-9]+|wynik$', kolNrPV='nr_pv
 		stop('niejednoznaczna nazwa kolumny z numerem PV')
 	}	else if(length(kolNrPV) == 0){
 		# ramka danych w postaci szerokiej - skonwertuj do długiej
-		dane = melt(dane[, c(kolPozostale, kolPV)], id.vars=kolGrupy)	
+		dane = melt(dane[, c(kolPozostale, kolPV)], id.vars=kolPozostale)	
 		names(dane) = sub('^variable$', 'nr_pv', names(dane))
 		names(dane) = sub('^value$', 'wynik', names(dane))
 	} else if(length(kolPV) != 1){

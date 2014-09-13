@@ -43,8 +43,6 @@
 #' @return [data.frame] zagregowane wartości PWE
 #' @export
 agreguj_pwe = function(dane, kolGrupy, bladZrwn, wariancjaPop, kolPV='^[pP][vV]_[0-9]+|wynik$', kolNrPV='nr_pv'){
-	require(plyr)
-	
 	#<-- Sprawdzenie argumentów i doprowadzenie danych do postaci długiej
 	if(any(!is.numeric(bladZrwn), !is.vector(bladZrwn), length(bladZrwn) != 1, is.na(bladZrwn))){
 		stop('argument bladZrwn musi być jednoelementowym wektorem numerycznym i posiadać wartość inną niż NA')

@@ -1,17 +1,15 @@
 --------------------
-Zmiany w ZPD 0.6.5 (2014-??-??)
-
-- Dodanie parametru "katalogTmp" w funkcji zapisz_spss(), aby móc wskazać
-  miejsce tworzenia tymczasowego pliku danych
-
-
---------------------
 Zmiany w ZPD 0.6.4 (2014-09-13)
 
-- Dodanie funkcji zapisz_spss(), która używając pod spodem PSPP zapisuje
-  ramki danych do formatu SAV
-- Obłożenie foreign::read.spss() w funkcji wczytaj_spss() suppressWarnings()
-  oraz suppressMessages()
+- Nowe funkcje:
+	- zapisz_spss(), która używając pod spodem PSPP zapisuje ramkę danych 
+    w formacie SAV
+
+- Poprawki:
+	- Obłożenie foreign::read.spss() w funkcji wczytaj_spss() suppressWarnings()
+  	oraz suppressMessages()
+	- Korekta nazwy zmiennej w funkcji ramka_danych_pv() z nieistniejącej 
+    zmiennej na istniejącą
 
 --------------------
 Zmiany w ZPD 0.6.3 (2014-07-29)
@@ -47,6 +45,7 @@ Zmiany w ZPD 0.6 (2014-04-26)
   - sprawdz_realizacje() - sprawdza poprawność zbioru podsumowującego
     realizację i jego zgodność ze zbiorem danych wszystkich uczniów 
     [weryfikacja zbiorów z badań zrównujących]
+
 - Poprawki
 	- sprawdz_zrownanie() teraz radzi sobie z ujednolicaniem kodów specjalnych
 	- stworz_skale() dostosowane do zmiany w nazwach tablic w bazie

@@ -40,8 +40,6 @@
 #' @return [numeric] obliczona wariancja
 #' @export
 oblicz_wariancje_populacji = function(dane, kolPV='^[pP][vV]_[0-9]+|wynik$', kolNrPV='nr_pv'){
-	require(plyr)
-
 	dane = ramka_danych_pv(dane, kolPV, kolNrPV)
 	
 	warPop = mean(daply(dane, c('nr_pv'), function(x){
