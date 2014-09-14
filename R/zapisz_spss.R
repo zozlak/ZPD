@@ -85,7 +85,7 @@ zapisz_spss = function(dane, plik, katalogTmp = NULL, sprzatnij = TRUE){
   
   if(sprzatnij){
     unlink(plikiTmp)
-    return(NULL)
+    return(invisible(NULL))
   }else{
     return(plikiTmp)
   }
@@ -106,7 +106,7 @@ typDanych = function(kolumna){
     if(is.infinite(N)){
       N = 1
     }
-    return(paste0('A', N))
+    return(paste0('A', max(N, 1)))
   }
   calk = floor(kolumna)
   if(all(calk == kolumna)){
