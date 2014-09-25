@@ -55,7 +55,7 @@ pobierz_czesc_egzaminu=function(
 	zrodloDanychODBC='EWD'
 ){
 	P = odbcConnect(as.character(zrodloDanychODBC))
-	tryCatch({
+#	tryCatch({
 		if(!is.character(rodzajEgzaminu) | !is.vector(rodzajEgzaminu) | length(rodzajEgzaminu)>1)
 			stop('rodzajEgzaminu nie jest lancuchem znakow')
 		if(!is.character(czescEgzaminu) | !is.vector(czescEgzaminu) | length(czescEgzaminu)>1)
@@ -87,15 +87,15 @@ pobierz_czesc_egzaminu=function(
 		
 		tmp = .sqlQuery(
 			P, 
-			"SELECT zbuduj_widok_czesci_egzaminu('tmp', ?, ?, ?, ?, ?, ?, ?);", 
+			"SELECT zbuduj_widok_czesci_egzaminu('tmp', ?, ?, ?::int, ?, ?, ?, ?);", 
 			list(rodzajEgzaminu, czescEgzaminu, rokEgzaminu, czyEwd, punktuj, idSkali, skroc)
 		)
 		dane = .sqlQuery(P, "SELECT * FROM tmp")
 		odbcClose(P)
 		return(dane)
-	},
-	error=function(e){
-		odbcClose(P)
-		.stop(e)
-	})
+#	},
+#	error=function(e){
+#		odbcClose(P)
+#		.stop(e)
+#	})
 }

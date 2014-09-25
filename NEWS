@@ -1,4 +1,13 @@
 --------------------
+Zmiany w ZPD 0.6.5 (2014-09-25)
+
+- Poprawki:
+	- Korekta w pobierz_czesc_egzaminu() - jawne nadanie typu 4 argumentowi
+    wywoływanej funkcji wbudowanej bazy danych, co umożliwia poprawny
+    wybór właściwej funkcji wbudowanej przez bazę na etapie przygotowywania
+    zapytania.
+
+--------------------
 Zmiany w ZPD 0.6.4 (2014-09-13)
 
 - Nowe funkcje:
