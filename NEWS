@@ -1,4 +1,10 @@
 --------------------
+Zmiany w ZPD 0.6.6 (2014-10-03)
+
+- Poprawki:
+	- Zmiana z sqlQuery() na .sqlQuery() wewnątrz funkcji wydziel_testy()
+
+--------------------
 Zmiany w ZPD 0.6.5 (2014-09-25)
 
 - Poprawki:
@@ -99,7 +105,7 @@ Zmiany w ZPD 0.4
 	-	edytuj_skale()
 -	Wprowadzenie (jednolitej) obsługi wyjątków.
 
---------------------4:02 an 
+--------------------
 Zmiany w ZPD 0.3.1
 
 -	Funkcje pobierz_arkusz(), pobierz_czesc_egzaminu(), pobierz_test(), 
@@ -112,11 +118,10 @@ Zmiany w ZPD 0.3
 	pobierz_test(), pobierz_zrownywanie() parametrow "idSkali" oraz "skroc"
 	umozliwiajacych przeksztalcanie pobieranych wynikow (zlaczanie kryteriow
 	oceny i/lub skracanie skal) stosownie do definicji skali.
--	Dodanie funkcji pobierz_dane_jednoroczne_gimnazjum()
 -	Dodanie pełnej weryfikacji formalnej poprawności argumentów funkcji
 	pobierz_arkusz(), pobierz_czesc_egzaminu(), pobierz_test() oraz 
-	pobierz_zrownywanie(). Uwaga, nie oznacza to, że poprawności semantycznej,
-	np. cały czas można podać rodzaj czy część egzaminu których nie ma w bazie
-	i nie będzie to traktowane jako błąd (choć oczywiście pobranych zostanie
-	0 wierszy)
+	pobierz_zrownywanie(). 
+  Uwaga, nie oznacza to kontroli poprawności semantycznej, np. cały czas 
+  można podać rodzaj czy część egzaminu których nie ma w bazie i nie będzie 
+  to traktowane jako błąd.
 

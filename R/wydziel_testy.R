@@ -85,11 +85,15 @@ wydziel_testy = function(dane, zeszyt, zeszytBaza, kolIdZeszytu, kolUdzial, kolI
 	filtrW = dane[, kolIdZeszytu] == zeszyt & !is.na(dane[, kolIdZeszytu]) & dane[, kolUdzial] == 'tak' & !is.na(dane[, kolUdzial])
 	dane = dane[filtrW, ]
 	
-	idTestu = sqlQuery(P, "SELECT id_testu FROM testy WHERE opis ILIKE ?", zeszytBaza)[1,1]
-	kryteria = as.character(sqlQuery(P, "SELECT 'k_'||id_kryterium::text 
-																			 FROM testy_kryteria JOIN kryteria_oceny USING (id_kryterium)
-																			 WHERE id_testu = ? 
-																			 ORDER BY kolejnosc, opis, id_kryterium", idTestu)[, 1])
+	idTestu = .sqlQuery(P, "SELECT id_testu FROM testy WHERE opis ILIKE ?", zeszytBaza)[1,1]
+	kryteria = .sqlQuery(
+		P, 
+		"SELECT 'k_'||id_kryterium::text 
+		 FROM testy_kryteria JOIN kryteria_oceny USING (id_kryterium)
+		 WHERE id_testu = ? 
+		 ORDER BY kolejnosc, opis, id_kryterium", 
+		idTestu
+	)[, 1]
 	
 	for(i in names(dane)){
 		tmp = grep(sprintf('^%s_pkt$', i), names(dane)) # czy jest taka sama kolumna, tylko z sufiksem "_pkt"?
@@ -109,6 +113,7 @@ wydziel_testy = function(dane, zeszyt, zeszytBaza, kolIdZeszytu, kolUdzial, kolI
 	tmp = sub(' +$', '', tmp)
 	tmp = sub(' ', '|', tmp)
 	tmp = sub('0*([1-9][0-9]*)$', '|\\1', tmp)
+	tmp = sub('-([A-Z]+[|][0-9]+)$', '|\\1', tmp)
 	tmp = paste(rok, tmp, sep='|')
 	dane$zrwn = tmp
 	
