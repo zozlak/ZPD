@@ -48,6 +48,7 @@
 #' \dontrun{
 #' 	sprawdz_zrownanie('sprawdzian', 2014, 'zbiór.zrównywanie')
 #' }
+#' @import plyr
 #' @export
 sprawdz_zrownanie = function(rodzajEgzaminu, rok, kolumnaId, zrodloDanychODBC='EWD'){
   

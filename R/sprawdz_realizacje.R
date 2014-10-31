@@ -56,6 +56,7 @@
 #' 	dane = wczytaj_ibe('spr.csv', 'spr_c.csv')
 #' 	sprawdz_realizacje('spr_realizacja.csv', 'spr_realizacja_c.csv', dane)
 #' }
+#' @import plyr
 #' @export
 sprawdz_realizacje = function(plik, codebook, dane, przedmGim=NULL){
 	flaga = T

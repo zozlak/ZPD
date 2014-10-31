@@ -38,24 +38,26 @@
 #' @param P obiekt otwartego polaczenie ODBC
 #' @return [logical] TRUE w wypadku powodzenia funkcji
 sprawdz_skroty_skal = function(skroty, P){
-	skrotyBaza=.sqlQuery(P, "SELECT id_skrotu FROM skroty_skal")[, 1]
-	skroty=gsub(',', '.', skroty)
-	tmp=unique(skroty[!(skroty %in% skrotyBaza) & !is.na(skroty)])
-	tmp=strsplit(tmp, '[|]')
+	skrotyBaza = .sqlQuery(P, "SELECT id_skrotu FROM skroty_skal")[, 1]
+	skroty = gsub(',', '.', skroty)
+	tmp = unique(skroty[!(skroty %in% skrotyBaza) & !is.na(skroty)])
+	tmp = strsplit(tmp, '[|]')
 	for(i in tmp){
-		idSkrotu=paste(i, collapse='|')
-		i=strsplit(i, '[;]')
-		we=as.numeric(i[[1]])
-		wy=as.numeric(i[[2]])
-		if(length(we)!=length(wy))
+		idSkrotu = paste(i, collapse='|')
+		i = strsplit(i, '[;]')
+		we = as.numeric(i[[1]])
+		wy = as.numeric(i[[2]])
+		if(length(we) != length(wy)){
 			stop(sprintf('"%s" nie jest poprawnym identyfikatorem skrotu skali - rozne liczby wartosci wejsciowych i wyjsciowych', idSkrotu))
-		if(any(is.na(we) | is.na(wy)))
+		}
+		if(any(is.na(we) | is.na(wy))){
 			stop(sprintf('"%s" nie jest poprawnym identyfikatorem skrotu skali - co najmniej jedna z wartosci wejsciowych lub wyjsciowych nie jest liczba', idSkrotu))
+		}
 		.sqlQuery(P, sprintf("INSERT INTO skroty_skal (id_skrotu) VALUES ('%s')", .e(idSkrotu)))
 		for(j in 1:length(we)){
 			.sqlQuery(P, sprintf("INSERT INTO skroty_skal_mapowania (id_skrotu, wartosc, nowa_wartosc) VALUES ('%s', %f, %f)",
 													 idSkrotu, we[j], wy[j]))
 		}
-		return(TRUE)
 	}
+	return(TRUE)
 }

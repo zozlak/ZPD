@@ -1,4 +1,12 @@
 --------------------
+Zmiany w ZPD 0.6.7 (2014-10-31)
+
+- Poprawki:
+	- Korekta błędnego return() w funkcji sprawdz_skroty_skal()
+  - Wprowadzenie anotacji umożliwiających Roxygenowi dodanie potrzebnych
+    klauzuli import() w pliku NAMESPACE
+
+--------------------
 Zmiany w ZPD 0.6.6 (2014-10-03)
 
 - Poprawki:

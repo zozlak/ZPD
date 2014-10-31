@@ -50,6 +50,7 @@
 #' @param P otwarte polaczenie ODBC
 #' @param sql polecenie SQL do wykonania
 #' @return data.frame
+#' @import RODBCext
 .sqlQuery = function(P, sql, dane = NULL){
 	odbcClearError(P)
 	tmp = sqlExecute(P, sql, dane, fetch=T, errors=F, stringsAsFactors=F, dec='.')

@@ -46,6 +46,8 @@
 #' \dontrun{
 #' 	wczytaj_spss('gim10_07.sav')
 #' }
+#' @import stringr
+#' @import foreign
 #' @export
 wczytaj_spss = function(plik){
   dane = suppressWarnings(suppressMessages(read.spss(plik, to.data.frame=T, use.missings=F, trim.factor.names=T)))
