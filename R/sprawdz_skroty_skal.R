@@ -45,6 +45,9 @@ sprawdz_skroty_skal = function(skroty, P){
 	for(i in tmp){
 		idSkrotu = paste(i, collapse='|')
 		i = strsplit(i, '[;]')
+		if(length(i) != 2){
+			stop(sprintf('"%s" nie jest poprawnym identyfikatorem skrotu skali - nie podano wartosci wyjsciowych', idSkrotu))
+		}
 		we = as.numeric(i[[1]])
 		wy = as.numeric(i[[2]])
 		if(length(we) != length(wy)){

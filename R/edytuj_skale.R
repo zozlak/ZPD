@@ -43,8 +43,8 @@
 edytuj_skale = function(
 	idSkali, 
 	elementy, 
-	nadpisz=FALSE, 
-	zrodloDanychODBC='EWD'
+	nadpisz = FALSE, 
+	zrodloDanychODBC = 'EWD'
 ){
 	P=odbcConnect(zrodloDanychODBC)
 	tryCatch({

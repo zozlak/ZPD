@@ -1,4 +1,10 @@
 --------------------
+Zmiany w ZPD 0.6.8 (2014-11-02)
+
+- Poprawki:
+	- funkcja sprawdz_skroty_skal() dokładniej waliduje teraz dane wejściowe
+
+--------------------
 Zmiany w ZPD 0.6.7 (2014-10-31)
 
 - Poprawki:
