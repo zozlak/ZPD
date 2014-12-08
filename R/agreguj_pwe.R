@@ -36,24 +36,31 @@
 #' _
 #' @param dane macierz z wartosciami PV do zagregowania
 #' @param kolGrupy nazwa kolumny (lub wektor nazw kolumn), wg których PWE mają zostać zagregowane
-#' @param bladZrwn błąd zrównywania
-#' @param wariancjaPop wariancja wyników w populacji (uzyskana np. z funkcji pobierz_wariancje_populacji())
+#' @param wariancjaPop wariancja wyników w populacji - patrz opis funkcji
+#' @param bladZrwn błąd zrównywania - patrz opis funkcji
 #' @param kolPV wyrażenie regularne dopasowujące kolumny z wartościami PV
 #' @param kolNrPV nazwa kolumny z numerem PV (gdy dane w postaci długiej)
 #' @return [data.frame] zagregowane wartości PWE
 #' @export
-agreguj_pwe = function(dane, kolGrupy, bladZrwn, wariancjaPop, kolPV='^[pP][vV]_[0-9]+|wynik$', kolNrPV='nr_pv'){
-	#<-- Sprawdzenie argumentów i doprowadzenie danych do postaci długiej
-	if(any(!is.numeric(bladZrwn), !is.vector(bladZrwn), length(bladZrwn) != 1, is.na(bladZrwn))){
-		stop('argument bladZrwn musi być jednoelementowym wektorem numerycznym i posiadać wartość inną niż NA')
-	}
-
-	if(any(!is.numeric(wariancjaPop), !is.vector(wariancjaPop), length(wariancjaPop) != 1, is.na(wariancjaPop))){
-		stop('argument wariancjaPop musi być jednoelementowym wektorem numerycznym i posiadać wartość inną niż NA')
-	}
-	
+agreguj_pwe = function(dane, kolGrupy, wariancjaPop = 0, bladZrwn = 0, kolPV='^[pP][vV]_[0-9]+|wynik$', kolNrPV='nr_pv'){
+  stopifnot(
+    is.numeric(bladZrwn),
+    length(bladZrwn) == 1,
+    !is.na(bladZrwn),
+    is.numeric(wariancjaPop),
+    length(wariancjaPop) == 1,
+    !is.na(wariancjaPop)
+  )
+  if(bladZrwn != 0){
+    warning('Błąd zrównywania na ogół jest już wliczony w PV. Use at your own risk!')
+  }
+  message(ifelse(
+    wariancjaPop == 0, 
+    'Błąd losowania obserwacji obliczany na podstawie wariancji wewnątrz grup',
+    'Błąd losowania obserwacji obliczany na podstawie wariancji populacji'
+  ))
+  
 	dane = ramka_danych_pv(dane, kolPV, kolNrPV, kolGrupy)
-	#-->
 	
 	#<-- liczenie
 	ilePV = length(unique(dane$nr_pv))
@@ -63,14 +70,19 @@ agreguj_pwe = function(dane, kolGrupy, bladZrwn, wariancjaPop, kolPV='^[pP][vV]_
 			x = c(
 				quantile(x$wynik, probs=c(0, 0.25, 0.5, 0.75, 1)),
 				mean(x$wynik),
-				nrow(x)
+				nrow(x),
+				var(x$wynik)
 			)
-			names(x) = c('min', 'q1', 'mediana', 'q3', 'maks', 'srednia', 'n')
+			names(x) = c('min', 'q1', 'mediana', 'q3', 'maks', 'srednia', 'n', 'var')
 			return(x)
 		})
-		bs = sqrt((1 + 1 / ilePV) * var(d$srednia) + varPop / mean(d$n) + blZrwn2)
+		d$var[is.na(d$var)] = 0
+    if(varPop == 0){
+      d$bs = sqrt((1 + 1 / ilePV) * var(d$srednia) + mean(d$var) / mean(d$n) + blZrwn2)
+    }else{
+      d$bs = sqrt((1 + 1 / ilePV) * var(d$srednia) + varPop / mean(d$n) + blZrwn2)
+    }		
 		d$srednia = srednia
-		d$bs = bs
 		d = apply(d, 2, mean)
 		return(d)
 	}, bladZrwn^2, wariancjaPop, ilePV)

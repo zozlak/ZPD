@@ -50,37 +50,45 @@ stworz_skale = function(
 	rok, 
 	zrodloDanychODBC='EWD'
 ){
-	P=odbcConnect(zrodloDanychODBC)
+	P = odbcConnect(zrodloDanychODBC)
 	tryCatch({
 		odbcSetAutoCommit(P, FALSE)
 		.sqlQuery(P, "BEGIN;")
 		
-		if(!is.vector(nazwa) | !is.character(nazwa) | length(nazwa)>1)
+		if(!is.vector(nazwa) | !is.character(nazwa) | length(nazwa) > 1){
 			stop('nazwa nie jest pojedynczym lancuchem znakow')
-		if(nazwa=='')
+		}
+		if(nazwa == ''){
 			stop('nazwa skali nie moze byc pusta')
-		if(!is.vector(opis) | !is.character(opis) | length(opis)>1)
+		}
+		if(!is.vector(opis) | !is.character(opis) | length(opis)>1){
 			stop('opis nie jest pojedynczym lancuchem znakow')
-		if((!is.vector(rodzajEgzaminu) | !is.character(rodzajEgzaminu) | length(rodzajEgzaminu)>1) & !is.null(rodzajEgzaminu))
+		}
+		if((!is.vector(rodzajEgzaminu) | !is.character(rodzajEgzaminu) | length(rodzajEgzaminu) > 1) & !is.null(rodzajEgzaminu)){
 			stop('rodzajEgzaminu nie jest pojedynczym lancuchem znakow')
-		if((!is.vector(czescEgzaminu) | !is.character(czescEgzaminu) | length(czescEgzaminu)>1) & !is.null(czescEgzaminu))
+		}
+		if((!is.vector(czescEgzaminu) | !is.character(czescEgzaminu) | length(czescEgzaminu) > 1) & !is.null(czescEgzaminu)){
 			stop('czescEgzaminu nie jest pojedynczym lancuchem znakow')
-		if((!is.vector(rok) | !is.numeric(rok) | length(rok)>1) & !is.null(rok))
+		}
+		if((!is.vector(rok) | !is.numeric(rok) | length(rok) > 1) & !is.null(rok)){
 			stop('rok nie jest pojedyncza liczba')
-		czyEgzamin=is.null(rodzajEgzaminu)+is.null(czescEgzaminu)+is.null(rok)
-		if(czyEgzamin>0 & czyEgzamin<3)
+		}
+		czyEgzamin = is.null(rodzajEgzaminu) + is.null(czescEgzaminu) + is.null(rok)
+		if(czyEgzamin > 0 & czyEgzamin < 3){
 			stop('rodzajEgzaminu, czescEgzaminu oraz rok musza byc zdefiniowane wszystkie na raz lub wszystkie musza miec wartosc NULL')
-		if(czyEgzamin==0){
-			if(1!=.sqlQuery(P, sprintf("SELECT count(*) FROM sl_egzaminy WHERE rodzaj_egzaminu='%s' AND czesc_egzaminu='%s' AND date_part('year', data_egzaminu)=%d",
+		}
+		if(czyEgzamin == 0){
+			if(1 != .sqlQuery(P, sprintf("SELECT count(*) FROM sl_egzaminy WHERE rodzaj_egzaminu='%s' AND czesc_egzaminu='%s' AND date_part('year', data_egzaminu)=%d",
 																 .e(rodzajEgzaminu), .e(czescEgzaminu), rok))[1, 1]){
 				stop(sprintf("w bazie nie ma egzaminu '%s', '%s', %d", rodzajEgzaminu, czescEgzaminu, rok))
 			}
 		}
-		if(0!=.sqlQuery(P, sprintf("SELECT count(*) FROM skale WHERE nazwa='%s'", .e(nazwa))))
+		if(0 != .sqlQuery(P, sprintf("SELECT count(*) FROM skale WHERE nazwa='%s'", .e(nazwa)))){
 			stop(sprintf("w bazie istnieje juz skala o nazwie '%s'", nazwa))
+		}
 		
-		idSkali=.sqlQuery(P, "SELECT nextval('skale_id_skali_seq')")[1, 1]
-		if(czyEgzamin>0){
+		idSkali = .sqlQuery(P, "SELECT nextval('skale_id_skali_seq')")[1, 1]
+		if(czyEgzamin > 0){
 			.sqlQuery(P, sprintf("INSERT INTO skale (id_skali, opis, nazwa) VALUES (%d, '%s', '%s');", idSkali, .e(opis), .e(nazwa)))
 		}else{
 			.sqlQuery(P, sprintf("INSERT INTO skale (id_skali, opis, nazwa, rodzaj_egzaminu, czesc_egzaminu, data_egzaminu) 
@@ -92,7 +100,7 @@ stworz_skale = function(
 		odbcClose(P)
 		return(idSkali)	
 	},
-	error=function(e){
+	error = function(e){
 		odbcClose(P)
 		.stop(e)
 	})

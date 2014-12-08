@@ -3,7 +3,7 @@
 \alias{agreguj_pwe}
 \title{Oblicza PWE na podstawie PV agregujac wg wskazanych zmiennych}
 \usage{
-agreguj_pwe(dane, kolGrupy, bladZrwn, wariancjaPop,
+agreguj_pwe(dane, kolGrupy, wariancjaPop = 0, bladZrwn = 0,
   kolPV = "^[pP][vV]_[0-9]+|wynik$", kolNrPV = "nr_pv")
 }
 \arguments{
@@ -11,9 +11,9 @@ agreguj_pwe(dane, kolGrupy, bladZrwn, wariancjaPop,
 
 \item{kolGrupy}{nazwa kolumny (lub wektor nazw kolumn), wg których PWE mają zostać zagregowane}
 
-\item{bladZrwn}{błąd zrównywania}
+\item{wariancjaPop}{wariancja wyników w populacji - patrz opis funkcji}
 
-\item{wariancjaPop}{wariancja wyników w populacji (uzyskana np. z funkcji pobierz_wariancje_populacji())}
+\item{bladZrwn}{błąd zrównywania - patrz opis funkcji}
 
 \item{kolPV}{wyrażenie regularne dopasowujące kolumny z wartościami PV}
 

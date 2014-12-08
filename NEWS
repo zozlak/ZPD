@@ -1,4 +1,13 @@
 --------------------
+Zmiany w ZPD 0.7.0 (2014-12-08)
+
+- Nowe funkcjonalności
+	- funkcja agreguj_pwe() oblicza błędy standardowe agregatów PWE na
+    podstawie wariancji populacji (jak dotychczas) lub wariancji
+    wewnątrz grup; pozwala to obliczać PWE dla dowolnie zdefiniowanych
+    populacji
+
+--------------------
 Zmiany w ZPD 0.6.8 (2014-11-02)
 
 - Poprawki:
