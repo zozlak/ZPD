@@ -10,11 +10,13 @@ Ponieważ jednak zawiera jedynie kod w R, nie ma potrzeby zaopatrywać się w ko
 
 Instalacja możliwa jest w dwóch wariantach:
 
-1) Z użyciem pakietu devtools (uwaga - na skutek błędu w pakiecie devtools nie działa na 64-bitowych linuksach!):
+1) Z użyciem pakietu devtools:
 ```r
 install.packages('devtools') # potrzbne tylko gdy nie jest jeszcze zainstalowany
 devtools::install_github('zozlak/ZPD')
 ```
+
+**Jeśli podczas instalacji napotkasz na błąd, a używasz linuksa** sprawdź, czy nie dotyczy Cię [ten problem](https://github.com/hadley/devtools/issues/650) lub przeprowadź "uczciwą instalację ze źródeł" (patrz niżej).
 
 2) "Uczciwa instalacja ze źródeł":
 
