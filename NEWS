@@ -1,4 +1,18 @@
 --------------------
+Zmiany w ZPD 0.7.1 (2014-12-10)
+
+- Nowe funkcjonalności
+  - Testowe wprowadzenie zestawu funkcji pobierających dane z bazy w postaci
+    ramek danych dplyr-a:
+    - get_pupils_estimates()
+    - get_exam_results()
+    - get_test_results()
+    - get_pupils()
+    - get_pupils_tests_data()
+    - get_schools()
+    - get_tests()
+
+--------------------
 Zmiany w ZPD 0.7.0 (2014-12-08)
 
 - Nowe funkcjonalności

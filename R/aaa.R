@@ -32,12 +32,30 @@
 #    Place, Fifth Floor, Boston, MA  02110-1301  USA
 #
 
+#' @title Zwraca połączenie dplyr-a z bazą danych ZPD
+#' @param dbaname nazwa bazy danych
+#' @param host adres serwera bazy danych
+#' @param port port, na którym nasłuchuje serwer baz danych
+#' @param user użytkownik
+#' @param password hasło
+#' @import dplyr
+#' @export
+zpd_connect = polacz = function(
+	dbname = 'ewd',
+	host = 'ewd.ibe.edu.pl',
+	port = 5432,
+	user = 'ewd_baza',
+	password = 'CalEBo9'
+){
+	return(src_postgres(dbname, host, port, user, password))
+}
+
 #' @title Pobiera oszacowania umiejętności uczniów
 #' @param src uchwyt źródła danych dplyr-a
 #' @import dplyr
 #' @import DBI
 #' @export
-get_pupils_estimates = function(
+get_pupils_estimates = pobierz_oszacowania_uczniow = function(
 	src
 ){
 	query = "
@@ -54,7 +72,7 @@ get_pupils_estimates = function(
 	data = tbl(src, sql(query))
 	return(data)
 }
-	
+
 #' @title Pobiera wyniki części egzaminu
 #' @param src uchwyt źródła danych dplyr-a
 #' @param rodzajEgzaminu rodzaj egzaminu, ktorego wyniki maja zostac pobrane
@@ -67,7 +85,7 @@ get_pupils_estimates = function(
 #' @import dplyr
 #' @import DBI
 #' @export
-get_exam_results = function(
+get_exam_results = pobierz_wyniki_egzaminu = function(
 	src,
 	rodzajEgzaminu, 
 	czescEgzaminu, 
@@ -107,7 +125,7 @@ get_exam_results = function(
 #' @param skroc czy do danych zastosowac skrocenia skal opisane w skali
 #' @import dplyr
 #' @export
-get_test_results = function(
+get_test_results = pobierz_wyniki_testu = function(
 	src,
 	idTestu, 
 	punktuj        = TRUE,
@@ -137,7 +155,7 @@ get_test_results = function(
 #' @param src uchwyt źródła danych dplyr-a
 #' @import dplyr
 #' @export
-get_pupils = function(
+get_pupils = pobierz_uczniow = function(
 	src
 ){
 	query = "
@@ -155,7 +173,7 @@ get_pupils = function(
 #' @param src uchwyt źródła danych dplyr-a
 #' @import dplyr
 #' @export
-get_schools = function(
+get_schools = pobierz_szkoly = function(
   src
 ){
 	query = "
@@ -180,7 +198,7 @@ get_schools = function(
 #' #' @param src uchwyt źródła danych dplyr-a
 #' @import dplyr
 #' @export
-get_tests = function(
+get_tests = pobierz_testy = function(
 	src
 ){
 	query = "
@@ -201,7 +219,7 @@ get_tests = function(
 #' @param src uchwyt źródła danych dplyr-a
 #' @import dplyr
 #' @export
-get_pupils_tests_data = function(
+get_pupils_tests_data = pobierz_dane_uczniowie_testy = function(
 	src
 ){
 	query = "

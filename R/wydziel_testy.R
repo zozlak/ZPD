@@ -103,7 +103,7 @@ wydziel_testy = function(dane, zeszyt, zeszytBaza, kolIdZeszytu, kolUdzial, kolI
 	}
 	kolZadania = grep(sprintf('^%s', prefiksZadan), names(dane))
 	if(length(kolZadania) != length(kryteria)){
-		stop('liczba kryteriow w tescie nie zgadza sie z liczba kolumn w zbiorze')
+		stop('liczba kryteriow w tescie nie zgadza sie z liczba kolumn w zbiorze (', length(kolZadania), ' != ', length(kryteria), ')')
 	}
 	
 	names(dane)[kolZadania] = kryteria # przezwij kolumny na id_kryteriow
