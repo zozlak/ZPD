@@ -1,4 +1,11 @@
 --------------------
+Zmiany w ZPD 0.7.2 (2015-01-05)
+
+- Poprawki
+  - Poprawne opisanie funkcji dodanych w wersji 0.7.1, tak by były widoczne
+    po załadowaniu pakietu
+
+--------------------
 Zmiany w ZPD 0.7.1 (2014-12-10)
 
 - Nowe funkcjonalności

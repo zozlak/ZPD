@@ -1,4 +1,4 @@
-#	Copyright 2013 Mateusz Zoltak
+#  Copyright 2013 Mateusz Zoltak
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published by
@@ -30,10 +30,10 @@
 #    Powszechnej Licencji Publicznej GNU (GNU General Public License);
 #    jesli nie - napisz do Free Software Foundation, Inc., 59 Temple
 #    Place, Fifth Floor, Boston, MA  02110-1301  USA
+#
 
-#' @title Pobiera ramke danych z wynikami egzaminacyjnymi wskazanej czesci egzaminu
-#' @description
-#' _
+#' @title Pobiera wyniki części egzaminu
+#' @param src uchwyt źródła danych dplyr-a
 #' @param rodzajEgzaminu rodzaj egzaminu, ktorego wyniki maja zostac pobrane
 #' @param czescEgzaminu czesc egzaminu, ktorego wyniki maja zostac pobrane
 #' @param rokEgzaminu rok egzaminu, ktorego wyniki maja zostac pobrane
@@ -41,61 +41,41 @@
 #' @param punktuj wybor, czy dane maja byc pobrane w postaci dystraktorow, czy punktow
 #' @param idSkali identyfikator skali, ktora ma zostac zastosowana do danych
 #' @param skroc czy do danych zastosowac skrocenia skal opisane w skali
-#' @param zrodloDanychODBC nazwa zrodla danych ODBC, ktorego nalezy uzyc
-#' @return data frame
+#' @import dplyr
+#' @import DBI
 #' @export
-pobierz_czesc_egzaminu = function(
-	rodzajEgzaminu, 
-	czescEgzaminu, 
-	rokEgzaminu, 
-	czyEwd, 
-	punktuj=TRUE, 
-	idSkali=NULL,
-	skroc=TRUE,
-	zrodloDanychODBC = 'EWD'
+pobierz_wyniki_egzaminu = function(
+  src,
+  rodzajEgzaminu, 
+  czescEgzaminu, 
+  rokEgzaminu, 
+  czyEwd,
+  punktuj        = TRUE,
+  idSkali        = NULL,
+  skroc          = FALSE
 ){
-	P = odbcConnect(as.character(zrodloDanychODBC))
-#	tryCatch({
-		if(!is.character(rodzajEgzaminu) | !is.vector(rodzajEgzaminu) | length(rodzajEgzaminu)>1)
-			stop('rodzajEgzaminu nie jest lancuchem znakow')
-		if(!is.character(czescEgzaminu) | !is.vector(czescEgzaminu) | length(czescEgzaminu)>1)
-			stop('czescEgzaminu nie jest lancuchem znakow')
-		if(!is.numeric(rokEgzaminu) | !is.vector(rokEgzaminu) | length(rokEgzaminu)>1)
-			stop('rokEgzaminu nie jest liczba')
-		if(!is.logical(czyEwd) | !is.vector(czyEwd) | length(czyEwd)>1)
-			stop('czyEwd nie jest wartoscia logiczna')
-		if(!is.logical(punktuj) | !is.vector(punktuj) | length(punktuj)>1)
-			stop('punktuj nie jest wartoscia logiczna')
-		if((!is.numeric(idSkali) | !is.vector(idSkali) | length(idSkali)>1) & !is.null(idSkali))
-			stop('idSkali nie jest liczba')
-		if(!is.logical(skroc) | !is.vector(skroc) | length(skroc)>1)
-			stop('skroc nie jest wartoscia logiczna')
-		if(!is.null(idSkali))
-			idSkali = as.character(idSkali)
-		else idSkali = NA
-		
-		ile = .sqlQuery(
-			P,
-			"SELECT count(*) 
-			FROM testy JOIN arkusze USING (arkusz) 
-			WHERE rodzaj_egzaminu = ? AND czesc_egzaminu = ? AND extract(year FROM data_egzaminu) = ? AND ewd = ?",
-			list(rodzajEgzaminu, czescEgzaminu, rokEgzaminu, czyEwd)			
-		)
-		if(ile[1, 1] == 0){
-			stop('brak danych w bazie')
-		}
-		
-		tmp = .sqlQuery(
-			P, 
-			"SELECT zbuduj_widok_czesci_egzaminu('tmp', ?, ?, ?::int, ?, ?, ?, ?);", 
-			list(rodzajEgzaminu, czescEgzaminu, rokEgzaminu, czyEwd, punktuj, idSkali, skroc)
-		)
-		dane = .sqlQuery(P, "SELECT * FROM tmp")
-		odbcClose(P)
-		return(dane)
-#	},
-#	error=function(e){
-#		odbcClose(P)
-#		.stop(e)
-#	})
+  query = sprintf(
+    "SELECT zbuduj_widok_czesci_egzaminu('tmp_view', '%s', '%s', %d, %s, %s, %s, %s, true);",
+    sub("'", "''", rodzajEgzaminu),
+    sub("'", "''", czescEgzaminu),
+    rokEgzaminu,
+    ifelse(czyEwd, 'true', 'false'),
+    ifelse(punktuj, 'true', 'false'),
+    ifelse(is.null(idSkali), 'null', idSkali),
+    ifelse(skroc, 'true', 'false')
+  )
+  # R Postgresql DBI driver is extremely stupid and switches every message from
+  # a database into R error.
+  # This means "DROP VIEW IF EXISTS view_name;" executed on the backstage of the
+  # zbuduj_widok_czesci_egzaminu() call will generate an R error if a view named
+  # "view_name" doesn't exist.
+  # So we need to make sure it exists before calling zbuduj_widok_czesci_egzaminu()
+  dbGetQuery(src$con, "CREATE TEMPORARY VIEW tmp_view AS SELECT 1")
+  dbGetQuery(src$con, query)
+  data = tbl(src, sql("SELECT * FROM tmp_view"))
+  return(data)	
 }
+
+#' @rdname polacz
+#' @export
+get_exam_results = pobierz_wyniki_egzaminu
