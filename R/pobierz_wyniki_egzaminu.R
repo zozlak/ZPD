@@ -54,8 +54,10 @@ pobierz_wyniki_egzaminu = function(
   idSkali        = NULL,
   skroc          = FALSE
 ){
+  tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), runif(1))))
   query = sprintf(
-    "SELECT zbuduj_widok_czesci_egzaminu('tmp_view', '%s', '%s', %d, %s, %s, %s, %s, true);",
+    "SELECT zbuduj_widok_czesci_egzaminu('%s', '%s', '%s', %d, %s, %s, %s, %s, true);",
+    tmpName,
     sub("'", "''", rodzajEgzaminu),
     sub("'", "''", czescEgzaminu),
     rokEgzaminu,
@@ -70,14 +72,9 @@ pobierz_wyniki_egzaminu = function(
   # zbuduj_widok_czesci_egzaminu() call will generate an R error if a view named
   # "view_name" doesn't exist.
   # So we need to make sure it exists before calling zbuduj_widok_czesci_egzaminu()
-  try(
-    {
-      dbGetQuery(src$con, "CREATE TEMPORARY VIEW tmp_view AS SELECT 1")
-    },
-    silent = T
-  )
+  dbGetQuery(src$con, paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1"))
   dbGetQuery(src$con, query)
-  data = tbl(src, sql("SELECT * FROM tmp_view"))
+  data = tbl(src, sql(paste0("SELECT * FROM ", tmpName)))
   return(data)	
 }
 
