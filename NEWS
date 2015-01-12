@@ -1,4 +1,11 @@
 --------------------
+Zmiany w ZPD 0.7.3 (2015-01-12)
+
+- Poprawki
+  - Korekta w funkcji pobierz_wyniki_egzaminu() umożliwiająca pobranie wyników
+    wielu egzaminów podczas jednej sesji R
+
+--------------------
 Zmiany w ZPD 0.7.2 (2015-01-05)
 
 - Poprawki

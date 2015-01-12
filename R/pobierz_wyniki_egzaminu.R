@@ -70,7 +70,12 @@ pobierz_wyniki_egzaminu = function(
   # zbuduj_widok_czesci_egzaminu() call will generate an R error if a view named
   # "view_name" doesn't exist.
   # So we need to make sure it exists before calling zbuduj_widok_czesci_egzaminu()
-  dbGetQuery(src$con, "CREATE TEMPORARY VIEW tmp_view AS SELECT 1")
+  try(
+    {
+      dbGetQuery(src$con, "CREATE TEMPORARY VIEW tmp_view AS SELECT 1")
+    },
+    silent = T
+  )
   dbGetQuery(src$con, query)
   data = tbl(src, sql("SELECT * FROM tmp_view"))
   return(data)	
