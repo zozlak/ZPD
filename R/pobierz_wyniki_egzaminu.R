@@ -42,7 +42,6 @@
 #' @param idSkali identyfikator skali, ktora ma zostac zastosowana do danych
 #' @param skroc czy do danych zastosowac skrocenia skal opisane w skali
 #' @import dplyr
-#' @import DBI
 #' @export
 pobierz_wyniki_egzaminu = function(
   src,
@@ -50,34 +49,42 @@ pobierz_wyniki_egzaminu = function(
   czescEgzaminu, 
   rokEgzaminu, 
   czyEwd,
-  punktuj        = TRUE,
-  idSkali        = NULL,
-  skroc          = FALSE
+  punktuj = TRUE,
+  idSkali = NULL,
+  skroc   = FALSE
 ){
+  tests = get_tests(src) %>% 
+    collect() %>%
+    filter_(~rodzaj_egzaminu == rodzajEgzaminu, ~czesc_egzaminu == czescEgzaminu, ~rok == rokEgzaminu) %>%
+    group_by_('ewd') %>%
+    summarize(n = n())
+  if(nrow(tests) == 0){
+    stop('w bazie nie ma wyników takiego egzaminu')
+  }
+  if(nrow(tests %>% filter_(~ewd == czyEwd)) == 0){
+    stop('w bazie nie ma wyników takiego egzaminu, ale istnieją dla innego źródła danych (patrz parametr czyEwd)')
+  }
+  
   tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), runif(1))))
   query = sprintf(
-    "SELECT zbuduj_widok_czesci_egzaminu('%s', '%s', '%s', %d, %s, %s, %s, %s, true);",
+    "SELECT zbuduj_widok_czesci_egzaminu('%s', %s, %s, %d, %s, %s, %s, %s, true);",
     tmpName,
-    sub("'", "''", rodzajEgzaminu),
-    sub("'", "''", czescEgzaminu),
+    escape(rodzajEgzaminu),
+    escape(czescEgzaminu),
     rokEgzaminu,
     ifelse(czyEwd, 'true', 'false'),
     ifelse(punktuj, 'true', 'false'),
     ifelse(is.null(idSkali), 'null', idSkali),
     ifelse(skroc, 'true', 'false')
   )
-  # R Postgresql DBI driver is extremely stupid and switches every message from
-  # a database into R error.
-  # This means "DROP VIEW IF EXISTS view_name;" executed on the backstage of the
-  # zbuduj_widok_czesci_egzaminu() call will generate an R error if a view named
-  # "view_name" doesn't exist.
-  # So we need to make sure it exists before calling zbuduj_widok_czesci_egzaminu()
-  dbGetQuery(src$con, paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1"))
-  dbGetQuery(src$con, query)
+  DBI::dbGetQuery(src$con, query)
   data = tbl(src, sql(paste0("SELECT * FROM ", tmpName)))
+
+  attr(data, 'idSkali') = idSkali
+  
   return(data)	
 }
 
-#' @rdname polacz
+#' @rdname pobierz_wyniki_egzaminu
 #' @export
 get_exam_results = pobierz_wyniki_egzaminu

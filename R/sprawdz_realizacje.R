@@ -56,7 +56,6 @@
 #' 	dane = wczytaj_ibe('spr.csv', 'spr_c.csv')
 #' 	sprawdz_realizacje('spr_realizacja.csv', 'spr_realizacja_c.csv', dane)
 #' }
-#' @import plyr
 #' @export
 sprawdz_realizacje = function(plik, codebook, dane, przedmGim=NULL){
 	flaga = T
@@ -85,7 +84,7 @@ sprawdz_realizacje = function(plik, codebook, dane, przedmGim=NULL){
 		cat(paste0('w zbiorze wyników są szkoły, których nie ma w podsumowaniu realizacji: ', paste0(setdiff(tmp$id_szk, realizacja$id_szk), collapse=', '), '\n'))
 		flaga = F
 	}
-	tmp = join(realizacja, tmp, type='left', match='all')
+	tmp = plyr::join(realizacja, tmp, type='left', match='all')
 	filtr = is.na(tmp$x)
 	if(any(filtr)){
 		cat(paste0('w podsumowaniu realizacji są szkoły i/lub klasy, których nie ma w zbiorze wyników: ', paste0(tmp$id_szk[filtr], collapse=', '), '\n'))
@@ -95,7 +94,7 @@ sprawdz_realizacje = function(plik, codebook, dane, przedmGim=NULL){
 	# tylko uczniowie, którzy wzięli udział w badaniu - sprawdzenie 
 	dane = dane[dane$udzial == 'tak', ]
 	tmp = aggregate(dane[, 'id_ucz'], list('id_szk' = dane$id_szk, 'id_kl' = dane$id_kl), length)
-	tmp = join(realizacja, tmp, type='left', match='all')
+	tmp = plyr::join(realizacja, tmp, type='left', match='all')
 	filtr = tmp$x - tmp$l_bad != 0 & !is.na(tmp$x)
 	if(any(filtr)){
 		cat(paste0('niezgodna liczba uczniów, którzy wzięli udział w badaniu w szkołach: ', paste0(tmp$id_szk[filtr], collapse=', '), '\n'))

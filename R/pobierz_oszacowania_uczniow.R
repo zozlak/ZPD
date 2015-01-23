@@ -35,7 +35,6 @@
 #' @title Pobiera oszacowania umiejętności uczniów
 #' @param src uchwyt źródła danych dplyr-a
 #' @import dplyr
-#' @import DBI
 #' @export
 pobierz_oszacowania_uczniow = function(
   src
@@ -55,7 +54,7 @@ pobierz_oszacowania_uczniow = function(
   return(data)
 }
 
-#' @rdname polacz
+#' @rdname pobierz_oszacowania_uczniow
 #' @export
 get_pupils_estimates = pobierz_oszacowania_uczniow
   

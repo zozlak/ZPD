@@ -33,7 +33,7 @@
 
 #' @title Zapisuje elementy skali do bazy danych
 #' @description
-#' Patrz http://zpd.ibe.edu.pl/doku.php?id=odbcskale
+#' Patrz http://zpd.ibe.edu.pl/doku.php?id=r_zpd_skale
 #' @param idSkali identyfikator skali, ktora ma zostac zapisana (typowo uzyskany z funkcji "stworz_skale()")
 #' @param elementy ramka danych opisujaca elementy skali - patrz http://zpd.ibe.edu.pl/doku.php?id=odbcskale
 #' @param nadpisz czy nadpisac skale, jesli jest juz zdefiniowana w bazie danych

@@ -1,4 +1,4 @@
-#	Copyright 2013 Mateusz Zoltak
+#  Copyright 2013-2015 Mateusz Zoltak
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published by
@@ -34,58 +34,48 @@
 #' @title Pobiera ramke danych z wynikami egzaminacyjnymi testow zrownujacych
 #' @description
 #' _
+#' @param src uchwyt źródła danych dplyr-a
 #' @param rodzajEgzaminu rodzaj egzaminu, ktorego wyniki maja zostac pobrane
 #' @param punktuj wybor, czy dane maja byc pobrane w postaci dystraktorow, czy punktow
 #' @param rok rok, z ktorego dane maja zostac pobrane
 #' @param idSkali identyfikator skali, ktora ma zostac zastosowana do danych
 #' @param skroc czy do danych zastosowac skrocenia skal opisane w skali
-#' @param zrodloDanychODBC nazwa zrodla danych ODBC, ktorego nalezy uzyc
-#' @return data frame
+#' @import dplyr
 #' @export
-pobierz_zrownywanie=function(
+pobierz_wyniki_zrownywania = function(
+  src,
 	rodzajEgzaminu, 
 	rok, 
-	punktuj=TRUE, 
-	idSkali=NULL,
-	skroc=TRUE,
-	zrodloDanychODBC='EWD'
+	punktuj = TRUE, 
+	idSkali = NULL,
+	skroc   = TRUE
 ){
-	P = odbcConnect(zrodloDanychODBC, readOnlyOptimize=T)
-	tryCatch({
-		if(!is.character(rodzajEgzaminu) | !is.vector(rodzajEgzaminu) | length(rodzajEgzaminu)>1)
-			stop('rodzajEgzaminu nie jest lancuchem znakow')
-		if(!is.numeric(rok))
-			stop('rok nie jest liczba')
-		if(!is.logical(punktuj) | !is.vector(punktuj) | length(punktuj)>1)
-			stop('punktuj nie jest wartoscia logiczna')
-		if((!is.numeric(idSkali) | !is.vector(idSkali) | length(idSkali)>1) & !is.null(idSkali))
-			stop('idSkali nie jest liczba')
-		if(!is.logical(skroc) | !is.vector(skroc) | length(skroc)>1)
-			stop('skroc nie jest wartoscia logiczna')
-		if(!is.null(idSkali))
-			idSkali = as.character(idSkali)
-		else idSkali = NA
+  regExp = paste0('^zrównywanie;', rodzajEgzaminu, ';', rok, ';.*$')
+	tests = get_tests(src) %>% 
+    collect() %>%
+    filter_(~grepl(regExp, opis))
+	if(nrow(tests) == 0){
+		stop('w bazie nie ma takiego zrownywania')
+	}
 		
-		ile = .sqlQuery(
-			P, 
-			"SELECT count(*) FROM testy WHERE opis LIKE ?", 
-			paste0('zrównywanie;%;', rok, ';%')
-		)
-		if(ile[1, 1] == 0){
-			stop('w bazie nie ma takiego zrownywania')
-		}
-		
-		tmp = .sqlQuery(
-			P, 
-			"SELECT zbuduj_widok_zrownywania('tmp', ?, ?, ?, ?, ?);", 
-			list(rodzajEgzaminu, rok, punktuj, idSkali, skroc)
-		)
-		dane = .sqlQuery(P, "SELECT * FROM tmp")
-		odbcClose(P)
-		return(dane)
-	},
-	error=function(e){
-		odbcClose(P)
-		.stop(e)
-	})
+	tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), runif(1))))
+  query = sprintf(
+    "SELECT zbuduj_widok_zrownywania(%s, %s, %d, %s, %s, %s, true)",
+    escape(tmpName),
+    escape(rodzajEgzaminu),
+    rok,
+    ifelse(punktuj, 'true', 'false'),
+    ifelse(is.null(idSkali), 'null', as.numeric(idSkali)),
+    ifelse(skroc, 'true', 'false')
+  )
+	DBI::dbGetQuery(src$con, query)
+	data = tbl(src, sql(paste0("SELECT * FROM ", tmpName)))
+
+	attr(data, 'idSkali') = idSkali
+  
+	return(data)
 }
+
+#' @rdname pobierz_wyniki_zrownywania
+#' @export
+get_eqaution_results = pobierz_wyniki_zrownywania

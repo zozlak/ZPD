@@ -3,7 +3,7 @@
 \alias{sprawdz_zrownanie}
 \title{Weryfikuje, czy dane zrownania zostaly poprawnie zaimportowane do bazy}
 \usage{
-sprawdz_zrownanie(rodzajEgzaminu, rok, kolumnaId, zrodloDanychODBC = "EWD")
+sprawdz_zrownanie(rodzajEgzaminu, rok, kolumnaId, src)
 }
 \arguments{
 \item{rodzajEgzaminu}{rodzaj egzaminu}
@@ -12,7 +12,7 @@ sprawdz_zrownanie(rodzajEgzaminu, rok, kolumnaId, zrodloDanychODBC = "EWD")
 
 \item{kolumnaId}{nazwa kolumny przechowujacej "zewnetrzne id"}
 
-\item{zrodloDanychODBC}{nazwa zrodla danych ODBC}
+\item{src}{zrodlo danych dplyr-a}
 }
 \value{
 [logical] TRUE, gdy dane zweryfikowane poprawnie, FALSE w p.p.

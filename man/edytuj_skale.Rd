@@ -18,6 +18,6 @@ edytuj_skale(idSkali, elementy, nadpisz = FALSE, zrodloDanychODBC = "EWD")
 [data.frame] zapisane elementy skali
 }
 \description{
-Patrz http://zpd.ibe.edu.pl/doku.php?id=odbcskale
+Patrz http://zpd.ibe.edu.pl/doku.php?id=r_zpd_skale
 }
 

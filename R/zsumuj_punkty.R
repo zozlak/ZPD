@@ -1,4 +1,4 @@
-#	Copyright 2013 Mateusz Zoltak
+#  Copyright 2013-2015 Mateusz Zoltak
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published by
@@ -30,54 +30,43 @@
 #    Powszechnej Licencji Publicznej GNU (GNU General Public License);
 #    jesli nie - napisz do Free Software Foundation, Inc., 59 Temple
 #    Place, Fifth Floor, Boston, MA  02110-1301  USA
+#
 
-#' @title Pobiera ramke danych z wynikami egzaminacyjnymi wskazanego testu
+#' @title Sumuje punkty w ramach testu
 #' @description
-#' _
-#' @param idTestu identyfikator, ktorego wyniki maja zostac pobrane
-#' @param punktuj wybor, czy dane maja byc pobrane w postaci dystraktorow, czy punktow
-#' @param idSkali identyfikator skali, ktora ma zostac zastosowana do danych
-#' @param skroc czy do danych zastosowac skrocenia skal opisane w skali
-#' @param zrodloDanychODBC nazwa zrodla danych ODBC, ktorego nalezy uzyc
-#' @return data frame
+#' Parametr "usunKryteria" dziala tylko dla danych w postaci szerokiej. Dla 
+#' danych w postaci dlugiej nastepuje agregacja, ktora sila rzeczy usuwa
+#' informacje o poszczegolnych kryteriach.
+#' @param dane wynik dzialania dowolnej z funkcji pobierz_wyniki_...()
+#' @param usunKryteria czy usuwac ze zbioru kolumny z wynikami za poszczegolne kryteria
+#' @import dplyr
 #' @export
-pobierz_test=function(
-	idTestu, 
-	punktuj=TRUE, 
-	idSkali=NULL,
-	skroc=TRUE,
-	zrodloDanychODBC='EWD'
+zsumuj_punkty = function(
+  dane,
+  usunKryteria = TRUE
 ){
-	P = odbcConnect(zrodloDanychODBC, readOnlyOptimize=T)
-	tryCatch({
-		if(!is.numeric(idTestu) | !is.vector(idTestu) | length(idTestu)>1)
-			stop('idTestu nie jest liczba')
-		if(!is.logical(punktuj) | !is.vector(punktuj) | length(punktuj)>1)
-			stop('punktuj nie jest wartoscia logiczna')
-		if((!is.numeric(idSkali) | !is.vector(idSkali) | length(idSkali)>1) & !is.null(idSkali))
-			stop('idSkali nie jest liczba')
-		if(!is.logical(skroc) | !is.vector(skroc) | length(skroc)>1)
-			stop('skroc nie jest wartoscia logiczna')
-		if(!is.null(idSkali))
-			idSkali = as.character(idSkali)
-		else idSkali = NA
-		
-		ile = .sqlQuery(P, "SELECT count(*) FROM testy WHERE id_testu = ?", idTestu)
-		if(ile[1, 1] == 0){
-			stop('w bazie nie ma takiego testu')
-		}
-		
-		tmp = .sqlQuery(
-			P, 
-			"SELECT zbuduj_widok_testu('tmp', ?, ?, ?, ?);", 
-			list(idTestu, punktuj, idSkali, skroc)
-		)
-		dane = .sqlQuery(P, "SELECT * FROM tmp")
-		odbcClose(P)
-		return(dane)
-	},
-	error=function(e){
-		odbcClose(P)
-		.stop(e)
-	})
+  colNames = colnames(dane)
+  if(sum(colNames == 'kryterium') == 1 & sum(colNames == 'ocena') == 1){
+    # postać długa
+    groupCols = colNames[! colNames %in% c('kryterium', 'odpowiedz', 'ocena')]
+    dane = dane %>% 
+      group_by_(.dots = as.list(groupCols)) %>%
+      summarize_('wynik = sum(odpowiedz)') %>%
+      ungroup()
+  } else if(sum(grepl('^[pk]_[0-9]+$', colNames)) > 0){
+    # postać szeroka
+    sumCols = grep('^[pk]_[0-9]+$', colNames, value = T)
+    sumForm = list(wynik = paste0(sumCols, collapse = '+'))
+    dane = dane %>% 
+      mutate_(.dots = sumForm)
+    if(usunKryteria == TRUE){
+      dane = dane %>% select_(.dots = as.list(paste0('-', sumCols)))
+    }
+  }
+  
+  return(dane)
 }
+
+#' @rdname zsumuj_punkty
+#' @export
+sum_results = zsumuj_punkty

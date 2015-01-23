@@ -39,7 +39,6 @@
 #' @param kolNrPV nazwa kolumny z numerem PV (gdy dane w postaci długiej)
 #' @param kolPozostale nazwy wszystkich innych kolumn, które mają zostać zachowane
 #' @return [data.frame] dane w postaci długiej (z kolumnami "nr_pv" i "wynik")
-#' @import reshape
 ramka_danych_pv = function(dane, kolPV='^[pP][vV]_[0-9]+|wynik$', kolNrPV='nr_pv', kolPozostale=NULL){
 	dane = as.data.frame(dane)
 	
@@ -53,7 +52,7 @@ ramka_danych_pv = function(dane, kolPV='^[pP][vV]_[0-9]+|wynik$', kolNrPV='nr_pv
 		stop('niejednoznaczna nazwa kolumny z numerem PV')
 	}	else if(length(kolNrPV) == 0){
 		# ramka danych w postaci szerokiej - skonwertuj do długiej
-		dane = melt(dane[, c(kolPozostale, kolPV)], id.vars=kolPozostale)	
+		dane = reshape2::melt(dane[, c(kolPozostale, kolPV)], id.vars=kolPozostale)	
 		names(dane) = sub('^variable$', 'nr_pv', names(dane))
 		names(dane) = sub('^value$', 'wynik', names(dane))
 	} else if(length(kolPV) != 1){

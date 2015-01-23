@@ -34,10 +34,12 @@
 
 #' @title Pobiera informacje o uczniach
 #' @param src uchwyt źródła danych dplyr-a
+#' @param daneOsobowe czy pobierac z bazy takze dane osobowe (wymaga specjalnych uprawnien)
 #' @import dplyr
 #' @export
 pobierz_uczniow = function(
-  src
+  src,
+  daneOsobowe = FALSE
 ){
   query = "
 	  SELECT o.*, oi.id AS id_cke
@@ -46,10 +48,13 @@ pobierz_uczniow = function(
 			LEFT JOIN obserwacje_id oi USING (id_obserwacji)
 	  WHERE oi.typ_id = 'cke' OR oi.typ_id IS NULL
 	"
+  if(daneOsobowe == TRUE){
+    query = sub('obserwacje o', 'dane_osobowe.obserwacje o', query)
+  }
   data = tbl(src, sql(query))
   return(data)
 }
 
-#' @rdname polacz
+#' @rdname pobierz_uczniow
 #' @export
 get_pupils = pobierz_uczniow

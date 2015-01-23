@@ -41,18 +41,20 @@ pobierz_testy = function(
 ){
   query = "
     SELECT 
-    	id_testu, ewd, arkusz, rodzaj_egzaminu, czesc_egzaminu, 
+      id_testu, ewd, arkusz, 
+      COALESCE(a.rodzaj_egzaminu, t.rodzaj_egzaminu_) AS rodzaj_egzaminu,
+      COALESCE(a.czesc_egzaminu, t.czesc_egzaminu_) AS czesc_egzaminu, 
       extract(year FROM COALESCE(a.data_egzaminu, t.data)) AS rok,
       COALESCE(a.data_egzaminu, t.data) AS data, 
-      COALESCE(t.opis, trim(rodzaj_egzaminu || ' ' || czesc_egzaminu) || ' ' || extract(year FROM data_egzaminu)) AS opis
+      opis
     FROM 
-    	testy t
-			LEFT JOIN arkusze a USING (arkusz)
+      testy t
+      LEFT JOIN arkusze a USING (arkusz)
 	"
   data = tbl(src, sql(query))
   return(data)
 }
 
-#' @rdname polacz
+#' @rdname pobierz_testy
 #' @export
 get_tests = pobierz_testy

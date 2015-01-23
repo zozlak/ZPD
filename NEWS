@@ -1,4 +1,23 @@
 --------------------
+Zmiany w ZPD 0.8 (2015-01-19)
+
+- Dostosowanie funkcji pobierz_testy() do zmian w strukturze bazy danych
+- Usunięcie funkcji (jako niezgodnych z nową filozofią pobierania danych):
+  - pobierz_czesc_egzaminu(), 
+  - pobierz_arkusz(), 
+  - pobierz_test(),
+  - znajdz_testy(),
+  - znajdz_skale()
+- Przepisanie funkcji pobierz_zrownywanie() na dplyr-a i zmiana jej nazwy na
+  pobierz_wyniki_zrownywania()
+- Dodanie do funkcji pobierz_wyniki_egzaminu() sprawdzania, czy dany egzamin 
+  jest w bazie i eleganckiego komunikowania, jesli nie
+- Dodanie funkcji:
+  - pobierz_odpowiedzi(),
+  - zsumuj_punkty(),
+  - normalizuj_ekwikwantylowo()
+
+--------------------
 Zmiany w ZPD 0.7.3 (2015-01-12)
 
 - Poprawki

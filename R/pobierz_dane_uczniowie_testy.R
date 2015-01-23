@@ -34,10 +34,12 @@
 
 #' @title Pobiera informacje o uczniach specyficzne dla testu / egzaminu
 #' @param src uchwyt źródła danych dplyr-a
+#' @param daneOsobowe czy pobierac z bazy takze dane osobowe (wymaga specjalnych uprawnien)
 #' @import dplyr
 #' @export
 pobierz_dane_uczniowie_testy = function(
-	src
+	src,
+  daneOsobowe = FALSE
 ){
 	query = "
 		SELECT 
@@ -48,10 +50,13 @@ pobierz_dane_uczniowie_testy = function(
 			JOIN testy t USING (id_testu)
 			LEFT JOIN arkusze a USING (arkusz)
 	"
+  if(daneOsobowe == TRUE){
+    query = sub('testy_obserwacje tob', 'dane_osobowe.testy_obserwacje tob', query)
+  }
 	data = tbl(src, sql(query))
 	return(data)
 }
 
-#' @rdname polacz
+#' @rdname pobierz_dane_uczniowie_testy
 #' @export
 get_pupils_tests_data = pobierz_dane_uczniowie_testy

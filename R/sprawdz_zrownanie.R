@@ -41,40 +41,39 @@
 #' }
 #' @param rodzajEgzaminu rodzaj egzaminu
 #' @param rok rok badania zrownujacego
-#' @param zrodloDanychODBC nazwa zrodla danych ODBC
 #' @param kolumnaId nazwa kolumny przechowujacej "zewnetrzne id"
+#' @param src zrodlo danych dplyr-a
 #' @return [logical] TRUE, gdy dane zweryfikowane poprawnie, FALSE w p.p.
 #' @examples
 #' \dontrun{
 #' 	sprawdz_zrownanie('sprawdzian', 2014, 'zbiór.zrównywanie')
 #' }
-#' @import plyr
+#' @import dplyr
 #' @export
-sprawdz_zrownanie = function(rodzajEgzaminu, rok, kolumnaId, zrodloDanychODBC='EWD'){
+sprawdz_zrownanie = function(rodzajEgzaminu, rok, kolumnaId, src){
   
 	cat('Pobieranie wyników zrównań z bazy...')
-	daneBaza = pobierz_zrownywanie(rodzajEgzaminu, rok, F, zrodloDanychODBC=zrodloDanychODBC)
+	daneBaza = pobierz_wyniki_zrownywania(rodzajEgzaminu, rok, F)
 	
 	testy = unique(daneBaza$id_testu)
 	if(length(testy) == 0){
 		stop('W bazie brak testow zrownujacych')
 	}
 	
-	sumyBaza = pobierz_zrownywanie(rodzajEgzaminu, rok, T, zrodloDanychODBC=zrodloDanychODBC)
+	sumyBaza = pobierz_wyniki_zrownywania(src, rodzajEgzaminu, rok, T)
 	sumyBaza$suma = rowSums(sumyBaza[, grep('^k_', names(sumyBaza))], na.rm=T)
 	sumyBaza = sumyBaza[, -grep('^k_', names(sumyBaza))]
-	daneBaza = join(daneBaza, sumyBaza, by=intersect(names(daneBaza), names(sumyBaza)))
+	daneBaza = plyr::join(daneBaza, sumyBaza, by=intersect(names(daneBaza), names(sumyBaza)))
 	rm(sumyBaza)
 	cat('\n')	
 	
 	cat('Pobierane informacji o zadaniach i uczniach...')
-	P = odbcConnect(zrodloDanychODBC)
-	schematyOdp = sqlQuery(P, "SELECT id_kryterium, kolejnosc, dystraktor
-												 			FROM sl_schematy_odp_dystr JOIN pytania USING (schemat_odp) JOIN kryteria_oceny USING (id_pytania)")
-	obserwacjeId = sqlQuery(P, "SELECT id_obserwacji, id
+	schematyOdp = tbl(src, sql("SELECT id_kryterium, kolejnosc, dystraktor
+												 			FROM sl_schematy_odp_dystr JOIN pytania USING (schemat_odp) JOIN kryteria_oceny USING (id_pytania)"))
+	obserwacjeId = tbl(src, sql("SELECT id_obserwacji, id
 															FROM obserwacje_id
-															WHERE typ_id = 'zbiór zrównywanie'")
-	testyMaks = sqlQuery(P, "SELECT id_testu, sum(l_punktow) AS maks
+															WHERE typ_id = 'zbiór zrównywanie'"))
+	testyMaks = tbl(src, sql("SELECT id_testu, sum(l_punktow) AS maks
 											 			FROM
 															(
 												 				SELECT 
@@ -87,11 +86,10 @@ sprawdz_zrownanie = function(rodzajEgzaminu, rok, kolumnaId, zrodloDanychODBC='E
 												 				WHERE opis <> 'wal' 
 												 				GROUP BY 1, 2
 												 			) AS t 
-											 			GROUP BY 1")
-	odbcClose(P)
+											 			GROUP BY 1"))
 	cat('\n\n')
 	
-	daneBaza = join(daneBaza, obserwacjeId, by='id_obserwacji', type='left')
+	daneBaza = plyr::join(daneBaza, obserwacjeId, by='id_obserwacji', type='left')
 	rm(obserwacjeId)
 	
 	bledy = c()

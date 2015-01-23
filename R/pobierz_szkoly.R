@@ -57,6 +57,6 @@ pobierz_szkoly = function(
   return(data)
 }
 
-#' @rdname polacz
+#' @rdname pobierz_szkoly
 #' @export
 get_schools = pobierz_szkoly
