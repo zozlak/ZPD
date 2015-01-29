@@ -65,6 +65,14 @@ normalizuj_ekwikwantylowo = function(
   idSkali  = NULL,
   zBazy    = TRUE
 ){
+  stopifnot(
+    is.data.frame(dane) | is.tbl(dane),
+    is.null(src) | is.src(src),
+    is.vector(kolWynik), is.character(kolWynik), length(kolWynik) == 1,
+    is.null(idSkali) | is.vector(idSkali) & is.numeric(idSkali) & length(idSkali) == 1,
+    is.vector(zBazy), is.logical(zBazy), length(zBazy) == 1, zBazy %in% c(T, F)
+  )
+  
   resultCol = paste0(kolWynik, '_norm')
   if(zBazy == TRUE){
     stopifnot(
@@ -81,7 +89,7 @@ normalizuj_ekwikwantylowo = function(
       select_('wartosc', 'wartosc_zr') %>%
       rename_(.dots = setNames(list('wartosc', 'wartosc_zr'), c(kolWynik, resultCol)))
     if(nrow(norms %>% collect()) == 0){
-      stop('W bazie nie ma określonych norm dla tej skali')
+      stop('W bazie nie ma określonych norm dla tej skali (lub nie ma takiej skali)')
     }
   }else{
     dane = as.data.frame(dane)

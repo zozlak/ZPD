@@ -1,4 +1,4 @@
-#  Copyright 2013 Mateusz Zoltak
+#  Copyright 2013-2015 Mateusz Zoltak
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published by
@@ -31,30 +31,27 @@
 #    jesli nie - napisz do Free Software Foundation, Inc., 59 Temple
 #    Place, Fifth Floor, Boston, MA  02110-1301  USA
 
-#' @title Wczytuje wskazany plik SPSS stosujac standardowe przeksztalcenia
-#' @description 
-#' Funkcja:
-#' \itemize{
-#' 	\item wczytuje plik SPSS z to.data.frame=T, use.missings=F, trim.factor.names=T
-#' 	\item zamienia nazwy wszystkich zmiennych na pisane malymi literami
-#' 	\item zamienia wszystkie factor-y na zwykle zmienne typu character
-#' 	\item wykonuje str_trim() na wszystkich zmiennych
-#' }
-#' @param plik sciezka do pliku SPSS
-#' @return [data.frame] wczytane dane
-#' @examples
-#' \dontrun{
-#' 	wczytaj_spss('gim10_07.sav')
-#' }
+#' @title Pobiera informacje o liczbie uczniów uwzględnionych przy wyliczaniu
+#'   wskaźników w podziale na przedmioty (dokładniej części egzaminu)
+#' @param src uchwyt źródła danych dplyr-a
+#' @import dplyr
 #' @export
-wczytaj_spss = function(plik){
-  dane = suppressWarnings(suppressMessages(foreign::read.spss(plik, to.data.frame=T, use.missings=F, trim.factor.names=T)))
-  names(dane) = tolower(names(dane))
-  for(i in 1:ncol(dane)){
-    if(is.factor(dane[, i]))
-      dane[, i] = as.character(dane[, i])
-    if(is.character(dane[, i]))
-      dane[, i] = stringi::stri_trim(dane[, i])
-  }
-  return(dane)
+pobierz_wartosci_wskaznikow_lu = function(
+  src
+){
+  stopifnot(is.src(src))
+  
+  query = "
+    SELECT 
+      id_ww, rodzaj_egzaminu, czesc_egzaminu, lu, lu_ewd, lu_wszyscy
+    FROM
+      liczba_zdajacych_
+      JOIN sl_kategorie_lu USING (rodzaj_wsk, wskaznik, kategoria_lu)
+    WHERE
+      rodzaj_egzaminu IS NOT NULL
+    ORDER BY 1, 2, 3
+  "
+  data = tbl(src, sql(query))
+  return(data)
 }
+attr(pobierz_wartosci_wskaznikow_lu, 'grupa') = 'wartosciWskaznikow'

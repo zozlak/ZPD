@@ -75,8 +75,8 @@ sprawdz_realizacje = function(plik, codebook, dane, przedmGim=NULL){
 		names(dane) = sub(paste0('udzial_', przedmGim), 'udzial', names(dane))
 	}
 	
-	dane$id_szk = str_trim(paste(dane$przedm, dane$id_szk))
-	realizacja$id_szk = str_trim(paste(realizacja$przedm, realizacja$id_szk))
+	dane$id_szk = stringi::stri_trim(paste(dane$przedm, dane$id_szk))
+	realizacja$id_szk = stringi::stri_trim(paste(realizacja$przedm, realizacja$id_szk))
 	
 	# wszyscy niewykluczeni uczniowie - sprawdzenie zgodności id_szk i id_kl
 	tmp = aggregate(dane[, 'id_ucz'], list('id_szk' = dane$id_szk, 'id_kl' = dane$id_kl), length)

@@ -49,7 +49,3 @@ polacz = function(
 ){
   return(src_postgres(dbname, host, port, user, password))
 }
-
-#' @rdname polacz
-#' @export
-zpd_connect = polacz

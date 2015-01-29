@@ -43,7 +43,7 @@
 #' }
 #' W pliku SAV stosowane są tylko trzy typy zmiennych:
 #' \itemize{
-#'  \item string N, gdzie N jest odczytywane za pomocą stringr::str_length()
+#'  \item string N, gdzie N jest odczytywane za pomocą stringr::stringi::stri_length()
 #'  \item numeric N,M, gdzie N i M są odczytywane w przemyślny sposób
 #' }
 #' @param dane ramka danych do zapisania
@@ -102,7 +102,7 @@ typDanych = function(kolumna){
   }
   
   if(is.character(kolumna)){
-    N = max(str_length(kolumna))
+    N = max(stringi::stri_length(kolumna))
     if(is.infinite(N)){
       N = 1
     }
@@ -115,7 +115,7 @@ typDanych = function(kolumna){
     tmp = sprintf("%.15f", kolumna)
     tmp = sub('0+$', '', tmp)
     tmp = sub('.*[.]', '', tmp)
-    M = max(str_length(tmp))
+    M = max(stringi::stri_length(tmp))
   }
   wMax = max(abs(calk))
   if(is.infinite(wMax)){

@@ -42,14 +42,21 @@
 #' @param kolNrPV nazwa kolumny z numerem PV (gdy dane w postaci długiej)
 #' @return [data.frame] zagregowane wartości PWE
 #' @export
-agreguj_pwe = function(dane, kolGrupy, wariancjaPop = 0, bladZrwn = 0, kolPV='^[pP][vV]_[0-9]+|wynik$', kolNrPV='nr_pv'){
+agreguj_pwe = function(
+  dane, 
+  kolGrupy, 
+  wariancjaPop = 0, 
+  bladZrwn     = 0, 
+  kolPV        = '^[pP][vV]_[0-9]+|wynik$', 
+  kolNrPV      = 'nr_pv'
+){
   stopifnot(
-    is.numeric(bladZrwn),
-    length(bladZrwn) == 1,
-    !is.na(bladZrwn),
-    is.numeric(wariancjaPop),
-    length(wariancjaPop) == 1,
-    !is.na(wariancjaPop)
+    is.data.frame(dane) | is.tbl(dane),
+    is.vector(kolGrupy), is.character(kolGrupy), length(kolGrupy) > 0,
+    is.vector(wariancjaPop), is.numeric(wariancjaPop), length(wariancjaPop) == 1, !is.na(wariancjaPop),
+    is.vector(bladZrwn), is.numeric(bladZrwn), length(bladZrwn) == 1, !is.na(bladZrwn),
+    is.vector(kolPV), is.character(kolPV), length(kolPV) == 1, !is.na(kolPV),
+    is.vector(kolNrPV), is.character(kolNrPV), length(kolNrPV) == 1, !is.na(kolNrPV)
   )
   if(bladZrwn != 0){
     warning('Błąd zrównywania na ogół jest już wliczony w PV. Use at your own risk!')

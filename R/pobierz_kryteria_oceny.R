@@ -1,4 +1,4 @@
-#  Copyright 2013 Mateusz Zoltak
+#  Copyright 2013-2015 Mateusz Zoltak
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published by
@@ -31,30 +31,50 @@
 #    jesli nie - napisz do Free Software Foundation, Inc., 59 Temple
 #    Place, Fifth Floor, Boston, MA  02110-1301  USA
 
-#' @title Wczytuje wskazany plik SPSS stosujac standardowe przeksztalcenia
-#' @description 
-#' Funkcja:
-#' \itemize{
-#' 	\item wczytuje plik SPSS z to.data.frame=T, use.missings=F, trim.factor.names=T
-#' 	\item zamienia nazwy wszystkich zmiennych na pisane malymi literami
-#' 	\item zamienia wszystkie factor-y na zwykle zmienne typu character
-#' 	\item wykonuje str_trim() na wszystkich zmiennych
-#' }
-#' @param plik sciezka do pliku SPSS
-#' @return [data.frame] wczytane dane
-#' @examples
-#' \dontrun{
-#' 	wczytaj_spss('gim10_07.sav')
-#' }
+#' @title Pobiera informacje o kryteriach oceny i pytaniach
+#' @param src uchwyt źródła danych dplyr-a
+#' @import dplyr
 #' @export
-wczytaj_spss = function(plik){
-  dane = suppressWarnings(suppressMessages(foreign::read.spss(plik, to.data.frame=T, use.missings=F, trim.factor.names=T)))
-  names(dane) = tolower(names(dane))
-  for(i in 1:ncol(dane)){
-    if(is.factor(dane[, i]))
-      dane[, i] = as.character(dane[, i])
-    if(is.character(dane[, i]))
-      dane[, i] = stringi::stri_trim(dane[, i])
-  }
-  return(dane)
+pobierz_kryteria_oceny = function(
+  src
+){
+  stopifnot(is.src(src))
+  
+  query = "
+    SELECT
+      'k_' || id_kryterium AS kryterium,
+      id_wiazki, id_pytania, p.typ AS typ_pytania, schemat_odp,
+      substring(p.opis from '[^;]+$') AS numer_pytania,
+      k.opis AS numer_kryterium,
+      l_punktow, sposob_oceny, schemat_pkt,
+      s.tag AS standard,
+      sz.tag AS standard_szcz,
+      o.tag AS opis_standardu,
+      string_agg(DISTINCT pt.typ, ', ' ORDER BY pt.typ) AS tresc_pytania,
+      string_agg(DISTINCT wt.typ, ', ' ORDER BY wt.typ) AS tresc_wiazki
+    FROM 
+      pytania p 
+      JOIN kryteria_oceny k USING (id_pytania)
+      LEFT JOIN pytania_tresci pt USING (id_pytania)
+      LEFT JOIN pytania_wiazki_tresci wt USING (id_wiazki)
+      LEFT JOIN (
+        SELECT * 
+        FROM kryteria_oceny_tagi JOIN sl_tagi USING (tag)
+        WHERE grupa = 'standard egzaminacyjny'
+      ) AS s USING (id_kryterium)
+      LEFT JOIN (
+        SELECT * 
+        FROM kryteria_oceny_tagi JOIN sl_tagi USING (tag)
+        WHERE grupa = 'standard egzaminacyjny - szczegółowy'
+      ) AS sz USING (id_kryterium)
+      LEFT JOIN (
+        SELECT * 
+        FROM kryteria_oceny_tagi JOIN sl_tagi USING (tag)
+        WHERE grupa = 'standard egzaminacyjny - opis'
+      ) AS o USING (id_kryterium)
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13
+  "
+  data = tbl(src, sql(query))
+  return(data)
 }
+attr(pobierz_kryteria_oceny, 'grupa') = 'kryteriaOceny'

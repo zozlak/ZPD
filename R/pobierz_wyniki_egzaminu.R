@@ -53,15 +53,26 @@ pobierz_wyniki_egzaminu = function(
   idSkali = NULL,
   skroc   = FALSE
 ){
-  tests = get_tests(src) %>% 
+  stopifnot(
+    is.src(src),
+    is.vector(rodzajEgzaminu), is.character(rodzajEgzaminu), length(rodzajEgzaminu) == 1,
+    is.vector(czescEgzaminu), is.character(czescEgzaminu), length(czescEgzaminu) == 1,
+    is.vector(rokEgzaminu), is.numeric(rokEgzaminu), length(rokEgzaminu) == 1, 
+    is.vector(czyEwd), is.logical(czyEwd), length(czyEwd) == 1, czyEwd %in% c(T, F),
+    is.vector(punktuj), is.logical(punktuj), length(punktuj) == 1, punktuj %in% c(T, F),
+    is.null(idSkali) | is.vector(idSkali) & is.numeric(idSkali) & length(idSkali) == 1,
+    is.vector(skroc), is.logical(skroc), length(skroc) == 1, skroc %in% c(T, F)
+  )
+
+  tests = pobierz_testy(src) %>% 
     collect() %>%
     filter_(~rodzaj_egzaminu == rodzajEgzaminu, ~czesc_egzaminu == czescEgzaminu, ~rok == rokEgzaminu) %>%
-    group_by_('ewd') %>%
+    group_by_('dane_ewd') %>%
     summarize(n = n())
   if(nrow(tests) == 0){
     stop('w bazie nie ma wyników takiego egzaminu')
   }
-  if(nrow(tests %>% filter_(~ewd == czyEwd)) == 0){
+  if(nrow(tests %>% filter_(~dane_ewd == czyEwd)) == 0){
     stop('w bazie nie ma wyników takiego egzaminu, ale istnieją dla innego źródła danych (patrz parametr czyEwd)')
   }
   
@@ -84,7 +95,7 @@ pobierz_wyniki_egzaminu = function(
   
   return(data)	
 }
-
-#' @rdname pobierz_wyniki_egzaminu
-#' @export
-get_exam_results = pobierz_wyniki_egzaminu
+attr(pobierz_wyniki_egzaminu, 'grupa') = 'wyniki'
+attr(pobierz_wyniki_egzaminu, 'testArgs') = list(
+  'rodzajEgzaminu' = 'sprawdzian', 'czescEgzaminu' = '', 'rok' = 2010, 'czyEwd' = TRUE, 'idSkali' = 41
+)

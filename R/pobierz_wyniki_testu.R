@@ -47,7 +47,15 @@ pobierz_wyniki_testu = function(
   idSkali        = NULL,
   skroc          = FALSE
 ){
-  tests = get_tests(src) %>% 
+  stopifnot(
+    is.src(src),
+    is.vector(idTestu), is.numeric(idTestu), length(idTestu) == 1, 
+    is.vector(punktuj), is.logical(punktuj), length(punktuj) == 1, punktuj %in% c(T, F),
+    is.null(idSkali) | is.vector(idSkali) & is.numeric(idSkali) & length(idSkali) == 1,
+    is.vector(skroc), is.logical(skroc), length(skroc) == 1, skroc %in% c(T, F)
+  )
+  
+  tests = pobierz_testy(src) %>% 
     collect() %>%
     filter_(~id_testu == idTestu)
   if(nrow(tests) == 0){
@@ -70,7 +78,5 @@ pobierz_wyniki_testu = function(
   
   return(data)	
 }	
-
-#' @rdname pobierz_wyniki_testu
-#' @export
-get_test_results = pobierz_wyniki_testu
+attr(pobierz_wyniki_testu, 'grupa') = 'wyniki'
+attr(pobierz_wyniki_testu, 'testArgs') = list('idTestu' = 636, 'idSkali' = 41)

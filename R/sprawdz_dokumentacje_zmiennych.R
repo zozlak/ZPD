@@ -1,4 +1,4 @@
-#  Copyright 2013 Mateusz Zoltak
+#  Copyright 2013-2015 Mateusz Zoltak
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published by
@@ -31,30 +31,49 @@
 #    jesli nie - napisz do Free Software Foundation, Inc., 59 Temple
 #    Place, Fifth Floor, Boston, MA  02110-1301  USA
 
-#' @title Wczytuje wskazany plik SPSS stosujac standardowe przeksztalcenia
+#' @title Zbiera nazwy wszystkich zmiennych zwracanych przez funkcje pobierz_...()
 #' @description 
-#' Funkcja:
-#' \itemize{
-#' 	\item wczytuje plik SPSS z to.data.frame=T, use.missings=F, trim.factor.names=T
-#' 	\item zamienia nazwy wszystkich zmiennych na pisane malymi literami
-#' 	\item zamienia wszystkie factor-y na zwykle zmienne typu character
-#' 	\item wykonuje str_trim() na wszystkich zmiennych
-#' }
-#' @param plik sciezka do pliku SPSS
-#' @return [data.frame] wczytane dane
-#' @examples
-#' \dontrun{
-#' 	wczytaj_spss('gim10_07.sav')
-#' }
-#' @export
-wczytaj_spss = function(plik){
-  dane = suppressWarnings(suppressMessages(foreign::read.spss(plik, to.data.frame=T, use.missings=F, trim.factor.names=T)))
-  names(dane) = tolower(names(dane))
-  for(i in 1:ncol(dane)){
-    if(is.factor(dane[, i]))
-      dane[, i] = as.character(dane[, i])
-    if(is.character(dane[, i]))
-      dane[, i] = stringi::stri_trim(dane[, i])
+#' Funkcja używana do utrzymywania aktualności dokumentacji grup danych oraz
+#' weryfikacji, czy wszystkie funkcje pobierające (wyłączywszy te pobierające
+#' wyniki w postaci szerokiej) odpalają się w domyślnej parametryzacji.
+#' @param src uchwyt źródła danych dplyr-a
+.sprawdz_dokumentacje_zmiennych = function(
+  src
+){
+  stopifnot(is.src(src))
+  
+  obj = objects('package:ZPD')
+
+  vars = c()
+  grps = c()
+  funcs = c()
+  for(f in obj){
+    fname = f
+    f = eval(parse(text = f))
+    g = attr(f, 'grupa')
+    aa = attr(f, 'testArgs')
+    if(is.function(f) & !is.null(g)){
+      a = list('src' = src)
+      if(!is.null(aa)){
+        a = append(a, aa)
+      }
+      tmp = colnames(do.call(f, a))
+      
+      tmp = sub('^([pk])_[0-9]+$', '\\1_LICZBA', tmp)
+      tmp = unique(tmp)
+
+      vars = append(vars, tmp)
+      grps = append(grps, rep(g, length(tmp)))
+      funcs = append(funcs, rep(fname, length(tmp)))
+    }
   }
-  return(dane)
+  vars = data_frame('zmienna' = vars, 'grupa_danych' = grps, 'funkcja' = funcs)
+  vars$pakiet = TRUE
+  
+  missing = tbl(src, sql("SELECT zmienna, grupa_danych, funkcja, true AS baza FROM sl_wiki_zmienne")) %>% 
+    collect() %>%
+    full_join(vars) %>%
+    filter_(~is.na(baza) | is.na(pakiet))
+  
+  return(missing)
 }

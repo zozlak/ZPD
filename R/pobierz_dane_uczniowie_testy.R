@@ -41,6 +41,11 @@ pobierz_dane_uczniowie_testy = function(
 	src,
   daneOsobowe = FALSE
 ){
+  stopifnot(
+    is.src(src),
+    is.vector(daneOsobowe), is.logical(daneOsobowe), length(daneOsobowe) == 1, daneOsobowe %in% c(TRUE, FALSE)
+  )
+  
 	query = "
 		SELECT 
 			tob.*, 
@@ -53,10 +58,8 @@ pobierz_dane_uczniowie_testy = function(
   if(daneOsobowe == TRUE){
     query = sub('testy_obserwacje tob', 'dane_osobowe.testy_obserwacje tob', query)
   }
+
 	data = tbl(src, sql(query))
 	return(data)
 }
-
-#' @rdname pobierz_dane_uczniowie_testy
-#' @export
-get_pupils_tests_data = pobierz_dane_uczniowie_testy
+attr(pobierz_dane_uczniowie_testy, 'grupa') = 'uczniowieTesty'

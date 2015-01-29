@@ -1,4 +1,4 @@
-#  Copyright 2013 Mateusz Zoltak
+#  Copyright 2013-2015 Mateusz Zoltak
 #
 #    This program is free software; you can redistribute it and/or modify
 #    it under the terms of the GNU Lesser General Public License as published by
@@ -31,30 +31,26 @@
 #    jesli nie - napisz do Free Software Foundation, Inc., 59 Temple
 #    Place, Fifth Floor, Boston, MA  02110-1301  USA
 
-#' @title Wczytuje wskazany plik SPSS stosujac standardowe przeksztalcenia
-#' @description 
-#' Funkcja:
-#' \itemize{
-#' 	\item wczytuje plik SPSS z to.data.frame=T, use.missings=F, trim.factor.names=T
-#' 	\item zamienia nazwy wszystkich zmiennych na pisane malymi literami
-#' 	\item zamienia wszystkie factor-y na zwykle zmienne typu character
-#' 	\item wykonuje str_trim() na wszystkich zmiennych
-#' }
-#' @param plik sciezka do pliku SPSS
-#' @return [data.frame] wczytane dane
-#' @examples
-#' \dontrun{
-#' 	wczytaj_spss('gim10_07.sav')
-#' }
+#' @title Pobiera parametry kryteriów i pseudokryteriów obliczone w skalowaniach
+#' @param src uchwyt źródła danych dplyr-a 
+#' @import dplyr
 #' @export
-wczytaj_spss = function(plik){
-  dane = suppressWarnings(suppressMessages(foreign::read.spss(plik, to.data.frame=T, use.missings=F, trim.factor.names=T)))
-  names(dane) = tolower(names(dane))
-  for(i in 1:ncol(dane)){
-    if(is.factor(dane[, i]))
-      dane[, i] = as.character(dane[, i])
-    if(is.character(dane[, i]))
-      dane[, i] = stringi::stri_trim(dane[, i])
-  }
-  return(dane)
+pobierz_parametry = function(
+  src
+){
+  stopifnot(is.src(src))
+  
+  query = "
+    SELECT 
+      id_skali, skalowanie, 
+      COALESCE('k_' || id_kryterium, 'p_' || id_pseudokryterium) AS kryterium, 
+      parametr, model, wartosc, bs
+    FROM
+      skalowania_elementy
+      JOIN skale_elementy USING (id_skali, kolejnosc)
+    ORDER BY id_skali, kolejnosc
+  "
+  data = tbl(src, sql(query))
+  return(data)  
 }
+attr(pobierz_parametry, 'grupa') = 'parametry'

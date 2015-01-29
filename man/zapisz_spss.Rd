@@ -28,7 +28,7 @@ Zapis realizowany jest następująco:
 }
 W pliku SAV stosowane są tylko trzy typy zmiennych:
 \itemize{
- \item string N, gdzie N jest odczytywane za pomocą stringr::str_length()
+ \item string N, gdzie N jest odczytywane za pomocą stringr::stringi::stri_length()
  \item numeric N,M, gdzie N i M są odczytywane w przemyślny sposób
 }
 }

@@ -50,16 +50,15 @@
 #' @param P otwarte polaczenie ODBC
 #' @param sql polecenie SQL do wykonania
 #' @return data.frame
-#' @import RODBCext
 .sqlQuery = function(P, sql, dane = NULL){
-	odbcClearError(P)
-	tmp = sqlExecute(P, sql, dane, fetch=T, errors=F, stringsAsFactors=F, dec='.')
+	RODBC::odbcClearError(P)
+	tmp = RODBCext::sqlExecute(P, sql, dane, fetch=T, errors=F, stringsAsFactors=F, dec='.')
 	if(!is.data.frame(tmp)){
 		if(tmp[1] == -2){
 			return(NULL) # brak danych
 		}
 	}
-	blad = odbcGetErrMsg(P)
+	blad = RODBC::odbcGetErrMsg(P)
 	if(length(blad) > 0){
 		stop(tmp[1])
 	}

@@ -50,6 +50,20 @@ pobierz_odpowiedzi = function(
   idSkali = NULL,
   skroc   = FALSE
 ){
+  stopifnot(
+    is.src(src),
+    is.null(idSkali) | is.vector(idSkali) & is.numeric(idSkali) & length(idSkali) == 1,
+    is.vector(skroc), is.logical(skroc), length(skroc) == 1, skroc %in% c(T, F)
+  )
+
+  if(!is.null(idSkali)){
+    query = sprintf("SELECT * FROM skale_elementy WHERE id_skali = %d", idSkali)
+    scale = tbl(src, sql(query)) %>% collect()
+    if(nrow(scale) == 0){
+      stop('Nie ma takiej skali lub skala nie ma określonych elementów')
+    }
+  }
+    
   query = "
     SELECT 
       id_obserwacji, id_testu, id_szkoly, extract(year FROM COALESCE(a.data_egzaminu, t.data)) AS rok, 
@@ -114,7 +128,4 @@ pobierz_odpowiedzi = function(
   
   return(data)  
 }
-
-#' @rdname pobierz_odpowiedzi
-#' @export
-get_answers = pobierz_odpowiedzi
+attr(pobierz_odpowiedzi, 'grupa') = 'wyniki'

@@ -39,9 +39,11 @@
 pobierz_oszacowania_uczniow = function(
   src
 ){
+  stopifnot(is.src(src))
+  
   query = "
     SELECT 
-			so.*, 
+			so.*,
       tob.id_szkoly,
 			extract(year FROM COALESCE(a.data_egzaminu, t.data)) AS rok
     FROM 
@@ -53,8 +55,4 @@ pobierz_oszacowania_uczniow = function(
   data = tbl(src, sql(query))
   return(data)
 }
-
-#' @rdname pobierz_oszacowania_uczniow
-#' @export
-get_pupils_estimates = pobierz_oszacowania_uczniow
-  
+attr(pobierz_oszacowania_uczniow, 'grupa') = 'oszacowania'

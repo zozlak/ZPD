@@ -45,6 +45,11 @@ zsumuj_punkty = function(
   dane,
   usunKryteria = TRUE
 ){
+  stopifnot(
+    is.data.frame(dane) | is.src(dane),
+    is.vector(usunKryteria), is.logical(usunKryteria), length(usunKryteria) == 1, usunKryteria %in% c(T, F)
+  )
+  
   colNames = colnames(dane)
   if(sum(colNames == 'kryterium') == 1 & sum(colNames == 'ocena') == 1){
     # postać długa
@@ -66,7 +71,3 @@ zsumuj_punkty = function(
   
   return(dane)
 }
-
-#' @rdname zsumuj_punkty
-#' @export
-sum_results = zsumuj_punkty

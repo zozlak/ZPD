@@ -32,8 +32,6 @@
 #    Place, Fifth Floor, Boston, MA  02110-1301  USA
 
 #' @title Pobiera ramke danych z wynikami egzaminacyjnymi testow zrownujacych
-#' @description
-#' _
 #' @param src uchwyt źródła danych dplyr-a
 #' @param rodzajEgzaminu rodzaj egzaminu, ktorego wyniki maja zostac pobrane
 #' @param punktuj wybor, czy dane maja byc pobrane w postaci dystraktorow, czy punktow
@@ -50,10 +48,19 @@ pobierz_wyniki_zrownywania = function(
 	idSkali = NULL,
 	skroc   = TRUE
 ){
+  stopifnot(
+    is.src(src),
+    is.vector(rodzajEgzaminu), is.character(rodzajEgzaminu), length(rodzajEgzaminu) == 1,
+    is.vector(rok), is.numeric(rok), length(rok) == 1, 
+    is.vector(punktuj), is.logical(punktuj), length(punktuj) == 1, punktuj %in% c(T, F),
+    is.null(idSkali) | is.vector(idSkali) & is.numeric(idSkali) & length(idSkali) == 1,
+    is.vector(skroc), is.logical(skroc), length(skroc) == 1, skroc %in% c(T, F)
+  )
+  
   regExp = paste0('^zrównywanie;', rodzajEgzaminu, ';', rok, ';.*$')
-	tests = get_tests(src) %>% 
+	tests = pobierz_testy(src) %>% 
     collect() %>%
-    filter_(~grepl(regExp, opis))
+    filter_(~grepl(regExp, opis_testu))
 	if(nrow(tests) == 0){
 		stop('w bazie nie ma takiego zrownywania')
 	}
@@ -75,7 +82,7 @@ pobierz_wyniki_zrownywania = function(
   
 	return(data)
 }
-
-#' @rdname pobierz_wyniki_zrownywania
-#' @export
-get_eqaution_results = pobierz_wyniki_zrownywania
+attr(pobierz_wyniki_zrownywania, 'grupa') = 'wyniki'
+attr(pobierz_wyniki_zrownywania, 'testArgs') = list(
+  'rodzajEgzaminu' = 'sprawdzian', 'rok' = 2013, 'idSkali' = 41
+)

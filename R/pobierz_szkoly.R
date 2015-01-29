@@ -39,12 +39,13 @@
 pobierz_szkoly = function(
   src
 ){
+  stopifnot(is.src(src))
+
   query = "
 	  SELECT
       s.id_szkoly, s.typ_szkoly, s.publiczna, s.dla_doroslych, s.specjalna, s.przyszpitalna,
-      sd.rok, sd.id_szkoly_oke, sd.nazwa, sd.adres, sd.miejscowosc, sd.pna, sd.poczta, sd.wielkosc_miejscowosci, sd.matura_miedzynarodowa, 
-      sd.id_wojewodztwa * 10000 + sd.id_powiatu * 100 + sd.id_gminy AS teryt,
-      sd.id_wojewodztwa, sd.id_powiatu, sd.id_gminy,
+      sd.rok, sd.id_szkoly_oke, sd.nazwa AS nazwa_szkoly, sd.adres, sd.miejscowosc, sd.pna, sd.poczta, sd.wielkosc_miejscowosci, sd.matura_miedzynarodowa, 
+      sd.id_wojewodztwa * 10000 + sd.id_powiatu * 100 + sd.id_gminy AS teryt_szkoly,
       w.nazwa AS wojewodztwo, p.nazwa AS powiat, g.nazwa AS gmina, g.rodzaj_gminy
 	  FROM
 	    szkoly s
@@ -56,7 +57,4 @@ pobierz_szkoly = function(
   data = tbl(src, sql(query))
   return(data)
 }
-
-#' @rdname pobierz_szkoly
-#' @export
-get_schools = pobierz_szkoly
+attr(pobierz_szkoly, 'grupa') = 'szkoly'

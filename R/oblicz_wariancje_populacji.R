@@ -39,7 +39,17 @@
 #' @param kolNrPV nazwa kolumny z numerem PV (gdy dane w postaci długiej)
 #' @return [numeric] obliczona wariancja
 #' @export
-oblicz_wariancje_populacji = function(dane, kolPV='^[pP][vV]_[0-9]+|wynik$', kolNrPV='nr_pv'){
+oblicz_wariancje_populacji = function(
+  dane, 
+  kolPV='^[pP][vV]_[0-9]+|wynik$', 
+  kolNrPV='nr_pv'
+){
+  stopifnot(
+    is.data.frame(dane) | is.tbl(dane),
+    is.vector(kolPV), is.character(kolPV), length(kolPV) == 1, !is.na(kolPV),
+    is.vector(kolNrPV), is.character(kolNrPV), length(kolNrPV) == 1, !is.na(kolNrPV)
+  )
+  
 	dane = ramka_danych_pv(dane, kolPV, kolNrPV)
 	
 	warPop = mean(daply(dane, c('nr_pv'), function(x){

@@ -1,4 +1,37 @@
 --------------------
+Zmiany w ZPD 0.9 (2015-01-29)
+
+- Zmiana nazw niektórych zmiennych zwracanych przez funkcje pobierz_...()
+  w celu uniknięcia niejednoznaczności w nazwach zmiennych pomiędzy grupami
+  danych (a co za tym idzie problemów przy złączeniach)
+- Dodanie funkcji:
+  - filtruj_przystapienia()
+  - pobierz_kryteria_oceny()
+  - pobierz_parametry()
+  - pobierz_schematy_odp()
+  - pobierz_schematy_pkt()
+  - pobierz_skale()
+  - pobierz_standardy_egz()
+  - pobierz_wartosci_wskaznikow()
+  - pobierz_wartosci_wskaznikow_lu()
+  - pobierz_wskazniki()
+  - oszacuj_czas_wykonania() (wymaga jeszcze kalibracji)
+- Techniczne:
+  - zredukowanie "twardych" zależności pakietu do dplyr-a i przeniesienie 
+    wszystkich innych zależności do "suggests" (bo dotychczasowa litania
+    zależności powodowała już problemy z przykrywaniem nazw np. między
+    pakietami dplyr i plyr)
+  - przejście z funkcji pakietu stringr na stringi
+  - dodanie funkcji .sprawdz_dokumentacje_zmiennych() do weryfikacji,
+    czy zapisana w bazie dokumentacja zmiennych zwracanych przez funkcje
+    pobierz_...() jest kompletna
+    - wprowadzenie systemu anotacji funkcji przez atrybuty umożliwiającego
+      powiązanie funkcji z grupą danych w bazie oraz określenie testowych
+      wartości parametrów niezbędnych dla sczytania listy zwracanych przez
+      funkcję zmiennych
+  - dodanie porządnej weryfikacji argumentów do funkcji pobierz_...()
+
+--------------------
 Zmiany w ZPD 0.8 (2015-01-19)
 
 - Dostosowanie funkcji pobierz_testy() do zmian w strukturze bazy danych
