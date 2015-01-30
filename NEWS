@@ -1,4 +1,27 @@
 --------------------
+Zmiany w ZPD 0.9.1 (2015-01-30)
+
+- Zmiany w grupie danych "wskazniki":
+  - zmiana nazwy zmiennej "do_prezentacji" na "wsk_do_prezentacji"
+  - zmiana nazwy zmiennej "opis_wskaznika" na "opis_wsk"
+  - dodanie zmiennej "rok_do"
+- Zmiany w grupie danych "wartosciWskaznikow":
+  - dodanie prefiksu "przedm_" do zmiennych "lu", "lu_ewd" i "lu_wszyscy" 
+    zwracanych przez funkcję pobierz_wartosci_wskaznikow_lu(), aby
+    nie złączały się (powodując błędy) z analogicznymi zmiennymi w danych
+    zwracanych przez pobierz_wartosci_wskaznikow()
+  - korekta funkcji pobierz_wartosci_wskaznikow(), aby poprawnie filtrowała
+    jedynie informacje w podziale na przedmioty
+- Zmiany w grupie danych "kryteriaOceny":
+  - dodanie zmiennych "id_testu", "kolejnosc_kryt" oraz "popr_dystraktor"
+    - dzięki temu możliwe jest łączenie z grupą danych "testy"
+    - każde kryterium oceny jest teraz powielone tyle razy, w ilu testach
+      występuje
+- Zmiany w grupie danych "skale":
+  - zmiana nazwy parametru "ktt" funkcji pobierz_skale() na "czyKtt"
+  - dopracowanie pobierania rodzaju i części egzaminu związanego z daną skalą
+
+--------------------
 Zmiany w ZPD 0.9 (2015-01-29)
 
 - Zmiana nazw niektórych zmiennych zwracanych przez funkcje pobierz_...()

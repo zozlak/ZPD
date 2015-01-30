@@ -34,13 +34,13 @@
 #' @title Zwraca wskaźniki zapisane w bazie
 #' @description
 #' Każdy wskaźnik jest powielony w zwracanej tabeli tyle razy, ile wynosi 
-#' iloczyn liczby typów szkół, do których ma zastosowanie, liczby częśći
-#' egzaminu, do których ma zastosowanie oraz liczby skalowań, na których
-#' wynikach się opiera. Dzięki temu możliwe jest łatwe filtrowanie po typach
-#' szkół i/lub przedmiotach bez konieczności tworzenia dodatkowych grup danych.
-#' Aby uzyskać listę, w której kolumna "id_wskaznika" ma unikalne wartości
-#' nelaży usunąć kolumny "typ_szkoly" i "przedmiot" oraz skorzystać z czasownika
-#' "distinct()".
+#' iloczyn liczby typów szkół, do których ma zastosowanie, liczby częśći 
+#' egzaminu, do których ma zastosowanie, liczby okresów, dla których wskaźnik
+#' był obliczany oraz liczby skalowań, na których wynikach się opiera. Dzięki
+#' temu możliwe jest łatwe filtrowanie po typach szkół i/lub przedmiotach bez
+#' konieczności tworzenia dodatkowych grup danych. Aby uzyskać listę, w której
+#' kolumna "id_wskaznika" ma unikalne wartości nelaży usunąć kolumny
+#' "typ_szkoly" i "przedmiot" oraz skorzystać z czasownika "distinct()".
 #' 
 #' Domyśle odfiltrowywanie jedynie wskaźników do prezentacji służy ułatwieniu 
 #' wyszukiwania wskaźników przez większość użytkowników.
@@ -67,7 +67,7 @@ pobierz_wskazniki = function(
   )
   
   query = sprintf(
-    "SELECT %s, tsz.typ_szkoly, rodzaj_egzaminu, czesc_egzaminu, ws.id_skali, ws.skalowanie
+    "SELECT %s, rok_do, tsz.typ_szkoly, rodzaj_egzaminu, czesc_egzaminu, ws.id_skali, ws.skalowanie
     FROM 
       sl_wskazniki w
       LEFT JOIN sl_wskazniki_typy_szkol tsz USING (rodzaj_wsk, wskaznik)
@@ -89,7 +89,7 @@ pobierz_wskazniki = function(
   }
   data = tbl(src, sql(query))
   data = data %>%
-    rename_(.dots = list(opis_wskaznika = 'opis'))
+    rename_(.dots = list(opis_wsk = 'opis', wsk_do_prezentacji = 'do_prezentacji'))
   return(data)  
 }
 attr(pobierz_wskazniki, 'grupa') = 'wskazniki'

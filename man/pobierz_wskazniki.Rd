@@ -17,12 +17,12 @@ prezentacji wskaźników na stronach WWW}
 \description{
 Każdy wskaźnik jest powielony w zwracanej tabeli tyle razy, ile wynosi
 iloczyn liczby typów szkół, do których ma zastosowanie, liczby częśći
-egzaminu, do których ma zastosowanie oraz liczby skalowań, na których
-wynikach się opiera. Dzięki temu możliwe jest łatwe filtrowanie po typach
-szkół i/lub przedmiotach bez konieczności tworzenia dodatkowych grup danych.
-Aby uzyskać listę, w której kolumna "id_wskaznika" ma unikalne wartości
-nelaży usunąć kolumny "typ_szkoly" i "przedmiot" oraz skorzystać z czasownika
-"distinct()".
+egzaminu, do których ma zastosowanie, liczby okresów, dla których wskaźnik
+był obliczany oraz liczby skalowań, na których wynikach się opiera. Dzięki
+temu możliwe jest łatwe filtrowanie po typach szkół i/lub przedmiotach bez
+konieczności tworzenia dodatkowych grup danych. Aby uzyskać listę, w której
+kolumna "id_wskaznika" ma unikalne wartości nelaży usunąć kolumny
+"typ_szkoly" i "przedmiot" oraz skorzystać z czasownika "distinct()".
 
 Domyśle odfiltrowywanie jedynie wskaźników do prezentacji służy ułatwieniu
 wyszukiwania wskaźników przez większość użytkowników.

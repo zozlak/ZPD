@@ -43,12 +43,15 @@ pobierz_wartosci_wskaznikow_lu = function(
   
   query = "
     SELECT 
-      id_ww, rodzaj_egzaminu, czesc_egzaminu, lu, lu_ewd, lu_wszyscy
+      id_ww, rodzaj_egzaminu, czesc_egzaminu, 
+      lu AS przedm_lu, 
+      lu_ewd AS przedm_lu_ewd, 
+      lu_wszyscy AS przedm_lu_wszyscy
     FROM
       liczba_zdajacych_
       JOIN sl_kategorie_lu USING (rodzaj_wsk, wskaznik, kategoria_lu)
     WHERE
-      rodzaj_egzaminu IS NOT NULL
+      czesc_egzaminu IS NOT NULL
     ORDER BY 1, 2, 3
   "
   data = tbl(src, sql(query))

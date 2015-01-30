@@ -46,26 +46,29 @@
 #' @param src uchwyt źródła danych dplyr-a
 #' @param doPrezentacji czy wyświetlać tylko skale i skalowania oznaczone do
 #'   publicznej prezentacji
-#' @param ktt czy czy wyświetlać skale i skalowania KTT
+#' @param czyKtt czy czy wyświetlać skale i skalowania KTT
 #' @import dplyr
 #' @export
 pobierz_skale = function(
   src,
   doPrezentacji = TRUE,
-  ktt = FALSE
+  czyKtt = FALSE
 ){
   stopifnot(
     is.src(src),
-    is.null(doPrezentacji) | is.logical(doPrezentacji) & length(doPrezentacji) == 1,
-    is.null(ktt) | is.logical(ktt) & length(ktt) == 1
+    is.null(doPrezentacji) | 
+      is.vector(doPrezentacji) & is.logical(doPrezentacji) & length(doPrezentacji) == 1,
+    is.vector(czyKtt), is.logical(czyKtt), length(czyKtt) == 1, czyKtt %in% c(TRUE, FALSE)
   )
   
   query = "
     SELECT 
       id_skali, s.opis AS opis_skali, nazwa AS nazwa_skali, rodzaj_skali, 
       s.do_prezentacji AS skala_do_prezentacji,
-      rodzaj_egzaminu, czesc_egzaminu, id_testu,
-      COALESCE(extract(year from COALESCE(data_egzaminu, t.data)), rok) AS rok, 
+      COALESCE(s.rodzaj_egzaminu,t.rodzaj_egzaminu_, a.rodzaj_egzaminu) AS rodzaj_egzaminu ,
+      COALESCE(s.czesc_egzaminu, t.czesc_egzaminu_, a.czesc_egzaminu) AS czesc_egzaminu, 
+      id_testu,
+      COALESCE(extract(year from COALESCE(s.data_egzaminu, t.data, a.data_egzaminu)), rok) AS rok, 
       skalowanie, ss.opis AS opis_skalowania, estymacja, ss.data AS data_skalowania,
       ss.do_prezentacji AS skalowanie_do_prezentacji,
       n.id_skali IS NOT NULL AS normy_ekwikwantylowe      
@@ -76,6 +79,7 @@ pobierz_skale = function(
         SELECT DISTINCT id_skali FROM normy_ekwikwantylowe
       ) AS n USING (id_skali)
       LEFT JOIN testy t USING (id_testu)
+      LEFT JOIN arkusze a USING (arkusz)
   "
   
   where = c()
@@ -89,14 +93,8 @@ pobierz_skale = function(
       )
     )
   }
-  if(ktt){
-    where = append(
-      where, 
-      sprintf(
-        "s.kategoria = %s",
-        ifelse(ktt == TRUE, 'true', 'false'),
-      )
-    )
+  if(czyKtt == FALSE){
+    where = append(where, "s.rodzaj_skali <> 'ktt'")
   }
   if(length(where) > 0){
     query = sprintf('%s WHERE %s', query, paste0(where, collapse = ' AND '))

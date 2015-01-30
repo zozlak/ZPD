@@ -3,7 +3,7 @@
 \alias{pobierz_skale}
 \title{Pobiera skale i skalowania}
 \usage{
-pobierz_skale(src, doPrezentacji = TRUE, ktt = FALSE)
+pobierz_skale(src, doPrezentacji = TRUE, czyKtt = FALSE)
 }
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}
@@ -11,7 +11,7 @@ pobierz_skale(src, doPrezentacji = TRUE, ktt = FALSE)
 \item{doPrezentacji}{czy wyświetlać tylko skale i skalowania oznaczone do
 publicznej prezentacji}
 
-\item{ktt}{czy czy wyświetlać skale i skalowania KTT}
+\item{czyKtt}{czy czy wyświetlać skale i skalowania KTT}
 }
 \description{
 Pobiera listę skal połączoną z listą skalowań. Tak więc każda skala
