@@ -45,7 +45,7 @@ pobierz_wyniki_testu = function(
   idTestu, 
   punktuj        = TRUE,
   idSkali        = NULL,
-  skroc          = FALSE
+  skroc          = TRUE
 ){
   stopifnot(
     is.src(src),
