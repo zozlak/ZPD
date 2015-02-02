@@ -56,7 +56,7 @@ zsumuj_punkty = function(
     groupCols = colNames[! colNames %in% c('kryterium', 'odpowiedz', 'ocena')]
     dane = dane %>% 
       group_by_(.dots = as.list(groupCols)) %>%
-      summarize_('wynik = sum(odpowiedz)') %>%
+      summarize_(.dots = list('wynik' = 'sum(ocena)')) %>%
       ungroup()
   } else if(sum(grepl('^[pk]_[0-9]+$', colNames)) > 0){
     # postać szeroka

@@ -48,7 +48,7 @@
 pobierz_odpowiedzi = function(
   src,
   idSkali = NULL,
-  skroc   = FALSE
+  skroc   = TRUE
 ){
   stopifnot(
     is.src(src),
@@ -115,9 +115,9 @@ pobierz_odpowiedzi = function(
     
     shorten = tbl(src, sql("SELECT id_skrotu, wartosc, nowa_wartosc FROM skroty_skal_mapowania"))
     data = data %>% 
-      rename_('wartosc = ocena') %>% 
+      rename_(.dots = list('wartosc' = 'ocena')) %>% 
       left_join(shorten) %>% 
-      mutate_('ocena = coalesce(nowa_wartosc, wartosc)')
+      mutate_(.dots = list('ocena' = 'coalesce(nowa_wartosc, wartosc)'))
     
     data = data %>% select_('id_obserwacji', 'id_testu', 'id_szkoly', 'rok', 'kryterium', 'ocena')
   }else{

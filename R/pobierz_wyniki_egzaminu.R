@@ -51,7 +51,7 @@ pobierz_wyniki_egzaminu = function(
   czyEwd,
   punktuj = TRUE,
   idSkali = NULL,
-  skroc   = FALSE
+  skroc   = TRUE
 ){
   stopifnot(
     is.src(src),
