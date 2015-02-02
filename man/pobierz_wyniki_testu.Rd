@@ -4,7 +4,7 @@
 \title{Pobiera wyniki testu}
 \usage{
 pobierz_wyniki_testu(src, idTestu, punktuj = TRUE, idSkali = NULL,
-  skroc = FALSE)
+  skroc = TRUE)
 }
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}

@@ -3,7 +3,7 @@
 \alias{pobierz_odpowiedzi}
 \title{Pobiera wyniki testow (odpowiedzi) w postaci dlugiej}
 \usage{
-pobierz_odpowiedzi(src, idSkali = NULL, skroc = FALSE)
+pobierz_odpowiedzi(src, idSkali = NULL, skroc = TRUE)
 }
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}

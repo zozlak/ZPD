@@ -4,7 +4,7 @@
 \title{Pobiera wyniki części egzaminu}
 \usage{
 pobierz_wyniki_egzaminu(src, rodzajEgzaminu, czescEgzaminu, rokEgzaminu, czyEwd,
-  punktuj = TRUE, idSkali = NULL, skroc = FALSE)
+  punktuj = TRUE, idSkali = NULL, skroc = TRUE)
 }
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}
