@@ -76,7 +76,9 @@ pobierz_wyniki_egzaminu = function(
     stop('w bazie nie ma wyników takiego egzaminu, ale istnieją dla innego źródła danych (patrz parametr czyEwd)')
   }
   
+  
   tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), runif(1))))
+  DBI::dbGetQuery(src$con, paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1"))
   query = sprintf(
     "SELECT zbuduj_widok_czesci_egzaminu('%s', %s, %s, %d, %s, %s, %s, %s, true);",
     tmpName,

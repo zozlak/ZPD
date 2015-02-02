@@ -1,4 +1,11 @@
 --------------------
+Zmiany w ZPD 0.9.2 (2015-02-02)
+
+- Korekty w funkcjach pobierz_wyniki_egzaminu(), pobierz_wyniki_testu(),
+  pobierz_wyniki_zrownywania() uodparniające je na błąd w bibliotece
+  RPostgreSQL
+
+--------------------
 Zmiany w ZPD 0.9.1 (2015-01-30)
 
 - Zmiany w grupie danych "wskazniki":

@@ -66,7 +66,8 @@ pobierz_wyniki_zrownywania = function(
 	}
 		
 	tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), runif(1))))
-  query = sprintf(
+	DBI::dbGetQuery(src$con, paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1"))
+	query = sprintf(
     "SELECT zbuduj_widok_zrownywania(%s, %s, %d, %s, %s, %s, true)",
     escape(tmpName),
     escape(rodzajEgzaminu),
