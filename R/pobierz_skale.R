@@ -33,13 +33,16 @@
 
 #' @title Pobiera skale i skalowania
 #' @description
-#' Pobiera listę skal połączoną z listą skalowań. Tak więc każda skala
-#' występować będzie tyle razy, ile ma w bazie bazujących na niej skalowań.
+#' Pobiera listę skal połączoną z listą skalowań oraz testami powiązanymi z daną
+#' skalą. Tak więc każda skala występować będzie tyle razy, ile wynosi iloczyn
+#' liczby testów, z którymi jest powiązana oraz liczby skalowań, które na niej
+#' bazują.
 #' 
 #' Domyślnie pomijane są skale i skalowania, które nie zostały oznaczone jako
 #' do_prezentacji. W większości wypadków powoduje to, że danej skali przypisane
 #' jest co najwyżej jedno skalowanie, co powinno ułatwiać wybór poszukiwanego
-#' skalowania.
+#' skalowania. Jeśli chcemy uzyskać listę wszystkich skal, należy parametr
+#' "doPrezentacji" ustawić na NA.
 #' 
 #' Domyślnie pomijane są wszystie skale i skalowania KTT. Aby wyszukać skale i
 #' skalowania KTT, ustaw parametr "ktt" na TRUE.
@@ -65,10 +68,10 @@ pobierz_skale = function(
     SELECT 
       id_skali, s.opis AS opis_skali, nazwa AS nazwa_skali, rodzaj_skali, 
       s.do_prezentacji AS skala_do_prezentacji,
-      COALESCE(s.rodzaj_egzaminu,t.rodzaj_egzaminu_, a.rodzaj_egzaminu) AS rodzaj_egzaminu ,
-      COALESCE(s.czesc_egzaminu, t.czesc_egzaminu_, a.czesc_egzaminu) AS czesc_egzaminu, 
+      COALESCE(t.rodzaj_egzaminu_, a.rodzaj_egzaminu) AS rodzaj_egzaminu ,
+      COALESCE(t.czesc_egzaminu_, a.czesc_egzaminu) AS czesc_egzaminu, 
       id_testu,
-      COALESCE(extract(year from COALESCE(s.data_egzaminu, t.data, a.data_egzaminu)), rok) AS rok, 
+      extract(year from COALESCE(t.data, a.data_egzaminu)) AS rok, 
       skalowanie, ss.opis AS opis_skalowania, estymacja, ss.data AS data_skalowania,
       ss.do_prezentacji AS skalowanie_do_prezentacji,
       n.id_skali IS NOT NULL AS normy_ekwikwantylowe      
@@ -78,7 +81,8 @@ pobierz_skale = function(
       LEFT JOIN (
         SELECT DISTINCT id_skali FROM normy_ekwikwantylowe
       ) AS n USING (id_skali)
-      LEFT JOIN testy t USING (id_testu)
+      JOIN skale_testy st USING (id_skali)
+      JOIN testy t USING (id_testu)
       LEFT JOIN arkusze a USING (arkusz)
   "
   

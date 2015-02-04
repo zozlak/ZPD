@@ -1,4 +1,14 @@
 --------------------
+Zmiany w ZPD 0.9.3 (2015-02-04)
+
+- Zmiany w grupie danych "skale"
+  - Dostosowanie funkcji pobierz_skale() do zmian w bazie danych
+- Zmiany w funkcji filtruj_przystapienia():
+  - dodanie obejścia problemu niepoprawnego mapowania R-oweg operatora %in% na 
+    SQL-owy IN w wypadku gdy wektor wartości jest długości 1
+  - dostosowanie do zmian nazw kolumn w grupie danych "testy"
+  
+--------------------
 Zmiany w ZPD 0.9.2 (2015-02-02)
 
 - Zmiany w grupie danych "wyniki"

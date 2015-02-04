@@ -106,7 +106,7 @@ filtruj_przystapienia = function(
     length(pierwsze) == 1,
     is.character(rodzajEgzaminu),
     length(rodzajEgzaminu) == 1,
-    is.null(czescEgzaminu) | is.character(czescEgzaminu),
+    is.null(czescEgzaminu) | is.vector(czescEgzaminu) & is.character(czescEgzaminu),
     is.logical(czyEwd),
     length(czyEwd) == 1,
     is.null(obserwacje) |
@@ -118,8 +118,9 @@ filtruj_przystapienia = function(
     select_('id_testu', 'rodzaj_egzaminu', 'czesc_egzaminu', 'dane_ewd') %>%
     filter_(~rodzaj_egzaminu == rodzajEgzaminu, ~dane_ewd == czyEwd)
   if(length(czescEgzaminu) > 0){
+    czescEgzaminu = append(czescEgzaminu, '-1') # paskudne obejście błędnego mapowania dplyr-a na SQL-owe IN
     tests = tests %>% 
-      filter_(~czesc_egzaminu %in% czescEgzaminu)
+      filter_(~czesc_egzaminu %in% czescEgzaminu) 
   }
   if(nrow(tests %>% collect()) == 0){
     stop('Nie ma takiej części i/lub rodzaju egzaminu')
@@ -145,7 +146,7 @@ filtruj_przystapienia = function(
     )
   }
   tob = tob %>%
-    group_by_('id_obserwacji', 'ewd', 'rodzaj_egzaminu')
+    group_by_('id_obserwacji', 'dane_ewd', 'rodzaj_egzaminu')
   
   if(length(czescEgzaminu) > 0){
     tob = tob %>%
@@ -161,9 +162,8 @@ filtruj_przystapienia = function(
   }
   
   tob = tob %>% 
-    ungroup() %>%
-    rename_(.dots = list('dane_ewd' = 'ewd'))
-  
+    ungroup()
+
   return(tob)
 }
 attr(filtruj_przystapienia, 'grupa') = 'uczniowieTesty'
