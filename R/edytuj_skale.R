@@ -35,7 +35,7 @@
 #' @description
 #' Patrz http://zpd.ibe.edu.pl/doku.php?id=r_zpd_skale
 #' @param idSkali identyfikator skali, ktora ma zostac zapisana (typowo uzyskany z funkcji "stworz_skale()")
-#' @param elementy ramka danych opisujaca elementy skali - patrz http://zpd.ibe.edu.pl/doku.php?id=odbcskale
+#' @param elementy ramka danych opisujaca elementy skali - patrz http://zpd.ibe.edu.pl/doku.php?id=r_zpd_skale
 #' @param nadpisz czy nadpisac skale, jesli jest juz zdefiniowana w bazie danych
 #' @param zrodloDanychODBC nazwa zrodla danych ODBC, ktorego nalezy uzyc
 #' @return [data.frame] zapisane elementy skali
@@ -49,8 +49,16 @@ edytuj_skale = function(
 ){
   stopifnot(
     is.vector(idSkali), is.numeric(idSkali), length(idSkali) == 1, !is.na(idSkali),
-    is.data.frame(elementy)
+    is.data.frame(elementy),
+    !is.null(elementy$id_kryterium),
+    !is.null(elementy$id_pseudokryterium),
+    !is.null(elementy$id_skrotu),
+    all(as.numeric(!is.na(elementy$id_kryterium)) + as.numeric(!is.na(elementy$id_pseudokryterium)) <= 1)
   )
+  kryteria = as.matrix(elementy[, grep('^id_kryterium_[0-9]+$', names(elementy))])
+  if(any((!is.na(elementy$id_kryterium) | !is.na(elementy$id_pseudokryterium)) & rowSums(!is.na(kryteria)) > 0)){
+    stop('dla niektorych elementow skali zdefiniowano jednoczesnie id_kryterium/id_pseudokryterium, jak i wartosci w kolumnach id_kryterium_N')
+  }
   
 	P = odbcConnect(zrodloDanychODBC)
 	on.exit({
@@ -60,8 +68,6 @@ edytuj_skale = function(
 	odbcSetAutoCommit(P, FALSE)
 	.sqlQuery(P, "BEGIN")
 		
-
-	kryteria = as.matrix(elementy[, grep('^id_kryterium_[0-9]+$', names(elementy))])
 	kolOpis = grep('^opis$', names(elementy))
 	#<-- na wypadek factor-ow
 	if(ncol(kryteria) > 0){
@@ -75,17 +81,6 @@ edytuj_skale = function(
 	elementy$id_skrotu = as.character(elementy$id_skrotu)
 	#-->
 	
-	#<-- testy niewymagajace polaczenia z baza
-	stopifnot(
-	  !is.null(elementy$id_skrotu),
-	  !is.null(elementy$id_kryterium),
-	  !is.null(elementy$id_pseudokryterium),
-	  all(as.numeric(!is.na(elementy$id_kryterium)) + as.numeric(!is.na(elementy$id_pseudokryterium)) <= 1)
-	)
-  if(any((!is.na(elementy$id_kryterium) | !is.na(elementy$id_pseudokryterium)) & rowSums(!is.na(kryteria)) > 0)){
-	  stop('dla niektorych elementow skali zdefiniowano jednoczesnie id_kryterium/id_pseudokryterium, jak i wartosci w kolumnach id_kryterium_N')
-	}
-	#-->		
 	#<-- testy zwiazane ze skala
   stopifnot(
     idSkali %in% .sqlQuery(P, "SELECT id_skali FROM skale")[, 1],
