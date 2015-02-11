@@ -3,3 +3,4 @@
 .RData
 sciagawka.r
 *.Rproj
+*_cache

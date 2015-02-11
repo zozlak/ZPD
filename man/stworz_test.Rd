@@ -3,7 +3,9 @@
 \alias{stworz_test}
 \title{Tworzy nowy test (także jako kompilację wskazanych testów)}
 \usage{
-stworz_test(ewd, opis, data, idTestow = NULL, zrodloDanychODBC = "EWD")
+stworz_test(ewd, opis, data, rodzajEgzaminu = NA_character_,
+  czescEgzaminu = NA_character_, idTestow = NULL,
+  zrodloDanychODBC = "EWD")
 }
 \arguments{
 \item{ewd}{czy będzie to test ewd [logical]}
@@ -11,6 +13,10 @@ stworz_test(ewd, opis, data, idTestow = NULL, zrodloDanychODBC = "EWD")
 \item{opis}{opis testu}
 
 \item{data}{data testu}
+
+\item{rodzajEgzaminu}{rodzaj egzaminu powiązany z testem (lub NA)}
+
+\item{czescEgzaminu}{część egzaminu powiązana z testem (lub NA)}
 
 \item{idTestow}{wektor id_testu testów, których kryteria oceny mają zostać skopiowane do tworzonego testu}
 

@@ -3,7 +3,7 @@
 \alias{stworz_skale}
 \title{Tworzy w bazie nowa skale i zwraca jej id_skali}
 \usage{
-stworz_skale(nazwa, opis, rodzajEgzaminu, czescEgzaminu, rok,
+stworz_skale(nazwa, opis, rodzaj, doPrezentacji, idTestow,
   zrodloDanychODBC = "EWD")
 }
 \arguments{
@@ -11,11 +11,11 @@ stworz_skale(nazwa, opis, rodzajEgzaminu, czescEgzaminu, rok,
 
 \item{opis}{bardziej dokladny opis skali (opcjonalny, mozna ustawic na "")}
 
-\item{rodzajEgzaminu}{jesli skala dotyczy jednej konkretnej czesci egzaminu, rodzaj tego egzaminu (patrz http://zpd.ibe.edu.pl/doku.php?id=czesci_egzaminu)}
+\item{rodzaj}{rodzaj skali (ewd/zrównywanie/ktt)}
 
-\item{czescEgzaminu}{jesli skala dotyczy jednej konkretnej czesci egzaminu, czesc tego egzaminu (patrz http://zpd.ibe.edu.pl/doku.php?id=czesci_egzaminu)}
+\item{doPrezentacji}{czy skala ma być oznaczona jako przeznaczona do prezentacji}
 
-\item{rok}{jesli skala dotyczy jednej konkretnej czesci egzaminu, rok tego egzaminu (patrz http://zpd.ibe.edu.pl/doku.php?id=czesci_egzaminu)}
+\item{idTestow}{wektor id testów, z którymi ma być powiązana skala}
 
 \item{zrodloDanychODBC}{nazwa zrodla danych ODBC, ktorego nalezy uzyc}
 }

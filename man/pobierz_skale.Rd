@@ -14,13 +14,16 @@ publicznej prezentacji}
 \item{czyKtt}{czy czy wyświetlać skale i skalowania KTT}
 }
 \description{
-Pobiera listę skal połączoną z listą skalowań. Tak więc każda skala
-występować będzie tyle razy, ile ma w bazie bazujących na niej skalowań.
+Pobiera listę skal połączoną z listą skalowań oraz testami powiązanymi z daną
+skalą. Tak więc każda skala występować będzie tyle razy, ile wynosi iloczyn
+liczby testów, z którymi jest powiązana oraz liczby skalowań, które na niej
+bazują.
 
 Domyślnie pomijane są skale i skalowania, które nie zostały oznaczone jako
 do_prezentacji. W większości wypadków powoduje to, że danej skali przypisane
 jest co najwyżej jedno skalowanie, co powinno ułatwiać wybór poszukiwanego
-skalowania.
+skalowania. Jeśli chcemy uzyskać listę wszystkich skal, należy parametr
+"doPrezentacji" ustawić na NA.
 
 Domyślnie pomijane są wszystie skale i skalowania KTT. Aby wyszukać skale i
 skalowania KTT, ustaw parametr "ktt" na TRUE.

@@ -40,7 +40,7 @@
 #' @return [numeric vector] wektor odnalezionych i/lub utworzonych id_pseudokryteriow
 znajdz_pseudokryteria = function(kryteria, opisy, P){
 	kryteria = as.matrix(kryteria) # na wypadek, gdyby "kryteria" byly wektorem
-	opisyBaza = .sqlQuery(P, "SELECT opis FROM pseudokryteria_oceny;")[, 1]
+	opisyBaza = .sqlQuery(P, "SELECT opis FROM pseudokryteria_oceny")[, 1]
 	pkrytBaza = pobierz_pseudokryteria(P)
 	idPkryt = rep(NA, nrow(kryteria))
 	sumy = rowSums(!is.na(kryteria))
@@ -67,15 +67,15 @@ znajdz_pseudokryteria = function(kryteria, opisy, P){
 				stop(sprintf('w wierszu %d trzeba utworzyc nowe pseudokryterium, jednak podany dla niego opis wystepuje juz w bazie', i))
 			}
 			
-			idPkryt[i] = .sqlQuery(P, "SELECT nextval('pseudokryteria_id_pseudokryterium_seq');")[1, 1]
-			.sqlQuery(P, "INSERT INTO pseudokryteria_oceny (id_pseudokryterium, opis) VALUES (?, ?);",
-										list(idPkryt[i], opisy[i]))
+			idPkryt[i] = .sqlQuery(P, "SELECT nextval('pseudokryteria_id_pseudokryterium_seq')")[1, 1]
+			zap = "INSERT INTO pseudokryteria_oceny (id_pseudokryterium, opis) VALUES (?, ?)"
+			.sqlQuery(P, zap, list(idPkryt[i], opisy[i]))
 			for(j in wiersz){
 				if(is.na(j)){
 					next
 				}
-				.sqlQuery(P, "INSERT INTO pseudokryteria_oceny_kryteria (id_pseudokryterium, id_kryterium) VALUES (?, ?);",
-										list(idPkryt[i], j))
+			  zap = "INSERT INTO pseudokryteria_oceny_kryteria (id_pseudokryterium, id_kryterium) VALUES (?, ?)"
+				.sqlQuery(P, zap, list(idPkryt[i], j))
 			}
 		}
 	}	

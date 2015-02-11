@@ -36,72 +36,51 @@
 #' _
 #' @param nazwa nazwa skali (zwyczajowo w formacie "ZESPOL;EGZ;LATA", np. "paou;s;2002-2011" lub "ewd;gh_h;2012")
 #' @param opis bardziej dokladny opis skali (opcjonalny, mozna ustawic na "")
-#' @param rodzajEgzaminu jesli skala dotyczy jednej konkretnej czesci egzaminu, rodzaj tego egzaminu (patrz http://zpd.ibe.edu.pl/doku.php?id=czesci_egzaminu)
-#' @param czescEgzaminu jesli skala dotyczy jednej konkretnej czesci egzaminu, czesc tego egzaminu (patrz http://zpd.ibe.edu.pl/doku.php?id=czesci_egzaminu)
-#' @param rok jesli skala dotyczy jednej konkretnej czesci egzaminu, rok tego egzaminu (patrz http://zpd.ibe.edu.pl/doku.php?id=czesci_egzaminu)
+#' @param rodzaj rodzaj skali (ewd/zrównywanie/ktt)
+#' @param doPrezentacji czy skala ma być oznaczona jako przeznaczona do prezentacji
+#' @param idTestow wektor id testów, z którymi ma być powiązana skala
 #' @param zrodloDanychODBC nazwa zrodla danych ODBC, ktorego nalezy uzyc
 #' @return [numeric] id_skali utworzonej skali
 #' @export
+#' @import RODBCext
 stworz_skale = function(
 	nazwa, 
 	opis, 
-	rodzajEgzaminu, 
-	czescEgzaminu, 
-	rok, 
-	zrodloDanychODBC='EWD'
+	rodzaj,
+	doPrezentacji,
+	idTestow, 
+	zrodloDanychODBC = 'EWD'
 ){
-	P = odbcConnect(zrodloDanychODBC)
-	tryCatch({
-		odbcSetAutoCommit(P, FALSE)
-		.sqlQuery(P, "BEGIN;")
-		
-		if(!is.vector(nazwa) | !is.character(nazwa) | length(nazwa) > 1){
-			stop('nazwa nie jest pojedynczym lancuchem znakow')
-		}
-		if(nazwa == ''){
-			stop('nazwa skali nie moze byc pusta')
-		}
-		if(!is.vector(opis) | !is.character(opis) | length(opis)>1){
-			stop('opis nie jest pojedynczym lancuchem znakow')
-		}
-		if((!is.vector(rodzajEgzaminu) | !is.character(rodzajEgzaminu) | length(rodzajEgzaminu) > 1) & !is.null(rodzajEgzaminu)){
-			stop('rodzajEgzaminu nie jest pojedynczym lancuchem znakow')
-		}
-		if((!is.vector(czescEgzaminu) | !is.character(czescEgzaminu) | length(czescEgzaminu) > 1) & !is.null(czescEgzaminu)){
-			stop('czescEgzaminu nie jest pojedynczym lancuchem znakow')
-		}
-		if((!is.vector(rok) | !is.numeric(rok) | length(rok) > 1) & !is.null(rok)){
-			stop('rok nie jest pojedyncza liczba')
-		}
-		czyEgzamin = is.null(rodzajEgzaminu) + is.null(czescEgzaminu) + is.null(rok)
-		if(czyEgzamin > 0 & czyEgzamin < 3){
-			stop('rodzajEgzaminu, czescEgzaminu oraz rok musza byc zdefiniowane wszystkie na raz lub wszystkie musza miec wartosc NULL')
-		}
-		if(czyEgzamin == 0){
-			if(1 != .sqlQuery(P, sprintf("SELECT count(*) FROM sl_egzaminy WHERE rodzaj_egzaminu='%s' AND czesc_egzaminu='%s' AND date_part('year', data_egzaminu)=%d",
-																 .e(rodzajEgzaminu), .e(czescEgzaminu), rok))[1, 1]){
-				stop(sprintf("w bazie nie ma egzaminu '%s', '%s', %d", rodzajEgzaminu, czescEgzaminu, rok))
-			}
-		}
-		if(0 != .sqlQuery(P, sprintf("SELECT count(*) FROM skale WHERE nazwa='%s'", .e(nazwa)))){
-			stop(sprintf("w bazie istnieje juz skala o nazwie '%s'", nazwa))
-		}
-		
-		idSkali = .sqlQuery(P, "SELECT nextval('skale_id_skali_seq')")[1, 1]
-		if(czyEgzamin > 0){
-			.sqlQuery(P, sprintf("INSERT INTO skale (id_skali, opis, nazwa) VALUES (%d, '%s', '%s');", idSkali, .e(opis), .e(nazwa)))
-		}else{
-			.sqlQuery(P, sprintf("INSERT INTO skale (id_skali, opis, nazwa, rodzaj_egzaminu, czesc_egzaminu, data_egzaminu) 
-														SELECT %d, '%s', '%s', rodzaj_egzaminu, czesc_egzaminu, data_egzaminu
-														FROM sl_egzaminy WHERE rodzaj_egzaminu='%s' AND czesc_egzaminu='%s' AND date_part('year', data_egzaminu)=%d;",
-													 idSkali, .e(opis), .e(nazwa), .e(rodzajEgzaminu), .e(czescEgzaminu), rok))
-		}
-		odbcEndTran(P, TRUE)
-		odbcClose(P)
-		return(idSkali)	
-	},
-	error = function(e){
-		odbcClose(P)
-		.stop(e)
+  stopifnot(
+    is.vector(nazwa), is.character(nazwa), length(nazwa) == 1, !is.na(nazwa), nazwa != '', 
+    is.vector(opis), is.character(opis), length(opis) == 1, !is.na(opis),
+    is.vector(rodzaj), is.character(rodzaj), length(rodzaj) == 1, !is.na(rodzaj),
+    is.vector(doPrezentacji), is.logical(doPrezentacji), length(doPrezentacji) == 1, !is.na(doPrezentacji),
+    is.vector(idTestow), is.numeric(idTestow),
+    is.vector(zrodloDanychODBC), is.character(zrodloDanychODBC), length(zrodloDanychODBC) == 1
+  )
+  P = odbcConnect(zrodloDanychODBC)
+	on.exit({
+	  odbcClose(P)
 	})
+  
+  idTestow = na.exclude(idTestow)
+  stopifnot(
+    ! nazwa %in% .sqlQuery(P, "SELECT DISTINCT nazwa FROM skale")[, 1],
+    rodzaj %in% .sqlQuery(P, "SELECT rodzaj_skali FROM sl_rodzaje_skal")[, 1],
+    length(idTestow) > 0,
+    all(idTestow %in% .sqlQuery(P, "SELECT id_testu FROM testy")[, 1])
+  )
+  
+	odbcSetAutoCommit(P, FALSE)
+	.sqlQuery(P, "BEGIN")
+		
+  idSkali = .sqlQuery(P, "SELECT nextval('skale_id_skali_seq')")[1, 1]
+  zap = "INSERT INTO skale (id_skali, opis, nazwa, rodzaj_skali, do_prezentacji) VALUES (?, ?, ?, ?, ?)"
+  .sqlQuery(P, zap, list(idSkali, opis, nazwa, rodzaj, doPrezentacji))
+  zap = "INSERT INTO skale_testy (id_skali, id_testu) VALUES (?, ?)"
+  .sqlQuery(P, zap, list(rep(idSkali, length(idTestow)), idTestow))
+  
+  odbcEndTran(P, TRUE)
+	return(idSkali)	
 }

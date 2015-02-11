@@ -1,18 +1,18 @@
 Package: ZPD
 Title: Tools for a Polish examination data and item bank database
 Description: Tools for a Polish examination data and item bank database
-Version: 0.9.3
+Version: 0.9.4
 Author: Mateusz Zoltak <zozlak@zozlak.org>
 Maintainer: Mateusz Zoltak <zozlak@zozlak.org>
 Depends:
-    dplyr
+    dplyr,
+    RODBCext
 Suggests:
     DBI,
     reshape2,
     plyr,
     EWDdane,
     foreign,
-    RODBCext,
     RODBC,
     stringi
 License: LGPL-3

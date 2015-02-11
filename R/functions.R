@@ -50,17 +50,18 @@
 #' @param P otwarte polaczenie ODBC
 #' @param sql polecenie SQL do wykonania
 #' @return data.frame
+#' @import RODBCext
 .sqlQuery = function(P, sql, dane = NULL){
-	RODBC::odbcClearError(P)
-	tmp = RODBCext::sqlExecute(P, sql, dane, fetch=T, errors=F, stringsAsFactors=F, dec='.')
+	odbcClearError(P)
+	tmp = sqlExecute(P, sql, dane, fetch = T, errors = F, stringsAsFactors = F, dec = '.')
 	if(!is.data.frame(tmp)){
 		if(tmp[1] == -2){
 			return(NULL) # brak danych
 		}
 	}
-	blad = RODBC::odbcGetErrMsg(P)
+	blad = odbcGetErrMsg(P)
 	if(length(blad) > 0){
-		stop(tmp[1])
+		stop(paste0(blad, collapse = '\n'))
 	}
 	return(tmp)
 }
@@ -73,5 +74,5 @@
 #' @param e wyjatek przechwycony funkcja tryCatch()
 #' @return void
 .stop = function(e){
-	stop(paste(deparse(conditionCall(e)), conditionMessage(e), sep='\n'), call.=F)
+	stop(paste(deparse(conditionCall(e)), conditionMessage(e), sep = '\n'), call. = F)
 }

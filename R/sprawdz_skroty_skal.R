@@ -43,7 +43,7 @@ sprawdz_skroty_skal = function(skroty, P){
 	tmp = unique(skroty[!(skroty %in% skrotyBaza) & !is.na(skroty)])
 	tmp = strsplit(tmp, '[|]')
 	for(i in tmp){
-		idSkrotu = paste(i, collapse='|')
+		idSkrotu = paste(i, collapse = '|')
 		i = strsplit(i, '[;]')
 		if(length(i) != 2){
 			stop(sprintf('"%s" nie jest poprawnym identyfikatorem skrotu skali - nie podano wartosci wyjsciowych', idSkrotu))
@@ -56,11 +56,9 @@ sprawdz_skroty_skal = function(skroty, P){
 		if(any(is.na(we) | is.na(wy))){
 			stop(sprintf('"%s" nie jest poprawnym identyfikatorem skrotu skali - co najmniej jedna z wartosci wejsciowych lub wyjsciowych nie jest liczba', idSkrotu))
 		}
-		.sqlQuery(P, sprintf("INSERT INTO skroty_skal (id_skrotu) VALUES ('%s')", .e(idSkrotu)))
-		for(j in 1:length(we)){
-			.sqlQuery(P, sprintf("INSERT INTO skroty_skal_mapowania (id_skrotu, wartosc, nowa_wartosc) VALUES ('%s', %f, %f)",
-													 idSkrotu, we[j], wy[j]))
-		}
+		.sqlQuery(P, "INSERT INTO skroty_skal (id_skrotu) VALUES (?)", idSkrotu)
+	  zap = "INSERT INTO skroty_skal_mapowania (id_skrotu, wartosc, nowa_wartosc) VALUES (?, ?, ?)"
+		.sqlQuery(P, zap, list(rep(idSkrotu, length(we)), we, wy))
 	}
 	return(TRUE)
 }

@@ -68,8 +68,8 @@ pobierz_skale = function(
     SELECT 
       id_skali, s.opis AS opis_skali, nazwa AS nazwa_skali, rodzaj_skali, 
       s.do_prezentacji AS skala_do_prezentacji,
-      COALESCE(t.rodzaj_egzaminu_, a.rodzaj_egzaminu) AS rodzaj_egzaminu ,
-      COALESCE(t.czesc_egzaminu_, a.czesc_egzaminu) AS czesc_egzaminu, 
+      COALESCE(t.rodzaj_egzaminu, a.rodzaj_egzaminu) AS rodzaj_egzaminu ,
+      COALESCE(t.czesc_egzaminu, a.czesc_egzaminu) AS czesc_egzaminu, 
       id_testu,
       extract(year from COALESCE(t.data, a.data_egzaminu)) AS rok, 
       skalowanie, ss.opis AS opis_skalowania, estymacja, ss.data AS data_skalowania,

@@ -1,4 +1,22 @@
 --------------------
+Zmiany w ZPD 0.9.4 (2015-02-11)
+
+- Zmiany w grupie danych "testy":
+  - dostosowanie funkcji pobierz_testy() do zmian w strukturze bazy danych
+- Zmiany w grupie danych "skale":
+  - dostosowanie funkcji pobierz_testy() do zmian w strukturze bazy danych
+- Zmiany w grupie danych "wartosciWskaznikow":
+  - dostosowanie funkcji pobierz_wartosci_wskaznikow() i 
+    pobierz_wartosci_wskaznikow_lu() do zmian w strukturze bazy danych
+- Zmiany w funkcjach do zapisu do bazy:
+  - dodanie argumentów "rodzajEgzaminu" i "czescEgzaminu" do funkcji stworz_test(),
+  - przepisanie funkcji stworz_test(), stworz_skale(), edytuj_skale()
+- Zmiany techniczne:
+  - przywrócenie twardej zależności od RODBCext, bo RODBC::odbcConnect() nie radzi
+    sobie gdy nie zaimportowano całego namespace-a RODBC
+  - korekta sposobu zwracania błędów SQL (czemu to się tak długo uchowało?!) 
+
+--------------------
 Zmiany w ZPD 0.9.3 (2015-02-04)
 
 - Zmiany w grupie danych "skale"
