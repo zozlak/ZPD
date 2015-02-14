@@ -2,6 +2,15 @@
 
 Pakiet zawierający zestaw funkcji ułatwiających korzystanie z połączonych baz EWD i ZPD.
 
+## Uwagi
+
+1) Baza danych, do której dostęp daje pakiet podlega stałemu rozwojowi, co może powodować niekompatybilność ze starszymi wersjami pakietu. Stąd **jeśli zobaczysz nieznany błąd, na początek upewnij się, że korzystasz z najnowszej wersji pakietu**. Od czasu do czasu warto również zapoznać się z zawartością pliku NEWS.
+
+2) Aby dowiedzieć się więcej o strukturze bazy danych, zapoznaj się z:
+    * http://zpd.ibe.edu.pl/doku.php?id=obazie
+    * http://zpd.ibe.edu.pl/doku.php?id=r_gr
+    * http://zpd.ibe.edu.pl/doku.php?id=r_zpd
+
 ## Instalacja
 
 Pakiet nie jest wypchnięty na CRAN-a, więc instalować trzeba ze źródeł.
