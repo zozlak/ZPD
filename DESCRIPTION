@@ -1,7 +1,7 @@
 Package: ZPD
 Title: Tools for a Polish examination data and item bank database
 Description: Tools for a Polish examination data and item bank database
-Version: 0.9.4
+Version: 0.9.5
 Author: Mateusz Zoltak <zozlak@zozlak.org>
 Maintainer: Mateusz Zoltak <zozlak@zozlak.org>
 Depends:

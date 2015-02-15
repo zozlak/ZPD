@@ -1,4 +1,11 @@
 --------------------
+Zmiany w ZPD 0.9.5 (2015-02-15)
+
+- Zmiany w grupie danych "wyniki":
+  - korekta sprawdzania wartości wejściowych przez funkcję zsumuj_punkty()
+    (dotychczas niepoprawnie nie dopuszczała, aby dane były tablicą dplyr-a)
+
+--------------------
 Zmiany w ZPD 0.9.4 (2015-02-11)
 
 - Zmiany w grupie danych "testy":

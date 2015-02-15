@@ -10,11 +10,28 @@ date: "2015.02.02"
 %\VignetteEngine{knitr::rmarkdown}
 %\VignetteIndexEntry{Wyniki egzaminów}
 -->
-```{r, results = "hide", message = FALSE, warning = FALSE, echo = FALSE}
-library(ZPD)
-src = polacz()
-library('ggplot2')
+
+# Instalacja niezbędnych pakietów
+
+Do wykonania ćwiczeń niezbędnę będą pakiety: *ZPD, EWDdane, ggplot2*, a także ich zależności (*dplyr, RPostgreSQL, reshape2*). Upewnijmy się więc, że wszystkie te pakiety posiadamy:
+
+```{r, cache = TRUE, message = FALSE, warning = FALSE}
+install.packages(c('devtools', 'ggplot2', 'dplyr', 'RPostgreSQL', 'reshape2'))
+devtools::install_github('zozlak/ZPD')
+devtools::install_github('tzoltak/EWDdane')
 ```
+
+Załadujmy potrzebne pakiety i nawiążmy połączenie z bazą:
+```{r, cache = TRUE, message = FALSE, warning = FALSE}
+library(ZPD)
+library('ggplot2')
+
+src = polacz()
+```
+
+# Czas pobierania danych
+
+Wykonanie niniejszych ćwiczeń wymaga wielokrotnego pobierania z bazy dużych ilości danych, co (samo pobieranie) łącznie może zająć ponad godzinę czasu. Stąd, jeśli chcemy przerwać wykonywanie ćwiczeń i wrócić do nich później, najlepiej już pobrane dane zachować lokalnie w pliku *.RData* (funkcją *save()* - patrz ćwiczenia ze wstępu do R). Możliwe będzie wtedy ich szybkie wczytanie bez niepotrzebnego oczekiwania funkcją *load()*. W takim wypadku oczywiście należy pominąć
 
 # Surowe wyniki egzaminacyjne
 
@@ -30,27 +47,20 @@ Pobierzmy wyniki części _matematyka_ egzaminu gimnazjalnego z 2014 roku:
 1. Sprawdzamy, jaki to rodzaj i część egzaminu - http://zpd.ibe.edu.pl/doku.php?id=czesci_egzaminu
 2. Sprawdzamy, czy będą to _dane EWD_ czy _dane CKE_ - http://zpd.ibe.edu.pl/doku.php?id=obazie
 3. Pobieramy dane:
-```{r, eval = FALSE}
-library(ZPD)
-src = polacz()
-
+```{r, cache = TRUE}
+# uwaga - wykonywanie tego polecenia może zająć kilkanaście minut
 gmm14.sz.surowe = pobierz_wyniki_egzaminu(src, 'egzamin gimnazjalny', 'matematyka', 2014, TRUE) %>%
   collect()
+head(gmm14.sz.surowe)
 
 # lub
 
+# uwaga - wykonywanie tego polecenia może zająć kilkanaście minut
 testy.gmm.14 = pobierz_testy(src) %>%
   filter(rodzaj_egzaminu == 'egzamin gimnazjalny', czesc_egzaminu == 'matematyka', rok == 2014, dane_ewd == TRUE)
 gmm14.dl.surowe = pobierz_odpowiedzi(src) %>%
   semi_join(testy.gmm.14) %>%
   collect()
-```
-
-Ponieważ pobieranie wyników całej części egzaminu trwałoby zbyt długo, my oszukamy i załadujemy już pobrane zbiory:
-```{r, cache = TRUE}
-load(url('http://ewd.edu.pl/gmm14.sz.surowe.RData'))
-load(url('http://ewd.edu.pl/gmm14.dl.surowe.RData'))
-head(gmm14.sz.surowe)
 head(gmm14.dl.surowe)
 ```
 
@@ -60,6 +70,7 @@ Mamy już pobrane surowe wyniki na poziomie poszczególnych kryteriów oceny, al
 
 ### Sumowanie
 
+Sumujemy funkcją *zsumuj_punkty()*:
 ```{r, cache = TRUE}
 # usuwając zmienne z wynikami za zadania
 gmm14.sz.sumy = zsumuj_punkty(gmm14.sz.surowe)
@@ -82,13 +93,18 @@ test = gmm14.sz.sumy %>%
   full_join(gmm14.dl.sumy) %>%
   mutate(roznica = wynik - wynik_sz)
 head(test)
+# oczekujemy zobaczyć tylko 0
 table(test$roznica)
+# oczekujemy, że liczba wierszy będzie zgodna
 nrow(test) - nrow(gmm14.dl.sumy)
 ```
+Szczęśliwie wszystko się zgadza.
 
 ### Normalizacja ekwikwantylowa
 
 Mając dane ze zsumowanymi punktami możemy dokonać normalizacji ekwikwantylowej.
+
+W tym celu korzystamy z funkcji *normalizuj_ekwikwantylowo()*.
 
 Dostępne są dwie metody:
 
@@ -116,24 +132,24 @@ Musimy zatem:
 ```{r, cache = TRUE}
 # 1. wyszukujemy skalę
 pobierz_skale(src) %>%
-  filter(normy_ekwikwantylowe == TRUE, rodzaj_egzaminu == 'egzamin gimnazjalny', czesc_egzaminu == 'matematyka', rok == 2014)
+  filter(normy_ekwikwantylowe == TRUE, rodzaj_egzaminu == 'egzamin gimnazjalny', czesc_egzaminu == 'matematyka', rok == 2014) %>%
+  distinct()
+```
+Spośród wyświetlonych skal nas interesuje skala 723 (dotyczy tylko części *gm_m* - patrz kolumna *nazwa*)
+```{r, cache = TRUE}
 # 2. pobieramy dane stosując skalę
-  # tak byśmy to zrobili normalnie, ale dziś nie mamy czasu:
-  #
-  # testy.gmm.14 = pobierz_testy(src) %>%
-  #   filter(rodzaj_egzaminu == 'egzamin gimnazjalny', czesc_egzaminu == 'matematyka', rok == 2014, dane_ewd == TRUE)
-  # gmm14.skala = pobierz_odpowiedzi(src, 723) %>%
-  #   semi_join(testy.gmm.14) %>%
-  #   collect()
-  #
-  # więc zrobimy tak:
-  load(url('http://ewd.edu.pl/gmm14.skala.RData'))
+testy.gmm.14 = pobierz_testy(src) %>%
+  filter(rodzaj_egzaminu == 'egzamin gimnazjalny', czesc_egzaminu == 'matematyka', rok == 2014, dane_ewd == TRUE)
+# uwaga - wykonywanie tego polecenia może zająć kilkanaście minut
+gmm14.skala = pobierz_odpowiedzi(src, 723) %>%
+  semi_join(testy.gmm.14) %>%
+  collect()
 # 3. sumujemy
 gmm14.skala.sumy = zsumuj_punkty(gmm14.skala)
 # 4. normalizujemy
 gmm14.skala.sumy = normalizuj_ekwikwantylowo(gmm14.skala.sumy, src, idSkali = 723)
 ```
-h
+
 Porównajmy wyniki przed i po normalizacji:
 ```{r, cache = TRUE}
 ggplot(gmm14.skala.sumy) +
@@ -157,13 +173,13 @@ Np. złączmy przygotowane powyżej sumy punktów z informacjami o pierwszym prz
 
 (W obydwu wypadkach dla *danych EWD*, bo właśnie na takich danych mamy policzone sumy punktów)
 ```{r, cache = TRUE}
+# uwaga - wykonywanie tego polecenia może zająć kilka minut
 filtrMat = filtruj_przystapienia(src, TRUE, 'egzamin gimnazjalny', 'matematyka', TRUE) %>%
   collect()
+# uwaga - wykonywanie tego polecenia może zająć kilka minut
 filtrGim = filtruj_przystapienia(src, TRUE, 'egzamin gimnazjalny', NULL, TRUE) %>%
   collect()
-# jeśli nie chcemy czekać, możemy też wczytać już pobrane wyniki:
-# load(url('http://ewd.edu.pl/filtry.RData'))
-filtrMat
+head(filtrMat)
 
 # filtrujemy
 gmm14.filtrMat = gmm14.sz.sumy %>%
@@ -171,9 +187,9 @@ gmm14.filtrMat = gmm14.sz.sumy %>%
 gmm14.filtrGim = gmm14.sz.sumy %>%
   inner_join(filtrGim)
 # jaka jest różnica w liczbie obserwacji?
-# z czego to wynika?
 nrow(gmm14.filtrMat) - nrow(gmm14.filtrGim)
 ```
+Czy umiemy powiedzieć, z czego wynika różnica w liczbie obserwacji pomiędzy jednym i drugim sposobem filtrowania?
 
 # Złączanie danych pomiędzy egzaminami
 
@@ -186,8 +202,10 @@ Warto jeszcze zauważyć, że złączane zbiory mogą zawierać jednakowo nazywa
 ```{r, cache = TRUE}
 # przyłączmy do policzonych sum surowych punktów z egzaminu GMM 2014 wyniki sprawdzianu 2011
 
-# pobierzmy wyniki sprawdzianu 2011 (znów oszukując)
-load(url('http://ewd.edu.pl/spr11.RData'))
+# pobierzmy wyniki sprawdzianu 2011 z danych EWD
+#   uwaga - wykonywanie tego polecenia może zająć kilkanaście minut
+spr11 = pobierz_wyniki_egzaminu(src, 'sprawdzian', '', 2011, TRUE) %>%
+  collect()
 # sumujemy punkty
 spr11 = zsumuj_punkty(spr11)
 # przezywamy kolumny
@@ -202,3 +220,4 @@ polaczone %>%
   group_by(is.na(rok_spr)) %>%
   summarize(n = n())
 ```
+Jak widać nie przyłączyło się nieco ponad 27 tys. uczniów (np. o opóźnionym toku kształcenia).

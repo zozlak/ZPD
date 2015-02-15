@@ -46,7 +46,7 @@ zsumuj_punkty = function(
   usunKryteria = TRUE
 ){
   stopifnot(
-    is.data.frame(dane) | is.src(dane),
+    is.data.frame(dane) | is.tbl(dane),
     is.vector(usunKryteria), is.logical(usunKryteria), length(usunKryteria) == 1, usunKryteria %in% c(T, F)
   )
   
