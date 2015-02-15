@@ -43,7 +43,7 @@ pobierz_szkoly = function(
 
   query = "
 	  SELECT
-      s.id_szkoly, s.typ_szkoly, s.publiczna, s.dla_doroslych, s.specjalna, s.przyszpitalna,
+      s.id_szkoly, s.typ_szkoly, s.publiczna, s.dla_doroslych, s.specjalna, s.przyszpitalna, s.artystyczna,
       sd.rok, sd.id_szkoly_oke, sd.nazwa AS nazwa_szkoly, sd.adres, sd.miejscowosc, sd.pna, sd.poczta, sd.wielkosc_miejscowosci, sd.matura_miedzynarodowa, 
       sd.id_wojewodztwa * 10000 + sd.id_powiatu * 100 + sd.id_gminy AS teryt_szkoly,
       w.nazwa AS wojewodztwo, p.nazwa AS powiat, g.nazwa AS gmina, g.rodzaj_gminy
