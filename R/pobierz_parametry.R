@@ -47,7 +47,7 @@ pobierz_parametry = function(
       parametr, model, wartosc, bs
     FROM
       skalowania_elementy
-      JOIN skale_elementy USING (id_skali, kolejnosc)
+      LEFT JOIN skale_elementy USING (id_skali, kolejnosc)
     ORDER BY id_skali, kolejnosc
   "
   data = tbl(src, sql(query))
