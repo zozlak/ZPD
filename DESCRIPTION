@@ -5,7 +5,8 @@ Version: 1.0.0
 Author: Mateusz Zoltak <zozlak@zozlak.org>, Tomasz Zoltak <tomek@zozlak.org>
 Maintainer: Mateusz Zoltak <zozlak@zozlak.org>
 Depends: 
-    dplyr
+    dplyr (>= 0.4),
+    RPostgreSQL
 Suggests: 
     DBI,
     reshape2,
