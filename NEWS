@@ -2,7 +2,7 @@
 Zmiany w ZPD 1.0.0 (2015-02-16)
 
 - Zmiany w grupie danych "parametry":
-  - dodanie pobierania parametrów grup
+  - dodanie pobierania parametrów grup (dotychczas tylko kryteriów oceny)
 - Zmiany w grupie danych "wyniki":
   - uwolnienie od zależności od pakietu EWDdane poprzez przeniesienie kodu
     funkcji EWDdane::normy_ekwikwantylowe()
@@ -11,10 +11,11 @@ Zmiany w ZPD 1.0.0 (2015-02-16)
     w wersji 0.9, który uniemożliwiał wyliczanie PWE funkcją agreguj_pwe()
   - korekta błędu w funkcji oblicz_wariancje_populacji() wprowadzonego
     w wersji 0.9, który uniemożliwiał wyliczanie PWE funkcją agreguj_pwe()
-  - usunięcie testów do starych funkcji pobierających dane
-  - dopisanie prostego testu dla funkcji agreguj_pwe()
   - dodanie automatycznej weryfikacji pakietu za pomocą Travis-a
     (http://r-pkgs.had.co.nz/check.html#travis)
+  - dopisanie prostego testu dla funkcji agreguj_pwe()
+  - dodanie automatycznych raportów pokrycia za pomocą pakietu "covr"
+    i coverall (https://github.com/jimhester/covr)
 - Przeniesienie funkcji realizujących zapis do bazy do oddzielnego pakietu
 - Przeniesienie funkcji niezwiązanych z pobieraniem danych z bazy do 
   oddzielnego pakietu (sprawdz_podwojne_ocenianie(), sprawdz_realizacje(),

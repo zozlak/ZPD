@@ -40,6 +40,7 @@
 #' @param password hasło
 #' @import dplyr
 #' @export
+#' @import RPostgreSQL
 polacz = function(
   dbname = 'ewd',
   host = 'ewd.ibe.edu.pl',
