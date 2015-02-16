@@ -3,6 +3,9 @@ Zmiany w ZPD 0.9.6 (2015-02-16)
 
 - Zmiany w grupie danych "parametry":
   - dodanie pobierania parametrów grup
+- Zmiany w grupie danych "wyniki":
+  - uwolnienie od zależności od pakietu EWDdane poprzez przeniesienie kodu
+    funkcji EWDdane::normy_ekwikwantylowe()
 - Techniczne:
   - korekta błędu w wewnętrznej funkcji ramka_danych_pv() wprowadzonego 
     w wersji 0.9, który uniemożliwiał wyliczanie PWE funkcją agreguj_pwe()
@@ -12,6 +15,10 @@ Zmiany w ZPD 0.9.6 (2015-02-16)
   - dopisanie prostego testu dla funkcji agreguj_pwe()
   - dodanie automatycznej weryfikacji pakietu za pomocą Travis-a
     (http://r-pkgs.had.co.nz/check.html#travis)
+- Przeniesienie funkcji realizujących zapis do bazy do oddzielnego pakietu
+- Przeniesienie funkcji niezwiązanych z pobieraniem danych z bazy do 
+  oddzielnego pakietu (sprawdz_podwojne_ocenianie(), sprawdz_realizacje(),
+  wczytaj_spss(), itp.)
 
 --------------------
 Zmiany w ZPD 0.9.5 (2015-02-15)

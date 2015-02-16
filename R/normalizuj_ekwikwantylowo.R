@@ -56,6 +56,7 @@
 #' @param src uchwyt źródła danych dplyr-a (gdy normalizacja na podstawie norm w bazie)
 #' @param idSkali skala, której norma z bazy ma zostać zastosowana
 #' @param zBazy czy normalizowac na podstawie norm w bazie, czy na podstawie danych
+#' @param ... ew. parametry funkcji normy_ekwikwantylowe() (gdy normalizacja na podstawie danych)
 #' @import dplyr
 #' @export
 normalizuj_ekwikwantylowo = function(
@@ -63,7 +64,8 @@ normalizuj_ekwikwantylowo = function(
   src      = NULL,
   kolWynik = 'wynik',
   idSkali  = NULL,
-  zBazy    = TRUE
+  zBazy    = TRUE,
+  ...
 ){
   stopifnot(
     is.data.frame(dane) | is.tbl(dane),
@@ -93,7 +95,7 @@ normalizuj_ekwikwantylowo = function(
     }
   }else{
     dane = as.data.frame(dane)
-    norms = suppressMessages(EWDdane::normy_ekwikwantylowe(dane[, kolWynik]))
+    norms = suppressMessages(normy_ekwikwantylowe(dane[, kolWynik], ...))
     norms = data_frame(as.numeric(names(norms)), norms)
     names(norms) = c(kolWynik, resultCol)
   }

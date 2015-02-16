@@ -13,12 +13,11 @@ date: "2015.02.02"
 
 # Instalacja niezbędnych pakietów
 
-Do wykonania ćwiczeń niezbędnę będą pakiety: *ZPD, EWDdane, ggplot2*, a także ich zależności (*dplyr, RPostgreSQL, reshape2*). Upewnijmy się więc, że wszystkie te pakiety posiadamy:
+Do wykonania ćwiczeń niezbędnę będą pakiety: *ZPD, ggplot2*, a także ich zależności (*dplyr, RPostgreSQL, reshape2*). Upewnijmy się więc, że wszystkie te pakiety posiadamy:
 
 ```{r, eval = FALSE}
 install.packages(c('devtools', 'ggplot2', 'dplyr', 'RPostgreSQL', 'reshape2', 'plyr'))
 devtools::install_github('zozlak/ZPD')
-devtools::install_github('tzoltak/EWDdane')
 ```
 
 Załadujmy potrzebne pakiety i nawiążmy połączenie z bazą:
