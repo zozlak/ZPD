@@ -52,7 +52,7 @@ oblicz_wariancje_populacji = function(
   
 	dane = ramka_danych_pv(dane, kolPV, kolNrPV)
 	
-	warPop = mean(daply(dane, c('nr_pv'), function(x){
+	warPop = mean(plyr::daply(dane, c('nr_pv'), function(x){
 		return(var(x$wynik))
 	}))
 	
