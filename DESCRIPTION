@@ -11,7 +11,6 @@ Suggests:
     DBI,
     reshape2,
     plyr,
-    EWDdane,
     foreign,
     RODBC,
     stringi,

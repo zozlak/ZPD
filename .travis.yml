@@ -9,7 +9,8 @@ before_install:
 
 install:
   - sudo apt-get install --no-install-recommends unixodbc-dev
-  - ./travis-tool.sh install_github hadley/plyr
+  - ./travis-tool.sh r_binary_install plyr
+  - ./travis-tool.sh r_binary_install RODBC
   - ./travis-tool.sh install_github tzoltak/EWDdane
   - ./travis-tool.sh install_github zozlak/ZPD
   - ./travis-tool.sh install_deps
