@@ -50,8 +50,9 @@ pobierz_uczniow = function(
 	  SELECT o.*, oi.id AS id_cke
 	  FROM 
 			obserwacje o 
-			LEFT JOIN obserwacje_id oi USING (id_obserwacji)
-	  WHERE oi.typ_id = 'cke' OR oi.typ_id IS NULL
+			LEFT JOIN (
+        SELECT * FROM obserwacje_id WHERE typ_id = 'cke'
+    ) oi USING (id_obserwacji)
 	"
   if(daneOsobowe == TRUE){
     query = sub('obserwacje o', 'dane_osobowe.obserwacje o', query)

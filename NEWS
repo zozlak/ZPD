@@ -1,6 +1,10 @@
 --------------------
 Zmiany w ZPD 1.0.0 (2015-02-16)
 
+- Zmiany w grupie danych "uczniowie":
+  - korekta błędu w funkcji pobierz_uczniow() uniemożliwiającego pobranie
+    danych uczniów, którzy posiadali w bazie id inne niż id_cke, nieposiadając
+    jednocześnie id_cke
 - Zmiany w grupie danych "parametry":
   - dodanie pobierania parametrów grup (dotychczas tylko kryteriów oceny)
 - Zmiany w grupie danych "wyniki":
