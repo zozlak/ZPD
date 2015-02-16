@@ -49,7 +49,7 @@ ramka_danych_pv = function(
     is.data.frame(dane) | is.tbl(dane),
     is.vector(kolPV), is.character(kolPV), length(kolPV) == 1, !is.na(kolPV),
     is.vector(kolNrPV), is.character(kolNrPV), length(kolNrPV) == 1, !is.na(kolNrPV),
-    is.null(kolPozostale) | is.vector(kolPozostale), is.character(kolPozostale), all(!is.na(kolPozostale))
+    is.null(kolPozostale) | is.vector(kolPozostale) & is.character(kolPozostale) & all(!is.na(kolPozostale))
   )
   
   dane = as.data.frame(dane)

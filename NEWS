@@ -3,6 +3,9 @@ Zmiany w ZPD 0.9.6 (2015-02-16)
 
 - Zmiany w grupie danych "parametry":
   - dodanie pobierania parametrów grup
+- Techniczne:
+  - korekta błędu w wewnętrznej funkcji ramka_danych_pv() wprowadzonego 
+    w wersji 0.9, który uniemożliwiał wyliczanie PWE funkcją agreguj_pwe()
 
 --------------------
 Zmiany w ZPD 0.9.5 (2015-02-15)
