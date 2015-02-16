@@ -8,9 +8,6 @@ before_install:
   - ./travis-tool.sh bootstrap
 
 install:
-  - sudo apt-get install --no-install-recommends unixodbc-dev
-  - ./travis-tool.sh r_binary_install plyr
-  - ./travis-tool.sh r_binary_install RODBC
   - ./travis-tool.sh install_github zozlak/ZPD
   - ./travis-tool.sh install_deps
 

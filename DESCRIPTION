@@ -8,6 +8,7 @@ Depends:
     dplyr
 Suggests: 
     DBI,
+    reshape2,
     plyr,
     testthat,
     knitr
@@ -15,3 +16,4 @@ License: LGPL-3
 NeedsCompilation: no
 Encoding: UTF-8
 VignetteBuilder: knitr
+Encoding: UTF-8

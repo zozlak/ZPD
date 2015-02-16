@@ -3,12 +3,11 @@ title: "Wyniki egzaminów"
 output:
   html_document:
     highlight: tango
-    keep_md: yes
-date: "2015.02.02"
 ---
 <!--
 %\VignetteEngine{knitr::rmarkdown}
 %\VignetteIndexEntry{Wyniki egzaminów}
+\usepackage[utf8]{inputenc}
 -->
 
 # Instalacja niezbędnych pakietów

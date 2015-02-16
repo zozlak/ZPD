@@ -1,13 +1,13 @@
 ---
 title: "Wstęp do R"
-date: 2015.02.02
 output:
   html_document:
-  highlight: tango
+    highlight: tango
 ---
 <!--
 %\VignetteEngine{knitr::rmarkdown}
 %\VignetteIndexEntry{Wstęp do R}
+\usepackage[utf8]{inputenc}
 -->
 ```{r, results = 'hide', message = FALSE, warning = FALSE, echo = FALSE}
 library(ZPD)
