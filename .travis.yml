@@ -8,6 +8,8 @@ before_install:
   - ./travis-tool.sh bootstrap
 
 install:
+  - ./travis-tool.sh r_binary_install RPostgreSQL
+  - ./travis-tool.sh github_package jimhester/covr
   - ./travis-tool.sh install_github zozlak/ZPD
   - ./travis-tool.sh install_deps
 
@@ -16,10 +18,13 @@ script: ./travis-tool.sh run_tests
 after_failure:
   - ./travis-tool.sh dump_logs
 
+after_success:
+  - Rscript -e 'library(covr);coveralls()'
+  
 env:
   - WARNINGS_ARE_ERRORS=0 _R_CHECK_FORCE_SUGGESTS_=0
 
 notifications:
   email:
-    on_success: change
-    on_failure: change
+    on_success: zozlak@zozlak.org
+    on_failure: zozlak@zozlak.org
