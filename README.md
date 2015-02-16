@@ -1,6 +1,7 @@
 # ZPD
 
 [![Travis-CI Build Status](https://travis-ci.org/zozlak/ZPD.png?branch=master)](https://travis-ci.org/zozlak/ZPD)
+[![Coverage Status](https://coveralls.io/repos/zozlak/ZPD/badge.svg)](https://coveralls.io/r/zozlak/ZPD)
 
 Pakiet zawierający zestaw funkcji ułatwiających korzystanie z połączonych baz EWD i ZPD.
 
