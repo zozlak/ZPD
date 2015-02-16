@@ -8,6 +8,10 @@ Zmiany w ZPD 0.9.6 (2015-02-16)
     w wersji 0.9, który uniemożliwiał wyliczanie PWE funkcją agreguj_pwe()
   - korekta błędu w funkcji oblicz_wariancje_populacji() wprowadzonego
     w wersji 0.9, który uniemożliwiał wyliczanie PWE funkcją agreguj_pwe()
+  - usunięcie testów do starych funkcji pobierających dane
+  - dopisanie prostego testu dla funkcji agreguj_pwe()
+  - dodanie automatycznej weryfikacji pakietu za pomocą Travis-a
+    (http://r-pkgs.had.co.nz/check.html#travis)
 
 --------------------
 Zmiany w ZPD 0.9.5 (2015-02-15)

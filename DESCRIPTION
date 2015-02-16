@@ -4,17 +4,20 @@ Description: Tools for a Polish examination data and item bank database
 Version: 0.9.6
 Author: Mateusz Zoltak <zozlak@zozlak.org>
 Maintainer: Mateusz Zoltak <zozlak@zozlak.org>
-Depends:
+Depends: 
     dplyr,
     RODBCext
-Suggests:
+Suggests: 
     DBI,
     reshape2,
     plyr,
     EWDdane,
     foreign,
     RODBC,
-    stringi
+    stringi,
+    testthat,
+    knitr
 License: LGPL-3
 NeedsCompilation: no
 Encoding: UTF-8
+VignetteBuilder: knitr

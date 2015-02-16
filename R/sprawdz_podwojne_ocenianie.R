@@ -66,8 +66,12 @@
 #' 
 #' 	# dane gimnazjalne - oddzielnie dla części hum i mat-przyr
 #' 	dane = wczytaj_ibe('gim.csv', 'gim_c.csv')
-#' 	sprawdz_podwojne_ocenianie('gim_podw_kod.csv', 'gim_podw_kod_c.csv', dane, c('GH-P1A-14', 'GH-P1B-14'), '^pol.*_ost$')
-#' 	sprawdz_podwojne_ocenianie('gim_podw_kod.csv', 'gim_podw_kod_c.csv', dane, c('GM-M1A-14', 'GM-M1B-14'), '^mat.*_ost$')
+#' 	sprawdz_podwojne_ocenianie(
+#' 	  'gim_podw_kod.csv', 'gim_podw_kod_c.csv', dane, c('GH-P1A-14', 'GH-P1B-14'), '^pol.*_ost$'
+#' 	)
+#' 	sprawdz_podwojne_ocenianie(
+#' 	  'gim_podw_kod.csv', 'gim_podw_kod_c.csv', dane, c('GM-M1A-14', 'GM-M1B-14'), '^mat.*_ost$'
+#' 	)
 #' }
 #' @export
 sprawdz_podwojne_ocenianie = function(plik, codebook, dane, zeszyt=NULL, wzor='^z[0-9].*_ost$'){

@@ -48,8 +48,8 @@ sprawdz_skroty_skal = function(skroty, P){
 		if(length(i) != 2){
 			stop(sprintf('"%s" nie jest poprawnym identyfikatorem skrotu skali - nie podano wartosci wyjsciowych', idSkrotu))
 		}
-		we = as.numeric(i[[1]])
-		wy = as.numeric(i[[2]])
+		we = suppressWarnings(as.numeric(i[[1]]))
+		wy = suppressWarnings(as.numeric(i[[2]]))
 		if(length(we) != length(wy)){
 			stop(sprintf('"%s" nie jest poprawnym identyfikatorem skrotu skali - rozne liczby wartosci wejsciowych i wyjsciowych', idSkrotu))
 		}

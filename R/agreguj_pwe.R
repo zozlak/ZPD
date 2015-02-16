@@ -71,9 +71,9 @@ agreguj_pwe = function(
 	
 	#<-- liczenie
 	ilePV = length(unique(dane$nr_pv))
-	wynik = ddply(dane, kolGrupy, function(d, blZrwn2, varPop, ilePV){
+	wynik = plyr::ddply(dane, kolGrupy, function(d, blZrwn2, varPop, ilePV){
 		srednia = mean(d$wynik)
-		d = ddply(d, c('nr_pv'), function(x){
+		d = plyr::ddply(d, c('nr_pv'), function(x){
 			x = c(
 				quantile(x$wynik, probs=c(0, 0.25, 0.5, 0.75, 1)),
 				mean(x$wynik),

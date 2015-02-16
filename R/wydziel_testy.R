@@ -37,7 +37,8 @@
 #' \itemize{
 #' 	\item filtruje rekordy pasujace do zadanego zeszytu
 #' 	\item zmienia nazwy kolumn z wynikami zadan na id_kryteriow
-#' 	\item dodaje kolumne "zrwn" zawierajace kolumne "id_ucz" przeksztalcona do postaci uzywanego w bazie identyfikatora "zrwn"
+#' 	\item dodaje kolumne "zrwn" zawierajace kolumne "id_ucz" przeksztalcona do postaci uzywanego 
+#' 	  w bazie identyfikatora "zrwn"
 #'  \item dubluje kolumne "id_szk" pod nazwa "id_szk_oke"
 #'  \item zapisuje tak odfiltrowany i skonwertowany zbior pod nazwa "id_testu.csv"
 #' }
@@ -65,7 +66,9 @@
 #'			wydziel_testy(
 #'					dane = dane, 
 #'					zeszyt = sprintf('S-%d%s-14', i, j),
-#'					zeszytBaza = sprintf('zrównywanie;sprawdzian;2014;%d%s', i,  j), 
+#'					zeszytBaza = sprintf(
+#'					  'zrównywanie;sprawdzian;2014;%d%s', i,  j
+#'					), 
 #'					kolIdZeszytu = grep('^id_zt$', names(dane)), 
 #'					kolUdzial = kolUdzial,
 #'					kolIdSzkOKE = grep('^id_szk$', names(dane)),

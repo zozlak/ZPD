@@ -15,14 +15,14 @@ date: "2015.02.02"
 
 Do wykonania ćwiczeń niezbędnę będą pakiety: *ZPD, EWDdane, ggplot2*, a także ich zależności (*dplyr, RPostgreSQL, reshape2*). Upewnijmy się więc, że wszystkie te pakiety posiadamy:
 
-```{r, cache = TRUE, message = FALSE, warning = FALSE}
-install.packages(c('devtools', 'ggplot2', 'dplyr', 'RPostgreSQL', 'reshape2'))
+```{r, eval = FALSE}
+install.packages(c('devtools', 'ggplot2', 'dplyr', 'RPostgreSQL', 'reshape2', 'plyr'))
 devtools::install_github('zozlak/ZPD')
 devtools::install_github('tzoltak/EWDdane')
 ```
 
 Załadujmy potrzebne pakiety i nawiążmy połączenie z bazą:
-```{r, cache = TRUE, message = FALSE, warning = FALSE}
+```{r, cache = TRUE, eval = FALSE, message = FALSE, warning = FALSE}
 library(ZPD)
 library('ggplot2')
 
@@ -47,7 +47,7 @@ Pobierzmy wyniki części _matematyka_ egzaminu gimnazjalnego z 2014 roku:
 1. Sprawdzamy, jaki to rodzaj i część egzaminu - http://zpd.ibe.edu.pl/doku.php?id=czesci_egzaminu
 2. Sprawdzamy, czy będą to _dane EWD_ czy _dane CKE_ - http://zpd.ibe.edu.pl/doku.php?id=obazie
 3. Pobieramy dane:
-```{r, cache = TRUE}
+```{r, cache = TRUE, eval = FALSE}
 # uwaga - wykonywanie tego polecenia może zająć kilkanaście minut
 gmm14.sz.surowe = pobierz_wyniki_egzaminu(src, 'egzamin gimnazjalny', 'matematyka', 2014, TRUE) %>%
   collect()
@@ -71,7 +71,7 @@ Mamy już pobrane surowe wyniki na poziomie poszczególnych kryteriów oceny, al
 ### Sumowanie
 
 Sumujemy funkcją *zsumuj_punkty()*:
-```{r, cache = TRUE}
+```{r, cache = TRUE, eval = FALSE}
 # usuwając zmienne z wynikami za zadania
 gmm14.sz.sumy = zsumuj_punkty(gmm14.sz.surowe)
 head(gmm14.sz.sumy)
@@ -87,7 +87,7 @@ gmm14.dl.surowe = zsumuj_punkty(gmm14.dl.surowe, FALSE)
 ```
 
 Dla sum punktów wyniki otrzymane z postaci długiej i szerokie powinny być zgodne - sprawdźmy:
-```{r, cache = TRUE}
+```{r, cache = TRUE, eval = FALSE}
 test = gmm14.sz.sumy %>% 
   rename(wynik_sz = wynik) %>% # żeby nie złączyło się po zmiennej "wynik"
   full_join(gmm14.dl.sumy) %>%
@@ -113,7 +113,7 @@ Dostępne są dwie metody:
 
 #### Normy wyliczane z danych
 
-```{r, cache = TRUE}
+```{r, cache = TRUE, eval = FALSE}
 gmm14.sz.sumy = normalizuj_ekwikwantylowo(gmm14.sz.sumy, zBazy = FALSE)
 ```
 
@@ -129,14 +129,14 @@ Musimy zatem:
 3. Zsumować punkty
 4. Znormalizować.
 
-```{r, cache = TRUE}
+```{r, cache = TRUE, eval = FALSE}
 # 1. wyszukujemy skalę
 pobierz_skale(src) %>%
   filter(normy_ekwikwantylowe == TRUE, rodzaj_egzaminu == 'egzamin gimnazjalny', czesc_egzaminu == 'matematyka', rok == 2014) %>%
   distinct()
 ```
 Spośród wyświetlonych skal nas interesuje skala 723 (dotyczy tylko części *gm_m* - patrz kolumna *nazwa*)
-```{r, cache = TRUE}
+```{r, cache = TRUE, eval = FALSE}
 # 2. pobieramy dane stosując skalę
 testy.gmm.14 = pobierz_testy(src) %>%
   filter(rodzaj_egzaminu == 'egzamin gimnazjalny', czesc_egzaminu == 'matematyka', rok == 2014, dane_ewd == TRUE)
@@ -151,7 +151,7 @@ gmm14.skala.sumy = normalizuj_ekwikwantylowo(gmm14.skala.sumy, src, idSkali = 72
 ```
 
 Porównajmy wyniki przed i po normalizacji:
-```{r, cache = TRUE}
+```{r, cache = TRUE, eval = FALSE}
 ggplot(gmm14.skala.sumy) +
   aes(x = wynik) + 
   geom_density(adjust = 2)
@@ -172,7 +172,7 @@ Np. złączmy przygotowane powyżej sumy punktów z informacjami o pierwszym prz
 * sprawdzając przystąpienia w obrębie całego egzaminu gimnazjalnego
 
 (W obydwu wypadkach dla *danych EWD*, bo właśnie na takich danych mamy policzone sumy punktów)
-```{r, cache = TRUE}
+```{r, cache = TRUE, eval = FALSE}
 # uwaga - wykonywanie tego polecenia może zająć kilka minut
 filtrMat = filtruj_przystapienia(src, TRUE, 'egzamin gimnazjalny', 'matematyka', TRUE) %>%
   collect()
@@ -199,7 +199,7 @@ Tak, czy owak, złączanie następuje wprost po *id_obserwacji* (i co najwyżej 
 
 Warto jeszcze zauważyć, że złączane zbiory mogą zawierać jednakowo nazywające się kolumny (np. _wynik_, _dysleksja_, itp.), które przed złączeniem należy przezwać (np. na *wynik_spr*, *wynik_gh*, *dysleksja_spr*, *dysleksja_gh* itd.).
 
-```{r, cache = TRUE}
+```{r, cache = TRUE, eval = FALSE}
 # przyłączmy do policzonych sum surowych punktów z egzaminu GMM 2014 wyniki sprawdzianu 2011
 
 # pobierzmy wyniki sprawdzianu 2011 z danych EWD

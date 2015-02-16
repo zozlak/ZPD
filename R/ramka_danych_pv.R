@@ -49,9 +49,8 @@ ramka_danych_pv = function(
     is.data.frame(dane) | is.tbl(dane),
     is.vector(kolPV), is.character(kolPV), length(kolPV) == 1, !is.na(kolPV),
     is.vector(kolNrPV), is.character(kolNrPV), length(kolNrPV) == 1, !is.na(kolNrPV),
-    is.null(kolPozostale) | is.vector(kolPozostale) & is.character(kolPozostale) & all(!is.na(kolPozostale))
+    is.null(kolPozostale) | is.vector(kolPozostale) & is.character(kolPozostale)
   )
-  
   dane = as.data.frame(dane)
 	
 	kolPV = grep(kolPV, names(dane), value = T)
@@ -64,7 +63,7 @@ ramka_danych_pv = function(
 		stop('niejednoznaczna nazwa kolumny z numerem PV')
 	}	else if(length(kolNrPV) == 0){
 		# ramka danych w postaci szerokiej - skonwertuj do długiej
-		dane = reshape2::melt(dane[, c(kolPozostale, kolPV)], id.vars = kolPozostale)	
+		dane = reshape2::melt(dane[, na.omit(c(kolPozostale, kolPV))], id.vars = kolPozostale)	
 		names(dane) = sub('^variable$', 'nr_pv', names(dane))
 		names(dane) = sub('^value$', 'wynik', names(dane))
 	} else if(length(kolPV) != 1){

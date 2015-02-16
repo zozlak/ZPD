@@ -4,3 +4,4 @@
 sciagawka.r
 *.Rproj
 *_cache
+inst/doc

@@ -2,3 +2,4 @@
 ^\.Rproj\.user$
 ^sciagawka.r$
 ^.*_cache$
+^\.travis\.yml$
