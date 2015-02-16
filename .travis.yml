@@ -22,5 +22,4 @@ after_success:
   
 notifications:
   email:
-    on_success: zozlak@zozlak.org
-    on_failure: zozlak@zozlak.org
+    - zozlak@zozlak.org
