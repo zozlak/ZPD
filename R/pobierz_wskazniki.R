@@ -43,8 +43,9 @@ pobierz_wskazniki = function(
       LEFT JOIN wskazniki_skalowania ws USING (rodzaj_wsk, wskaznik, rok_do)",
     ifelse(
       wszystkieKolumny == TRUE, 
-      'w.*', 
-      'rodzaj_wsk, wskaznik, okres, do_prezentacji, skrot, opis'
+      'w.okres, w.nazwa, w.kolejnosc, w.do_prezentacji AS wsk_do_prezentacji, 
+        w.kolor, w.skrot, w.os_y, w.egz_dop, w.opis AS opis_wsk, w.grupa, w.rodzaj_wsk, w.wskaznik', 
+      'w.rodzaj_wsk, w.wskaznik, w.okres, w.do_prezentacji AS wsk_do_prezentacji, w.skrot, w.opis AS opis_wsk'
     )
   )
   if(!is.na(doPrezentacji)){
@@ -55,8 +56,6 @@ pobierz_wskazniki = function(
     )
   }
   data = tbl(src, sql(query))
-  data = data %>%
-    rename_(.dots = list(opis_wsk = 'opis', wsk_do_prezentacji = 'do_prezentacji'))
   return(data)  
 }
 attr(pobierz_wskazniki, 'grupa') = 'wskazniki'

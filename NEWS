@@ -1,4 +1,18 @@
 --------------------
+Zmiany w ZPD 1.0.1 (2015-02-17)
+
+- Grupa danych "wskaźniki":
+  - korekta w funkcji pobierz_wskazniki() pozwalająca na obejście błędu 
+    dplyr-a, który uniemożliwiał filtrowanie po kolumnach "opis_wsk" i
+    "wsk_do_prezentacji"
+  - dodanie obejścia błędu w pakiecie RPostgreSQL umożliwiającego poprawne
+    wykonanie pod Windowsami funkcji pobierz_wartosci_wskaznikow()
+    (problemy z kodowaniem polskich znaków)
+- Techniczne:
+  - obłożenie testami funkcji zsumuj_punkty()
+  - obłożenie podstawowymi testami funkcji normalizuj_ekwikwantylowo()
+
+--------------------
 Zmiany w ZPD 1.0.0 (2015-02-16)
 
 - Zmiany w grupie danych "uczniowie":

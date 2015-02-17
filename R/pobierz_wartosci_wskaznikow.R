@@ -37,7 +37,7 @@ pobierz_wartosci_wskaznikow = function(
   if(czyPomin == FALSE){
     query = paste(query, 'WHERE pomin = false')
   }
-  data = tbl(src, sql(query))
+  data = tbl(src, enc2utf8(sql(query)))
   return(data)
 }
 attr(pobierz_wartosci_wskaznikow, 'grupa') = 'wartosciWskaznikow'
