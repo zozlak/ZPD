@@ -13,7 +13,7 @@ Suggests:
     plyr,
     testthat,
     knitr
-License: LGPL-3
+License: MIT + file LICENSE
 NeedsCompilation: no
 Encoding: UTF-8
 VignetteBuilder: knitr
