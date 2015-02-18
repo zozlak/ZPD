@@ -1,7 +1,14 @@
 --------------------
+Zmiany w ZPD 1.0.2 (2015-02-18)
+
+- Zmiany w grupie danych "skale":
+  - dodanie zmiennych "posiada_pv" i "posiada_eap" do wyników zwracanych
+    przez funkcję pobierz_skale()
+
+--------------------
 Zmiany w ZPD 1.0.1 (2015-02-17)
 
-- Grupa danych "wskaźniki":
+- Zmiany w grupie danych "wskaźniki":
   - korekta w funkcji pobierz_wskazniki() pozwalająca na obejście błędu 
     dplyr-a, który uniemożliwiał filtrowanie po kolumnach "opis_wsk" i
     "wsk_do_prezentacji"

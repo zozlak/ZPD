@@ -13,7 +13,7 @@ test_that('normalizuj_ekwikwantylowo works', {
   expect_less_than(abs(sd(norm$wynik_norm) - 15), 1)
   
   skale = pobierz_skale(src) %>% 
-    filter(normy_ekwikwantylowe == T, rodzaj_egzaminu == 'sprawdzian') %>% 
+    filter(normy_ekwikwantylowe == T, rodzaj_egzaminu == 'sprawdzian', rok == 2010) %>% 
     select(id_skali) %>%
     distinct() %>%
     collect()

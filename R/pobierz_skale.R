@@ -41,7 +41,8 @@ pobierz_skale = function(
       extract(year from COALESCE(t.data, a.data_egzaminu)) AS rok, 
       skalowanie, ss.opis AS opis_skalowania, estymacja, ss.data AS data_skalowania,
       ss.do_prezentacji AS skalowanie_do_prezentacji,
-      n.id_skali IS NOT NULL AS normy_ekwikwantylowe      
+      n.id_skali IS NOT NULL AS normy_ekwikwantylowe,
+      eap.posiada_eap, pv.posiada_pv
     FROM
       skale s
       LEFT JOIN skalowania ss USING (id_skali)
@@ -51,6 +52,30 @@ pobierz_skale = function(
       JOIN skale_testy st USING (id_skali)
       JOIN testy t USING (id_testu)
       LEFT JOIN arkusze a USING (arkusz)
+      LEFT JOIN (
+        SELECT id_skali, skalowanie, true AS posiada_eap
+        FROM skalowania ss1
+        WHERE
+          EXISTS (
+            SELECT 1 
+            FROM skalowania_obserwacje so1 
+            WHERE 
+              estymacja = 'EAP' 
+              AND (ss1.id_skali, ss1.skalowanie) = (so1.id_skali, so1.skalowanie)
+          )
+      ) AS eap USING (id_skali, skalowanie)
+      LEFT JOIN (
+        SELECT id_skali, skalowanie, true AS posiada_pv
+        FROM skalowania ss2
+        WHERE
+          EXISTS (
+            SELECT 1 
+            FROM skalowania_obserwacje so2
+            WHERE 
+              estymacja = 'PV' 
+              AND (ss2.id_skali, ss2.skalowanie) = (so2.id_skali, so2.skalowanie)
+          )
+      ) AS pv USING (id_skali, skalowanie)
   "
   
   where = c()
