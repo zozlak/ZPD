@@ -21,7 +21,7 @@ pobierz_wartosci_wskaznikow_lu = function(
       czesc_egzaminu IS NOT NULL
     ORDER BY 1, 2, 3
   "
-  data = tbl(src, sql(query))
+  data = tbl(src, sql(e(query)))
   return(data)
 }
 attr(pobierz_wartosci_wskaznikow_lu, 'grupa') = 'wartosciWskaznikow'

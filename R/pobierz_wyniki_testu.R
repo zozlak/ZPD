@@ -25,11 +25,11 @@ pobierz_wyniki_testu = function(
     collect() %>%
     filter_(~id_testu == idTestu)
   if(nrow(tests) == 0){
-    stop('nie ma takiego testu')
+    stop(e('nie ma takiego testu'))
   }
   
   tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), runif(1))))
-  DBI::dbGetQuery(src$con, paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1"))
+  DBI::dbGetQuery(src$con, e(paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1")))
   query = sprintf(
     "SELECT zbuduj_widok_testu('%s', %d, %s, %s, %s, true);",
     tmpName,
@@ -38,8 +38,8 @@ pobierz_wyniki_testu = function(
     ifelse(is.null(idSkali), 'null', as.numeric(idSkali)),
     ifelse(skroc, 'true', 'false')
   )
-  DBI::dbGetQuery(src$con, query)
-  data = tbl(src, sql(paste0("SELECT * FROM ", tmpName)))
+  DBI::dbGetQuery(src$con, e(query))
+  data = tbl(src, sql(e(paste0("SELECT * FROM ", tmpName))))
   
   attr(data, 'idSkali') = idSkali
   

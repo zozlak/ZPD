@@ -14,5 +14,12 @@ polacz = function(
   user = 'ewd_baza',
   password = 'CalEBo9'
 ){
-  return(src_postgres(dbname, host, port, user, password))
+  conn = src_postgres(dbname, host, port, user, password)
+  enc = tolower(Sys.getlocale('LC_CTYPE'))
+  if(!grepl('utf-8', enc)){
+    # get the encoding name and set client encoding for the connection
+    enc = paste0('WIN', sub('^[^0-9]+([0-9]+)$', '\\1', enc))
+    RPostgreSQL::dbGetQuery(conn$con, sprintf("SET NAMES '%s'", enc))
+  }
+  return(conn)
 }

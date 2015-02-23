@@ -1,4 +1,12 @@
 --------------------
+Zmiany w ZPD 1.1.0 (2015-02-23)
+
+- Zmiany techniczne:
+  - dodanie poprawnej obsługi polskich znaków pod Windows
+    (przestawianie połączenia z bazą w kodowanie lokalne komputera, 
+    rekodowanie komunikatów pakietu, rekodowanie zapytań)
+  
+--------------------
 Zmiany w ZPD 1.0.2 (2015-02-18)
 
 - Zmiany w grupie danych "skale":

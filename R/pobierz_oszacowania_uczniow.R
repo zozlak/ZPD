@@ -18,7 +18,7 @@ pobierz_oszacowania_uczniow = function(
       JOIN testy t USING (id_testu)
       LEFT JOIN arkusze a USING (arkusz)
 	"
-  data = tbl(src, sql(query))
+  data = tbl(src, sql(e(query)))
   return(data)
 }
 attr(pobierz_oszacowania_uczniow, 'grupa') = 'oszacowania'

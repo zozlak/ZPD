@@ -41,10 +41,10 @@ normy_ekwikwantylowe = function(
   )
   if(any(!is.finite(x) & !is.na(x))) {
     x[!is.finite(x)] = NA
-    warning("W danych wystąpiły wartości Inf, -Inf lub NaN, które zostały potraktowane jako braki danych.")
+    warning(e("W danych wystąpiły wartości Inf, -Inf lub NaN, które zostały potraktowane jako braki danych."))
   }
   if(all(is.na(x))) {
-    warning("Nie podano żadnych wartości nie będących brakami danych. Normalizacja nie może zostać przeprowadzona.")
+    warning(e("Nie podano żadnych wartości nie będących brakami danych. Normalizacja nie może zostać przeprowadzona."))
     return(NA)
   }
   # zapewniam sobie uwzględnienie w rozkładzie również tych wartości punktowych, które nie występują w danych
@@ -65,7 +65,11 @@ normy_ekwikwantylowe = function(
   zera = c(1:length(norma))[is.na(norma)]
   lz = length(zera)
   if(uzupLuki & lz > 0) {
-    message("W danych nie wystąpiły wartości: ", paste0(names(norma)[zera], collapse=", "), ". Wartości znormalizowane dla nich zostały sztucznie wygenerowane.")
+    message(
+      e("W danych nie wystąpiły wartości: "), 
+      e(paste0(names(norma)[zera], collapse=", ")), 
+      e(". Wartości znormalizowane dla nich zostały sztucznie wygenerowane.")
+    )
     zeraPocz = sum(zera == (1:lz)) # stwierdzamy ile dziur jest na początku skali
     zeraKon = sum(zera == ((length(norma) - lz + 1):length(norma))) # i na końcu
     if (zeraPocz > 0) zera = zera[-(1:zeraPocz)] # i chwilowo bierzemy je w nawias

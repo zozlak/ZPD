@@ -2,7 +2,7 @@ context('zsumuj_punkty')
 
 src = polacz()
 
-test_that('zsumuj_punkty sums data', {
+test_that('zsumuj_punkty sumuje poprawnie', {
   daneSql = pobierz_wyniki_zrownywania(src, 'sprawdzian', 2014, TRUE)
   daneLok = daneSql %>% collect()
   testy   = unique(daneLok$id_testu)

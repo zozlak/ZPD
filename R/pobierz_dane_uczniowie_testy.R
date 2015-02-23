@@ -25,7 +25,7 @@ pobierz_dane_uczniowie_testy = function(
     query = sub('testy_obserwacje tob', 'dane_osobowe.testy_obserwacje tob', query)
   }
 
-	data = tbl(src, sql(query))
+  data = tbl(src, sql(e(query)))
 	return(data)
 }
 attr(pobierz_dane_uczniowie_testy, 'grupa') = 'uczniowieTesty'

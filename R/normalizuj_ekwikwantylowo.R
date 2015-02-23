@@ -51,14 +51,14 @@ normalizuj_ekwikwantylowo = function(
       idSkali = attr(dane, 'idSkali')
     }
     if(is.null(idSkali)){
-      stop('Nie okreslono skali, której normy mają zostać zastosowane')
+      stop(e('Nie okreslono skali, której normy mają zostać zastosowane'))
     }
-    norms = tbl(src, sql("SELECT * FROM normy_ekwikwantylowe")) %>%
+    norms = tbl(src, sql(e("SELECT * FROM normy_ekwikwantylowe"))) %>%
       filter_(~id_skali == idSkali) %>%
       select_('wartosc', 'wartosc_zr') %>%
       rename_(.dots = setNames(list('wartosc', 'wartosc_zr'), c(kolWynik, resultCol)))
     if(nrow(norms %>% collect()) == 0){
-      stop('W bazie nie ma określonych norm dla tej skali (lub nie ma takiej skali)')
+      stop(e('W bazie nie ma określonych norm dla tej skali (lub nie ma takiej skali)'))
     }
   }else{
     dane = as.data.frame(dane)

@@ -12,7 +12,7 @@ pobierz_schematy_pkt = function(
     FROM kryteria_oceny JOIN sl_schematy_pkt_wartosci USING (schemat_pkt)
     ORDER BY 1
   "
-  data = tbl(src, sql(query))
+  data = tbl(src, sql(e(query)))
   return(data)
 }
 attr(pobierz_schematy_pkt, 'grupa') = 'kryteriaOceny'

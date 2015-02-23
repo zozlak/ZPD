@@ -37,7 +37,7 @@
   vars = data_frame('zmienna' = vars, 'grupa_danych' = grps, 'funkcja' = funcs)
   vars$pakiet = TRUE
   
-  missing = tbl(src, sql("SELECT zmienna, grupa_danych, funkcja, true AS baza FROM sl_wiki_zmienne")) %>% 
+  missing = tbl(src, sql(e("SELECT zmienna, grupa_danych, funkcja, true AS baza FROM sl_wiki_zmienne"))) %>% 
     collect() %>%
     full_join(vars) %>%
     filter_(~is.na(baza) | is.na(pakiet))

@@ -2,7 +2,7 @@ context('normalizuj_ekwikwantylowo')
 
 src = polacz()
 
-test_that('normalizuj_ekwikwantylowo works', {
+test_that('normalizuj_ekwikwantylowo działa', {
   dane = data.frame(wynik = rep(1:40, 50))
   
   norm = normalizuj_ekwikwantylowo(dane, zBazy = FALSE)

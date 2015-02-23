@@ -90,7 +90,7 @@ filtruj_przystapienia = function(
       filter_(~czesc_egzaminu %in% czescEgzaminu) 
   }
   if(nrow(tests %>% collect()) == 0){
-    stop('Nie ma takiej części i/lub rodzaju egzaminu')
+    stop(e('Nie ma takiej części i/lub rodzaju egzaminu'))
   }
 
   if(!is.null(obserwacje)){

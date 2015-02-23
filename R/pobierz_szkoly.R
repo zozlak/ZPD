@@ -20,7 +20,7 @@ pobierz_szkoly = function(
 	    LEFT JOIN teryt_powiaty p USING (rok, id_wojewodztwa, id_powiatu)
 	    LEFT JOIN teryt_wojewodztwa w USING (rok, id_wojewodztwa)
 	"
-  data = tbl(src, sql(query))
+  data = tbl(src, sql(e(query)))
   return(data)
 }
 attr(pobierz_szkoly, 'grupa') = 'szkoly'

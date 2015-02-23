@@ -36,15 +36,14 @@ pobierz_wyniki_egzaminu = function(
     group_by_('dane_ewd') %>%
     summarize(n = n())
   if(nrow(tests) == 0){
-    stop('w bazie nie ma wyników takiego egzaminu')
+    stop(e('w bazie nie ma wyników takiego egzaminu'))
   }
   if(nrow(tests %>% filter_(~dane_ewd == czyEwd)) == 0){
-    stop('w bazie nie ma wyników takiego egzaminu, ale istnieją dla innego źródła danych (patrz parametr czyEwd)')
+    stop(e('w bazie nie ma wyników takiego egzaminu, ale istnieją dla innego źródła danych (patrz parametr czyEwd)'))
   }
   
-  
   tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), runif(1))))
-  DBI::dbGetQuery(src$con, paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1"))
+  DBI::dbGetQuery(src$con, e(paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1")))
   query = sprintf(
     "SELECT zbuduj_widok_czesci_egzaminu('%s', %s, %s, %d, %s, %s, %s, %s, true);",
     tmpName,
@@ -56,8 +55,8 @@ pobierz_wyniki_egzaminu = function(
     ifelse(is.null(idSkali), 'null', idSkali),
     ifelse(skroc, 'true', 'false')
   )
-  DBI::dbGetQuery(src$con, query)
-  data = tbl(src, sql(paste0("SELECT * FROM ", tmpName)))
+  DBI::dbGetQuery(src$con, e(query))
+  data = tbl(src, sql(e(paste0("SELECT * FROM ", tmpName))))
 
   attr(data, 'idSkali') = idSkali
   

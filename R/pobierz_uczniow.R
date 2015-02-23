@@ -23,7 +23,7 @@ pobierz_uczniow = function(
   if(daneOsobowe == TRUE){
     query = sub('obserwacje o', 'dane_osobowe.obserwacje o', query)
   }
-  data = tbl(src, sql(query))
+  data = tbl(src, sql(e(query)))
   return(data)
 }
 attr(pobierz_uczniow, 'grupa') = 'uczniowie'

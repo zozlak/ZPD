@@ -17,7 +17,7 @@ pobierz_parametry = function(
       LEFT JOIN skale_elementy USING (id_skali, kolejnosc)
     ORDER BY id_skali, kolejnosc
   "
-  data = tbl(src, sql(query))
+  data = tbl(src, sql(e(query)))
   return(data)  
 }
 attr(pobierz_parametry, 'grupa') = 'parametry'

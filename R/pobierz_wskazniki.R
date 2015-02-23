@@ -55,7 +55,7 @@ pobierz_wskazniki = function(
       ifelse(doPrezentacji == TRUE, 'true', 'false')
     )
   }
-  data = tbl(src, sql(query))
+  data = tbl(src, sql(e(query)))
   return(data)  
 }
 attr(pobierz_wskazniki, 'grupa') = 'wskazniki'

@@ -20,7 +20,7 @@ pobierz_testy = function(
       testy t
       LEFT JOIN arkusze a USING (arkusz)
 	"
-  data = tbl(src, sql(query))
+  data = tbl(src, sql(e(query)))
   return(data)
 }
 attr(pobierz_testy, 'grupa') = 'testy'

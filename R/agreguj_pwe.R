@@ -26,13 +26,13 @@ agreguj_pwe = function(
     is.vector(kolNrPV), is.character(kolNrPV), length(kolNrPV) == 1, !is.na(kolNrPV)
   )
   if(bladZrwn != 0){
-    warning('Błąd zrównywania na ogół jest już wliczony w PV. Use at your own risk!')
+    warning(e('Błąd zrównywania na ogół jest już wliczony w PV. Use at your own risk!'))
   }
-  message(ifelse(
+  message(e(ifelse(
     wariancjaPop == 0, 
     'Błąd losowania obserwacji obliczany na podstawie wariancji wewnątrz grup',
     'Błąd losowania obserwacji obliczany na podstawie wariancji populacji'
-  ))
+  )))
   
 	dane = ramka_danych_pv(dane, kolPV, kolNrPV, kolGrupy)
 	

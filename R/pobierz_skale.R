@@ -96,7 +96,7 @@ pobierz_skale = function(
     query = sprintf('%s WHERE %s', query, paste0(where, collapse = ' AND '))
   }
   
-  data = tbl(src, sql(query))
+  data = tbl(src, sql(e(query)))
   return(data)  
 }
 attr(pobierz_skale, 'grupa') = 'skale'

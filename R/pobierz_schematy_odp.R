@@ -23,7 +23,7 @@ pobierz_schematy_odp = function(
       JOIN sl_schematy_odp_dystr USING (schemat_odp)
     ORDER BY 1, 3
   "
-  data = tbl(src, sql(query))
+  data = tbl(src, sql(e(query)))
   return(data)
 }
 attr(pobierz_schematy_odp, 'grupa') = 'kryteriaOceny'

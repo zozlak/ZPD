@@ -22,19 +22,19 @@ oszacuj_czas_wykonania = function(
     is.vector(format), is.character(format), length(format) == 1, format %in% c('TEXT', 'XML', 'JSON', 'YAML')
   )
   if(!any(class(dane) %in% 'tbl_sql')){
-    stop('Dane zostały już pobrane z serwera')
+    stop(e('Dane zostały już pobrane z serwera'))
   }
   query = paste0(
     'EXPLAIN (FORMAT ', format, ') ',
     dane$query$sql
   )
-  results = DBI::dbGetQuery(dane$src$con, query)
+  results = DBI::dbGetQuery(dane$src$con, e(query))
   
   if(pelnyPlan == FALSE & format == 'TEXT'){
     results = results[1, 1]
     results = sub('.*cost=([.0-9]+).*', '\\1', results)
     results = as.numeric(strsplit(results, '[.][.]')[[1]])
-    names(results) = cut(results, breaks = c(0, 10^4, 10^5, 10^6, 10^12), labels = c('sekundy', '< minuty', 'kilka minut', 'kilkadziesiąt minut'))
+    names(results) = cut(results, breaks = c(0, 10^4, 10^5, 10^6, 10^12), labels = e(c('sekundy', '< minuty', 'kilka minut', 'kilkadziesiąt minut')))
   }
   return(results)
 }

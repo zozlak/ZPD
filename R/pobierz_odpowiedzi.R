@@ -26,7 +26,7 @@ pobierz_odpowiedzi = function(
     query = sprintf("SELECT * FROM skale_elementy WHERE id_skali = %d", idSkali)
     scale = tbl(src, sql(query)) %>% collect()
     if(nrow(scale) == 0){
-      stop('Nie ma takiej skali lub skala nie ma określonych elementów')
+      stop(e('Nie ma takiej skali lub skala nie ma określonych elementów'))
     }
   }
     
@@ -63,7 +63,7 @@ pobierz_odpowiedzi = function(
       JOIN testy t USING (id_testu)
       LEFT JOIN arkusze a USING (arkusz)
   "
-  data = tbl(src, sql(query))
+  data = tbl(src, sql(e(query)))
   
   if(!is.null(idSkali)){
     query = sprintf(
@@ -72,14 +72,15 @@ pobierz_odpowiedzi = function(
        WHERE id_skali = %d",
       idSkali
     )
-    scale = tbl(src, sql(query))
+    scale = tbl(src, sql(e(query)))
     data = data %>% 
       inner_join(scale) %>% 
       group_by_('id_obserwacji', 'id_testu', 'id_szkoly', 'rok', 'kryterium', 'id_skrotu') %>% 
       summarize_(.dots = list('ocena' = 'sum(ocena)')) %>% 
       ungroup()
     
-    shorten = tbl(src, sql("SELECT id_skrotu, wartosc, nowa_wartosc FROM skroty_skal_mapowania"))
+    query = "SELECT id_skrotu, wartosc, nowa_wartosc FROM skroty_skal_mapowania"
+    shorten = tbl(src, sql(e(query)))
     data = data %>% 
       rename_(.dots = list('wartosc' = 'ocena')) %>% 
       left_join(shorten) %>% 

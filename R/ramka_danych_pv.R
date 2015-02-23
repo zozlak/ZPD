@@ -22,19 +22,19 @@ ramka_danych_pv = function(
 	
 	kolPV = grep(kolPV, names(dane), value = T)
 	if(length(kolPV) < 1){
-		stop('w ramce danych nie znaleziono zmiennych z wartościami PV')
+		stop(e('w ramce danych nie znaleziono zmiennych z wartościami PV'))
 	}
 	
 	kolNrPV = grep(kolNrPV, names(dane), value = T)
 	if(length(kolNrPV) > 1){
-		stop('niejednoznaczna nazwa kolumny z numerem PV')
+		stop(e('niejednoznaczna nazwa kolumny z numerem PV'))
 	}	else if(length(kolNrPV) == 0){
 		# ramka danych w postaci szerokiej - skonwertuj do długiej
 		dane = reshape2::melt(dane[, na.omit(c(kolPozostale, kolPV))], id.vars = kolPozostale)	
 		names(dane) = sub('^variable$', 'nr_pv', names(dane))
 		names(dane) = sub('^value$', 'wynik', names(dane))
 	} else if(length(kolPV) != 1){
-		stop('dane w postaci długiej, ale dopasowano wiele zmiennych z wartościami PV')
+		stop(e('dane w postaci długiej, ale dopasowano wiele zmiennych z wartościami PV'))
 	} else{
 		# ramka danych w postaci długiej
 		dane = dane[, c(kolPozostale, kolNrPV, kolPV)]

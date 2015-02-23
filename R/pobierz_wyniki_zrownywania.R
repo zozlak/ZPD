@@ -24,16 +24,16 @@ pobierz_wyniki_zrownywania = function(
     is.vector(skroc), is.logical(skroc), length(skroc) == 1, skroc %in% c(T, F)
   )
   
-  regExp = paste0('^zrównywanie;', rodzajEgzaminu, ';', rok, ';.*$')
+  regExp = e(paste0('^zrównywanie;', rodzajEgzaminu, ';', rok, ';.*$'))
 	tests = pobierz_testy(src) %>% 
     collect() %>%
     filter_(~grepl(regExp, opis_testu))
 	if(nrow(tests) == 0){
-		stop('w bazie nie ma takiego zrownywania')
+		stop(e('w bazie nie ma takiego zrownywania'))
 	}
-		
+
 	tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), runif(1))))
-	DBI::dbGetQuery(src$con, paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1"))
+	DBI::dbGetQuery(src$con, e(paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1")))
 	query = sprintf(
     "SELECT zbuduj_widok_zrownywania(%s, %s, %d, %s, %s, %s, true)",
     escape(tmpName),
@@ -43,8 +43,8 @@ pobierz_wyniki_zrownywania = function(
     ifelse(is.null(idSkali), 'null', as.numeric(idSkali)),
     ifelse(skroc, 'true', 'false')
   )
-	DBI::dbGetQuery(src$con, query)
-	data = tbl(src, sql(paste0("SELECT * FROM ", tmpName)))
+	DBI::dbGetQuery(src$con, e(query))
+	data = tbl(src, sql(e(paste0("SELECT * FROM ", tmpName))))
 
 	attr(data, 'idSkali') = idSkali
   
