@@ -1,4 +1,11 @@
 --------------------
+Zmiany w ZPD 1.1.1 (2015-03-08)
+
+- Zmiany w grupie danych "wartości wskaźników":
+  - korekta błędu przy pobieraniu liczby uczniów piszących maturę
+    rozszerzoną w funkcji pobierz_wartosci_wskaznikow()
+
+--------------------
 Zmiany w ZPD 1.1.0 (2015-02-23)
 
 - Zmiany techniczne:

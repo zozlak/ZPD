@@ -32,7 +32,7 @@ pobierz_wartosci_wskaznikow = function(
       LEFT JOIN teryt_wojewodztwa w USING (rok, id_wojewodztwa)
       JOIN sl_kategorie k USING (kategoria)
       LEFT JOIN (SELECT * FROM liczba_zdajacych WHERE kategoria_lu = 'ogółem') l USING (id_ww)
-      LEFT JOIN (SELECT * FROM liczba_zdajacych WHERE kategoria_lu = 'ogółem - poziom rozszerzony') lr USING (id_ww)
+      LEFT JOIN (SELECT * FROM liczba_zdajacych WHERE kategoria_lu = 'ogółem rozszerzona') lr USING (id_ww)
   "
   if(czyPomin == FALSE){
     query = paste(query, 'WHERE pomin = false')
