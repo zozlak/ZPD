@@ -5,6 +5,9 @@ e = function(s){
   stopifnot(
     is.character(s)
   )
-  Encoding(s) = 'UTF-8'
-  return(enc2native(s))
+  if(nchar('ą') == 2){
+    Encoding(s) = 'UTF-8'
+    s = enc2native(s)
+  }
+  return()
 }
