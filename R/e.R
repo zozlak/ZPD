@@ -9,5 +9,5 @@ e = function(s){
     Encoding(s) = 'UTF-8'
     s = enc2native(s)
   }
-  return()
+  return(s)
 }
