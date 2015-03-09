@@ -1,9 +1,9 @@
 --------------------
-Zmiany w ZPD 1.1.1 (2015-03-08)
+Zmiany w ZPD 1.1.1 (2015-03-09)
 
 - Zmiany w grupie danych "wartości wskaźników":
-  - korekta błędu przy pobieraniu liczby uczniów piszących maturę
-    rozszerzoną w funkcji pobierz_wartosci_wskaznikow()
+  - usunięcie kolumn lu_r i lu_ewd_r z danych zwracanych przez funkcję
+    pobierz_wartosci_wskaznikow()
 - Zmiany techniczne:
   - dodanie do funkcji e() empirycznego testu na poprawne odczytywanie przez R
     kodowania znaków w kodzie źródłowym (co powinno rozwiązać problem z 
