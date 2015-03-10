@@ -34,7 +34,7 @@ pobierz_wartosci_wskaznikow = function(
           END
       END AS poziom_agregacji,
       id_wojewodztwa * 10000 + COALESCE(id_powiatu * 100, 0) + COALESCE(id_gminy, 0) AS teryt_jst,
-      g.nazwa AS gmina, p.nazwa AS powiat, w.nazwa AS wojewodztwo,
+      g.nazwa AS gmina_jst, p.nazwa AS powiat_jst, w.nazwa AS wojewodztwo_jst,
       pomin, kategoria, k.wyswietlaj, k.komunikat,
       srednia, bs, q1, mediana, q3, min, max,
       ww.ewd, bs_ewd, trend_ewd, bs_trend_ewd, korelacja,
