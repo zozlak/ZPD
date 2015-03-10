@@ -1,0 +1,274 @@
+---
+title: "Pobieranie PWE i EWD na poziomie szkół"
+author: "Tymoteusz Wołodźko <t.wolodzko@ibe.edu.pl>"
+output:
+  html_document:
+    highlight: tango
+---
+
+# Wstęp
+
+Poniżej zapoznamy się z:
+
+1. wyszukiwaniem pożądanych wskaźników w grupie danych [wskaźniki](http://zpd.ibe.edu.pl/doku.php?id=r_gr_wskazniki)
+2. pobieraniem wartości pożądanych wskaźników z grupy danych [wartości wskaźnków](http://zpd.ibe.edu.pl/doku.php?id=r_gr_wartosciwskaznikow)
+3. dołączaniem do wartości wskaźników informacji o szkołach i odfiltrowywanie pobieranych danych do wybranego zakresu, np. po typie szkoły, województwie, itp. (grupa danych [szkoły](http://zpd.ibe.edu.pl/doku.php?id=r_gr_szkoly))
+
+## Przydatne linki:
+
+* http://zpd.ibe.edu.pl/doku.php?id=r_gr#podsumowanie_informacji_o_grupach_danych
+* http://zpd.ibe.edu.pl/doku.php?id=r_zmienne
+
+## Funkcje, z których będziemy korzystac:
+
+* `pobierz_wskazniki()`
+* `pobierz_wartosci_wskaznikow()`
+* `pobierz_szkoly()`
+
+## Czynności wstępne
+
+Zacznijmy od załadowania pakietu ZPD i połączenia się z bazą danych: 
+```{r, message=FALSE}
+# importujemy pakiet ZPD i nawiązujemy połączenie z bazą danych IBE
+library(ZPD)
+src = polacz() 
+
+# do tworzenia wykresów przyda nam się biblioteka ggplot2
+# więcej informacji na jego temat można znaleźć na stronie: http://www.cookbook-r.com
+library(ggplot2)
+```
+
+# Wyszukiwanie wskaźników EWD/PWE
+
+Punktem wyjścia do pobrania wskaźników EWD/PWE dla szkół jest ustalenie, jaki dokładnie wskaźnik chcemy pobrać, występują one bowiem w wielu odmianach ze względu na rodzaj egzaminu (sprawdzian/egzamin gimnazjalny/matura), część egzaminu, typ szkoły, itp.
+
+W tym celu przeanalizujemy zawartość zbioru danych [wskaźniki](http://zpd.ibe.edu.pl/doku.php?id=r_gr_wskazniki)
+
+Na początek pobierzemy cały zbiór danych *wskazniki*.  
+O ile nie jest to zalecane w przypadku większości zasobów bazy, w tym wypadku jest on na tyle mały, że nie będzie to stanowić problemu.
+
+```{r}
+wskazniki = pobierz_wskazniki(src) %>%
+  collect()
+```
+
+Podejrzyjmy teraz pierwsze kilka wierszy pobranego zbioru:
+```{r}
+wskazniki
+```
+
+Jak widzimy, ma on 210 obserwacji i 12 zmiennych.  
+Opis poszczególnych zmiennych znajdziemy na [tej stronie](http://zpd.ibe.edu.pl/doku.php?id=r_zmienne&zm=wskazniki).  
+Zmienne te będą nam służyć do późniejszego filtrowania wyników znajdujących się w bazie danych.
+
+Sprawdźmy jakie wartości przyjmują wybrane zmienne:
+```{r}
+unique(wskazniki$rodzaj_wsk)
+unique(wskazniki$rodzaj_egzaminu)
+unique(wskazniki$typ_szkoly)
+unique(wskazniki$czesc_egzaminu)
+unique(wskazniki$okres) # okres == 1 dla PWE i okres == 2 lub 3 dla EWD
+```
+
+Zmienna *wskaznik* w zbiorze danych *wskazniki* to identyfikator oszacowania PWE lub EWD, którego opis znajdziemy w zmiennej *opis_wsk*:
+```{r}
+unique(wskazniki$wskaznik)
+```
+
+Korzystając z opisanych powyżej zmiennych możemy odpowiednio filtrować ramkę danych w poszukiwaniu interesującego nas wskaźnika.  
+W tym celu przydatne będą funkcje `filter()`, `select()` i `arrange()` omawiane na wcześniejszym warsztacie.  
+Dodatkowo, możemy skorzystać z funkcji `distinct()`, która usuwa ze zbioru danych duplikaty.
+
+Spróbujmy zatem wyszukać wybrane wskaźniki PWE/EWD:
+
+
+1. Wskaźniki PWE dla sprawdzianu (takie jak w serwisie internetowym):
+```{r}
+wskazniki %>%
+  filter(
+    rodzaj_wsk == "pwe",
+    rodzaj_egzaminu == "sprawdzian"
+  ) %>%
+  arrange(rok_do, skrot) %>%
+  select(rodzaj_wsk, wskaznik, okres, wsk_do_prezentacji, skrot, rok_do, typ_szkoly, rodzaj_egzaminu, czesc_egzaminu)
+```
+Jak widać w tym wypadku mamy do czynienia z jednym wskaźnikiem (zmienna *wskaznik*) **paou_sp**, który występuje dla lat 2002-2013.
+
+2. Wskaźniki EWD dla matury z języka polskiego:
+```{r}
+wskazniki %>%
+  filter(
+    rodzaj_wsk == "ewd",
+    wsk_do_prezentacji == TRUE, 
+    rodzaj_egzaminu == "matura",
+    czesc_egzaminu %in% c("j. polski podstawowa", "j. polski rozszerzona")
+  ) %>%
+  arrange(rok_do, skrot) %>%
+  select(rodzaj_wsk, wskaznik, okres, wsk_do_prezentacji, skrot, rok_do, typ_szkoly, rodzaj_egzaminu, czesc_egzaminu)
+```
+W tym wypadku mamy do czynienia z 4 różnymi wskaźnikami (zmienna *wskaznik*):
+
+* __mlh_tl_wgr__ (wskaźnik humanistyczny dla LO), 
+* __mth_tl_wgr__ (wskaźnik humanistyczny dla techników), 
+* __mlp_tl_wgr__ (wskaźnik dla j. polskiego dla LO),
+* __mtp_tl_wgr__ (wskaźnik dla j. polskiego dla T).
+
+Przy czym każdy z nich występuje dla 3 okresów: 2010-2012, 2011-2013, 2012-2014 (patrz kombinacje zmiennych *rok_do* oraz *okres*).
+
+Umiejąc znaleźć interesujące nas wskaźniki, możemy przejść do pobierania ich wartości.
+
+# Pobieranie wartości wskaźników EWD/PWE
+
+Znając identyfikator wskaźnika, który chcemy pobrać (wartość zmiennej *wskaznik* w grupie danych [wskaźniki](http://zpd.ibe.edu.pl/doku.php?id=r_gr_wskazniki)), możemy pobrać z bazy jego wartości.
+
+Znajdują się one w grupie danych [wartości wskaźnków](http://zpd.ibe.edu.pl/doku.php?id=r_gr_wartosciwskaznikow), a do ich pobrania służy funkcja `pobierz_wartosci_wskaznikow()`.  
+
+Pobierzmy np. wartości wskaźnika **paou_sp** (PWE dla sprawdzianu):
+```{r}
+pwe_spr = pobierz_wartosci_wskaznikow(src) %>%
+  filter(wskaznik == 'paou_sp')
+pwe_spr
+```
+
+Zamiast podawać nazwę wskaźnika ręcznie, możemy dokonać odfiltrowania za pomocą funkcji `semi_join()` i odfiltrowanej wcześniej grupy danych [wskaźniki](http://zpd.ibe.edu.pl/doku.php?id=r_gr_wskazniki):
+```{r, message=FALSE}
+# wyszukujemy wskaźnik PWE dla sprawdzianu
+wskaznik = pobierz_wskazniki(src) %>%
+  filter(
+    rodzaj_wsk == "pwe",
+    rodzaj_egzaminu == "sprawdzian"
+  ) 
+wskaznik %>% select(wskaznik) %>% distinct() # podglądamy nazwę wskaźnika
+
+pwe_spr = pobierz_wartosci_wskaznikow(src) %>%
+  semi_join(wskaznik)
+pwe_spr
+```
+
+Spróbujmy teraz zwizualizować wyniki dla województw w sposób analogiczny do tego, jak w serwisie internetowym PWE:
+(95% przedziały ufności własności średniej, co odpowiada +/- 1,96 * błąd standardowy)
+```{r}
+# odfiltrowujemy dane województw
+# i ograniczamy się do zmiennych: rok, województwo, srednia i bs
+pwe_spr_woj = pwe_spr %>%
+  filter(poziom_agregacji == "województwo") %>%
+  select(rok, wojewodztwo_jst, srednia, bs) %>%
+  collect()
+
+ggplot(pwe_spr_woj, aes(x = rok, y = srednia, color = wojewodztwo_jst, fill = wojewodztwo_jst)) +
+  geom_line(size=.5) +
+  geom_ribbon(aes(ymin = srednia - 1.96 * bs, ymax = srednia + 1.96 * bs), alpha = 0.2, colour = NA) +
+  scale_x_continuous(breaks = 2002:2013) + 
+  ggtitle("PWE dla sprawdzianu na przestrzeni lat") +
+  scale_y_continuous(limits=c(94, 104)) +
+  geom_hline(aes(yintercept = 100), linetype = "dashed")
+```
+
+Podobnie możemy pobrać np. wskaźniki PWE dla części humanistycznej egzaminu gimnazjalnego dla powiatów z województwa pomorskiego:
+```{r, message = FALSE}
+# wyszukujemy wskaźnik PWE dla części humanistycznej egzaminu gimnazjalnego
+wskaznik = pobierz_wskazniki(src) %>%
+  filter(
+    rodzaj_wsk == "pwe",
+    rodzaj_egzaminu == "egzamin gimnazjalny",
+    czesc_egzaminu == "humanistyczna"
+  )
+wskaznik %>% select(wskaznik) %>% distinct() # podglądamy nazwę wskaźnika
+
+# pobieramy wartości wskaźnika odfiltrowując tylko powiaty w woj. pomorskim
+# (wskaźnik odfiltrowujemy złączając z pobraną przed chwilą nazwą wskaźnika)
+pwe_gh_pomorskie = pobierz_wartosci_wskaznikow(src) %>%
+  semi_join(wskaznik) %>%
+  filter(
+    wojewodztwo_jst == 'pomorskie',
+    poziom_agregacji == 'powiat'
+  ) %>%
+  collect()
+pwe_gh_pomorskie
+```
+
+Teraz możemy jeszcze np. odfiltrować jedynie wyniki dla 2007 roku i posortować je od najwyższych do najniższych w województwie (na podstawie wartości średniej).
+```{r, message = FALSE}
+pwe_gh_pomorskie %>%
+  filter(rok == 2007) %>%
+  select(rok, powiat_jst, srednia, bs, lu) %>%
+  arrange(desc(srednia))
+```
+
+### Pobieranie wartości wskaźników dla szkół
+
+Oczywiście jest również możliwe pobranie wartości wskaźników EWD/PWE dla szkół.
+
+Ponieważ jednak grupa danych [wartości wskaźnków](http://zpd.ibe.edu.pl/doku.php?id=r_gr_wartosciwskaznikow) zawiera jedynie identyfikator szkoły w bazie IBE (zmienna *id_szkoly*), aby móc zidentyfikować szkołę niezbędne będzie pobranie i dołączenie danych z grupy danych [szkoły](http://zpd.ibe.edu.pl/doku.php?id=r_gr_szkoly). Do pobrania grupy danych *szkoły* służy funkcja `pobierz_szkoly()`.
+
+Pobierzmy np. wartości wszystkich wskaźników PWE dla wszystkich gimnazjów w województwie opolskim dla roku 2010.  
+Zauważmy, że w tym wypadku:
+
+* Województwo, w którym leżą szkoły musimy odfiltrować w ramach grupy danych [szkoły](http://zpd.ibe.edu.pl/doku.php?id=r_gr_szkoly), bo właśnie tam znajduje się ta informacja.
+* Rok możemy odfiltrować w dowolnej grupie danych - albo tylko w grupie *szkoły* (jednostką obserwacji są tam dane adresowe szkoły w danym roku!) albo tylko w grupie *wartościWskaźników* albo w obydwu z nich.
+```{r, message=FALSE}
+# wyszukujemy wskaźniki PWE dla gimnazjów
+wskazniki = pobierz_wskazniki(src) %>%
+  filter(
+    rodzaj_wsk == 'pwe', 
+    rodzaj_egzaminu == 'egzamin gimnazjalny'
+  )
+
+# wyszukujemy szkoły w woj. opolskim w 2010 roku
+szkoly_opolskie = pobierz_szkoly(src) %>%
+  filter(
+    wojewodztwo_szkoly == 'opolskie',
+    rok == 2010
+  )
+
+# pobieramy wartości wskaźników odiltrowując interesujące szkoły i wskaźniki
+# porzez złączenia z pobranymi wyżej danymi
+pwe_gim_opolskie = pobierz_wartosci_wskaznikow(src) %>%
+  semi_join(wskazniki) %>%
+  inner_join(szkoly_opolskie) %>%
+  collect()
+
+# podglądamy fragment pobranych danych
+pwe_gim_opolskie %>%
+  select(id_szkoly, typ_szkoly, wojewodztwo_szkoly, rok, srednia, bs)
+```
+
+Pytania dla dociekliwych:
+
+* Dlaczego pobierając szkoły nie musieliśmy wskazać typu szkoły (gimnazjum), a mimo to otrzymaliśmy poprawny wynik?
+* Co trzeba by zrobić, aby wyszukując wskaźniki nie musieć filtrować po rodzaju egzaminu?
+
+-----
+
+Podobne dane możemy pobrać dla EWD.
+
+W poniższym przykładzie pobieramy 3-letnie wskaźniki EWD dla okresu 2010-2012 dla Techników w Krakowie, a następnie wyświetlamy pierwszych 20 wierszy pobranych danych:
+
+```{r, message=FALSE}
+# wyszukujemy 3-letnie wskaźniki EWD kończące się w 2012 roku
+wskazniki = pobierz_wskazniki(src) %>%
+  filter(
+    rodzaj_wsk == "ewd",
+    okres == 3,
+    rok_do == 2012
+  )
+
+# wyszukujemy technika w Krakowie
+szkoly = pobierz_szkoly(src) %>%
+  filter(
+    powiat_szkoly == "Kraków",
+    typ_szkoly == 'T'
+  )
+
+# pobieramy wartości wskaźników odfiltrowując wyżej pobranymi danymi
+ewd_t_krakow = pobierz_wartosci_wskaznikow(src) %>%
+  semi_join(wskazniki) %>%
+  inner_join(szkoly) %>%
+  collect()
+
+# podglądamy wybrane zmienne pierwszych 20 wierszy
+ewd_t_krakow %>%
+  select(wskaznik, srednia, ewd, nazwa_szkoly, publiczna) %>%
+  head(20)
+```
+

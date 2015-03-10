@@ -100,6 +100,24 @@ testy %>% filter(rodzaj_egzaminu == 'sprawdzian', (rok < 2003 | rok > 2013), czy
 testy %>% slice(1:5)
 ```
 
+### wg występowania wartości w innym zbiorze danych
+
+`semi_join(zbiórDanych1, zbiórDanych2)`
+
+Pozostawione zostaną tylko te wiersze z pierwszego zbioru danych, które występują w drugim.  
+Porównanie dokonywane jest na podstawie wartości zmiennych istniejących w obydwu zbiorach danych.
+
+```{r}
+# tworzymy zbiór danych, który posłuży nam do odfiltrowania
+mojFiltr = data_frame(
+  arkusz       = c('S-A1-102', 'S-B1-102'),
+  inna_kolumna = c(         1,          2)
+)
+# i odfiltrowujemy testy za jego pomocą 
+# (zwróćmy uwagę na komunikat mówiący o tym, na podstawie jakich kolumn dokonano filtrowania)
+testy %>% semi_join(mojFiltr)
+```
+
 ## wybieranie zmiennych
 
 `select(kolumna1, ...)`
