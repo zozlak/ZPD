@@ -16,7 +16,23 @@ pobierz_wartosci_wskaznikow = function(
     SELECT 
       id_ww, ww.rodzaj_wsk, ww.wskaznik,
       CASE okres > 1 WHEN true THEN (ww.rok_do - okres + 1) || '-' || ww.rok_do ELSE ww.rok_do::text END AS okres_wsk,
-      rok_do, id_szkoly, rok, polska,
+      rok_do, id_szkoly, rok,
+      CASE polska
+        WHEN true THEN 'Polska'
+        ELSE
+          CASE id_gminy IS NOT NULL
+            WHEN true THEN 'gmina'
+            ELSE
+              CASE id_powiatu IS NOT NULL
+                WHEN true THEN 'powiat'
+                ELSE
+                  CASE id_wojewodztwa IS NOT NULL
+                    WHEN true THEN 'województwo'
+                    ELSE 'szkoła'
+                  END
+              END
+          END
+      END AS poziom_agregacji,
       id_wojewodztwa * 10000 + COALESCE(id_powiatu * 100, 0) + COALESCE(id_gminy, 0) AS teryt_jst,
       g.nazwa AS gmina, p.nazwa AS powiat, w.nazwa AS wojewodztwo,
       pomin, kategoria, k.wyswietlaj, k.komunikat,
