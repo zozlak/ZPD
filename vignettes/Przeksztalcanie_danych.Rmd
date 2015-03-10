@@ -1,0 +1,277 @@
+---
+title: "Przekształcanie danych w R"
+author: "Mateusz Żółtak"
+output:
+  html_document:
+    highlight: tango
+---
+
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{Wstęp do R}
+\usepackage[utf8]{inputenc}
+-->
+# Wstęp
+
+Poniżej zapoznamy się ze sposobami przekształcania danych w R, takimi jak:
+
+* wybieranie wierszy
+* wybieranie zmiennych
+* zmiana nazw zmiennych
+* modyfikowanie / tworzenie nowych zmiennych
+* agregacja
+* sortowanie
+* złączanie kilku _zbiorów danych_
+* przekształcanie między postaciami długą i szeroką
+
+Ćwiczenia będziemy wykonywać na danych prostych [grupach danych](http://zpd.ibe.edu.pl/doku.php?id=r_gr) z bazy IBE - [testy](http://zpd.ibe.edu.pl/doku.php?id=r_gr_testy) oraz [wskażniki](http://zpd.ibe.edu.pl/doku.php?id=r_gr_wskazniki).  
+Z tego powodu zaczniemy od:
+
+* załadowania pakietu ZPD
+* nawiązania połączenia z bazą danych IBE
+* pobrania z bazy grup danych *testy* oraz *wskaźniki*
+```{r, message = FALSE, warning = FALSE}
+library(ZPD)
+src = polacz()
+testy = pobierz_testy(src) %>% collect()
+wskazniki = pobierz_wskazniki(src) %>% collect()
+```
+
+Dokładne opisy omawianych operacji wraz z przykładami można znaleźć pod [tutaj](http://zpd.ibe.edu.pl/?id=dplyr).
+
+## Łączenie ze sobą wielu operacji
+
+Operacje można wykonywać pojedynczo:
+```{r, eval = FALSE}
+mojeDane = operacja1(mojeDane)
+mojeDane = operacja2(mojeDane)
+```
+
+Można też łączyć je ze sobą w ciągi używając operatora `%>%`:
+```{r, eval = FALSE}
+mojeDane = operacja1(mojeDane) %>%
+  operacja2()
+```
+
+Tak naprawdę operator `%>%` powoduje przekazanie tego, co zastanie po lewej stronie jako pierwszy argument funkcji, którą ma po prawej stronie.
+
+Podczas warsztatów konsekwentnie stosować będziemy składnię z operatorem `%>%`.
+
+## Wybieranie wierszy
+
+### wg wartości kolumn
+
+`filter(warunek1, ...)`
+
+* warunków może być dowolnie wiele
+* łączą się ze sobą przez koniunkcję
+    * chcąc uzyskać alternatywę łączymy ze sobą warunki operatorem `|` (pojedynczej pionowej kreski) i całość __otaczamy nawiasami__
+* dostępne operatory:
+    * `%in%` zawieranie się w ciągu wartości (braki danych nie spełniają warunku)
+    * `==` tożsamość (__uwaga!__ braki danych spełniają warunek)
+    * `<, >, <=, >=` (__uwaga!__ braki danych spełniają warunek)
+    * `is.na()` - czy brak danych
+    * `grepl(wyrażenie, zmienna)` dopasowanie do wyrażenia regularnego
+    * `!` negacja
+* stałe logiczne:
+    * `T`, `TRUE` - prawda
+    * `F`, `FALSE` - fałsz
+
+```{r}
+# wybierzmy tylko testy egzaminacyjne (wyświetli się tylko pierwszych 10):
+testy %>% filter(czy_egzamin == TRUE)
+
+# wybierzmy tylko testy sprawdzianu z 2013 roku:
+testy %>% filter(rodzaj_egzaminu == 'sprawdzian', rok == 2013, czy_egzamin == TRUE)
+
+# wybierzmy tylko testy sprawdzianu z lat 2010, 2012
+testy %>% filter(rodzaj_egzaminu == 'sprawdzian', rok %in% c(2010, 2012), czy_egzamin == TRUE)
+
+# wybierzmy tylko testy sprawdzianu po 2013 lub przed 2003 rokiem
+testy %>% filter(rodzaj_egzaminu == 'sprawdzian', (rok < 2003 | rok > 2013), czy_egzamin == TRUE)
+```
+
+### wg numerów wierszy
+
+`slice(numery_wierszy)`
+
+```{r}
+# wybieramy wiersze od 1 do 5
+testy %>% slice(1:5)
+```
+
+## wybieranie zmiennych
+
+`select(kolumna1, ...)`
+
+```{r}
+# wybieramy tylko zmienne rodzaj_egzaminu i rok
+testy %>% select(rodzaj_egzaminu, rok)
+```
+
+## zmiana nazw zmiennych
+
+`rename(nowaNazwa = staraNazwa, ...)`
+
+```{r}
+# zmieniamy nazwę kolumny "arkusz" na "arkusz_egzaminacyjny"
+# (i wyświetlamy tylko 3 pierwsze wiersze)
+testy %>% 
+  rename(arkusz_egzaminacyjny = arkusz) %>%
+  slice(1:3)
+```
+
+## modyfikowanie / tworzenie nowych zmiennych
+
+`mutate(nazwaZmiennej1 = definicjaZmiennej1, ...)`
+
+W definicji możemy stosować:
+
+* operatory arytmetyczne (`+, -, *, /, ^`)
+* funkcje operujące na liczbach, np. `mean()`, `min()`, `max())`, `median()`
+    * aby pomijać przy obliczaniu braki danych, należy wywoływać je z parametrem `na.rm = TRUE`
+* funkcje operujące na łańcuchach znaków, np.:
+    * `paste0(zmiennaLubStala1, ...)` - złączanie tekstów
+    * `gsub(wyrazenieRegularne, zamiana, zmienna)` - znajdź i zamień
+
+```{r}
+# tworzymy nową zmienną, która przechowuje początkowy rok okresu obejmowanego przez dany wskaźnik
+# (i ograniczamy się do wyświetlenia zmiennych wskaznik, okres, rok_od i rok_do)
+wskazniki %>%
+  mutate(rok_od = rok_do - okres + 1) %>%
+  select(wskaznik, okres, rok_od, rok_do)
+```
+
+Jeśli tworzona zmienna będzie się nazywać tak, jak zmienna już istniejąca, wtedy istniejąca zmienna zostanie nadpisana nowymi wartościami (zmodyfikowana).
+
+## sortowanie
+
+`arrange(zmienna1, ...)`
+
+```{r}
+# sortujemy testy po roku
+# (ograniczając się do testów egzaminacyjnych)
+testy %>% 
+  arrange(rok) %>%
+  filter(czy_egzamin == TRUE)
+
+# tak samo, tylko malejąco
+testy %>% 
+  arrange(desc(rok)) %>%
+  filter(czy_egzamin == TRUE)
+```
+
+## agregacja
+
+`group_by(zmienna1, ...)`
+
+Grupuje _zbiór danych_ wg wartości zadanych zmiennych.
+
+`summarize(nazwaZmiennej1 = definicjaZmiennej1)`
+
+Tworzy nowy _zbiór danych_, który:
+
+* będzie zawierać tylko zmienne, wg których dokonano agregacji oraz zmienne zdefiniowane w funkcji `summarize()`
+* będzie zawierać tylko po jednym wierszu dla każdej grupy.
+
+Definiując nowe zmienne można użyć specjalnej funkcji `n()`, która zwraca liczbę obserwacji w danej grupie.
+
+```{r}
+# obliczmy liczbę testów, datę realizacji pierwszego z nich oraz datę realizacji ostatniego
+# w podziale na to, czy jest to test egzaminacyjny i rok
+testy %>%
+  group_by(czy_egzamin, rok) %>%
+  summarize(liczba = n(), pierwszy = min(data_testu), ostatni = max(data_testu))
+```
+
+## złączanie kilku _zbiorów danych_
+
+Istnieje wiele rodzajów złączeń - patrz http://zpd.ibe.edu.pl/?id=
+
+Złączenia pomiędzy zbiorami danych następują na podstawie wartości zmiennych **o tych samych nazwach**. Jeśli zmienne w zbiorach danych nazywają się tak samo, ale nie chcemy złączać na podstawie ich wartości, trzeba je przed złączeniem przezwać (np. mamy wyniki dwóch części egzaminu w oddzielnych zbiorach danych, a w każdej z nich w zmienną _wynik_ - przed ich złączeniem należałoby zmienić nazwę przynajmniej jednej ze zmiennych _wynik_).
+
+Do złączania zbiorów danych służą funkcje:
+
+`inner_join(zbiórDanych1, zbiórDanych2)`
+`left_join(zbiórDanych1, zbiórDanych2)`
+`full_join(zbiórDanych1, zbiórDanych2)`
+
+![rodzaje złączeń](http://zpd.ibe.edu.pl/lib/exe/fetch.php?media=joins.svg)
+
+### Przykład
+
+Aby pokazać złączanie danych będzie nam potrzebny trochę bardziej złożony przykład. Załóżmy, że mamy dwa zbiory danych - jeden opisuje szkoły, a drugi wyniki uczniów w tych szkołach:
+```{r}
+wyniki = data.frame(
+  id_szkoly     = c(  10,   10,   11,   13),
+  rok           = c(2014, 2014, 2014, 2014),
+  id_obserwacji = c( 100,  101,  102,  103),
+  id_testu      = c(   1,    1,    2,    2),
+  wynik         = c(  13,   15,    9,    8)
+  
+)
+wyniki
+szkoly = data.frame(
+    id_szkoly = c(          10,            11,               12),
+    rok       = c(        2014,          2014,             2014),
+    nazwa     = c(   'SP nr 1',     'SP nr 2',        'SP nr 3'),
+    adres     = c('Szkolna 10', 'Kopernika 3', 'Konopnickiej 1')
+)
+szkoly
+```
+
+Jeśli złączymy ze sobą te dwa zbiory danych, złączenie nastąpi na podstawie zmiennych występujących w obydwu zbiorach: **id_szkoły** oraz **rok**.
+
+Wynikami tych złączeń będzie:
+```{r, message = FALSE, warning = FALSE}
+# uczeń o id_obserwacji 103 został pominięty, bo w danych szkół nie ma szkoły o id_szkoly równym 15
+inner_join(wyniki, szkoly)
+```
+```{r, message = FALSE, warning = FALSE}
+# uczeń o id_onserwacji 103 pozostał w zbiorze i ma braki danych ze zbioru danych opisujących szkołę
+left_join(wyniki, szkoly)
+```
+```{r, message = FALSE, warning = FALSE}
+# pojawił się dodatkowo wiersz opisujacy szkołę, która nie posiada uczniów
+full_join(wyniki, szkoly)
+```
+
+## przekształcanie między postacią długą i szeroką
+
+Czasami może się okazać, że niektóre informacje, które w danej chwili przechowywane są w wierszach chcielibyśmy przenieść w kolumny (utworzyć z nich nowe zmienne) lub odwrotnie. Operacje takie nazywamy przekształcaniem danych z postaci długiej do szerokiej oraz z szerokiej do długiej.
+
+Najłatwiej będzie zapoznać się z tym zagadnieniem na przykładach
+
+### z postaci długiej do szerokiej
+
+`reshape2::dcast(zbiór_danych, formuła)`
+
+Formuła definiuje, wartości których zmiennych przepisane zostaną w nowe zmienne. Ma ona postać:
+
+`zmiennaWiersza1 + ... ~ zmiennaWkolumny1 + ...`
+
+Np. chcemy obliczyliśmy liczbę wskaźników EWD i PWE w poszczególnych latach:
+```{r}
+liczWsk = wskazniki %>%
+  group_by(rok_do, rodzaj_wsk) %>%
+  summarize(liczba = n())
+liczWsk
+```
+ale teraz chcielibyśmy, aby poszczególne lata utworzyły nowe zmienne (kolumny), a wiersze wyznaczały jedynie rodzaj wskaźnika.
+
+W tym celu musimy dokonać konwersji z postaci długiej do szerokiej:
+```{r}
+liczWsk = reshape2::dcast(liczWsk, rodzaj_wsk ~ rok_do)
+liczWsk
+```
+
+### z postaci szerokiej na długą
+
+`reshape2::melt(zbiórDanych, id.vars = nazwy_zmiennych_do_pozostawienia, variable.name = nazwaZmiennejNazwy, value.name = nazwaZmiennejWartosci)`
+
+Załóżmy teraz, że z jakichś powodów chcemy przywrócić poprzednią postać naszych danych, tzn. przepisać zmienne odpowiadające poszczególnym rocznikom w wiersze jednej zmiennej _rok_:
+```{r}
+liczWsk = reshape2::melt(liczWsk, id.vars = c('rodzaj_wsk'), variable.name = 'rok_do', value.name = 'liczba')
+liczWsk
+```
+

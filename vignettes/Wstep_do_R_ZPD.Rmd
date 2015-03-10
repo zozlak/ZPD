@@ -6,6 +6,11 @@ output:
     highlight: tango
 ---
 
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{Wstęp do R}
+\usepackage[utf8]{inputenc}
+-->
 ```{r, results = 'hide', message = FALSE, warning = FALSE, echo = FALSE}
 library(ZPD)
 ```
