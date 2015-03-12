@@ -31,7 +31,6 @@ normalizuj_ekwikwantylowo = function(
   src      = NULL,
   kolWynik = 'wynik',
   idSkali  = NULL,
-  zBazy    = TRUE,
   ...
 ){
   stopifnot(
@@ -43,10 +42,7 @@ normalizuj_ekwikwantylowo = function(
   )
   
   resultCol = paste0(kolWynik, '_norm')
-  if(zBazy == TRUE){
-    stopifnot(
-      !is.null(src)
-    )
+  if(!is.null(src)){
     if(is.null(idSkali)){
       idSkali = attr(dane, 'idSkali')
     }
