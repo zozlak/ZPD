@@ -1,0 +1,103 @@
+---
+title: "Struktura bazy danych IBE i możliwości, jakie daje"
+author: "Mateusz Żółtak"
+output:
+  html_document:
+    highlight: tango
+---
+
+# Wstęp
+
+Baza służy przechowywaniu możliwie kompletnych informacji o polskich egzaminach zewnętrznych, które przetwarzane są w IBE.  
+
+Wyróżnić w niej można cztery główne części (przy czym są one ze sobą ściśle powiązane): 
+
+* __Bank zadań__  
+Przechowuje informacje o zadaniach użytych w testach egzaminacyjnych oraz testach używanych w PAOU i EWD, w tym:
+    * rodzaj zadania
+    * sposób punktowania
+    * treść zadania
+    * parametry zadania
+    * informacje o egzaminach i/lub testach, w których zadanie zostało użyte
+* __Baza wyników egzaminacyjnych__  
+Przechowuje wyniki egzaminów oraz testów PAOU i EWD
+* __Baza wyników skalowań oraz wartości wskaźników PWE i EWD__  
+Przechowuje estymacje PWE i EWD na poziomie uczniów używane m.in. przez strony http://pwe.ibe.edu.pl, http://gimnazjum.ewd.edu.pl i http://matura.ewd.edu.pl
+* __Baza szkół__  
+Przechowuje informacje o danych teleadresowych szkół w poszczególnych latach
+
+## Możliwości dawane przez bazę
+
+Baza może uprościć wykonywanie analiz poprzez:
+
+* Dostępność wszystkich informacji w jednym miejscu.
+* Dostępność gotowych:
+    * wskaźników na poziomie szkół i/lub JST;
+        * opartych na uznanej i zweryfikowanej metodologii;
+        * także możliwość samodzielnego liczenia niektórych wskaźników na samodzielnie wybranym poziomie agregacji;
+    * wyskalowanych wyników uczniów.
+        * wyniki wyskalowane pozbawione są wielu niekorzystnych cech wyników surowych;
+    * parametrów zadań (zarówno KTT jak i IRT).
+* Ustandaryzowaną formę dostępu do danych.
+
+# Przepływ danych w bazie
+
+![przepływ danych](rysunki/przeplyw_danych.svg)
+
+# Grupy danych
+
+Z uwagi na różnorodność danych przechowywanych w bazie, nie ma możliwości udostępnienia ich w postaci jednego zbioru danych i zachodzi konieczność podzielenia ich na pewne grupy.
+
+Wyróżnione grupy to:
+
+* __wyniki__: surowe wyniki egzaminów i testów zrównujących ;
+* __oszacowania__: oszacowania umiejętności uczniów uzyskane w wyniku skalowania IRT;
+* __parametry__: oszacowania parametrów IRT i KTT zadań z egzaminów i testów;
+* __skale__: wykaz skal i skalowań użytych do uzyskania oszacowań umiejętności uczniów i/lub parametrów zadań; także informacje o normach ekwikwantylowych;
+* __uczniowie__: wykaz uczniów i tych ich cech, które nie zmianiają się w czasie (płeć, data urodzenia, id_cke);
+* __uczniowieTesty__: wykaz cech uczniów w momencie przystępowania do danego egzaminu lub testu (np. dysleksja czy bycie laureatem konkursu przedmiotowego);
+* __szkoly__: wykaz szkół (w podziale na lata);
+* __testy__: wykaz egzaminów i testów (data przeprowadzenia, zakres tematyczny, itp.);
+* __kryteriaOceny__: wykaz pytań i kryteriów oceny występujących w egzaminach i testach;
+* __wskazniki__: wykaz wskaźników EWD i PWE (wskaźniki dla szkół i, w wypadku PWE, jednostek samorządu terytorialnego);
+* __wartosciWskaznikow__: wartości wskaźników EWD i PWE.
+
+Dane każdej z grup pobrać można odpowiednią funkcją pakietu ZPD - podsumowanie tych funkcji oraz listy zmiennych w zwracanych przez nie zbiorach danych znajduje się:
+
+* na kartkach, które Państwo otrzymali;
+* [w internecie](http://zpd.ibe.edu.pl/doku.php?id=r_gr). 
+
+Dokładne omówienie poszczególnych zmiennych dostępne jest [tutaj](http://zpd.ibe.edu.pl/doku.php?id=r_zmienne).  
+(proszę zwrócić uwagę na możliwość filtrowania - pole wyszukiwania znajduje się w prawym górnym rogu tabeli)
+
+# Dane EWD (OKE) i dane PAOU/ZAOU (CKE)
+
+Oddzielnego omówienia wymagają źródła surowych wyników egzaminacyjnych, które znajdują się w bazie.
+
+* __Wyniki egzaminacyjne w bazie pochodzą z dwóch źródeł OKE i CKE.__
+* Do pewnego czasu z obydwu źródeł pobierano dane 
+    * dla nieco inaczej zdefiniowanych populacji (z OKE tylko uczniowie, którzy do egzaminu podchodzili po raz pierwszy i którym OKE udało się przyłączyć wynik na poprzednim egzaminie, z CKE wszyscy uczniowie podchodzący do egzaminu) 
+    * w nieco innym zakresie (z OKE tylko wyniki punktowe, z CKE dystraktory dla zadań zamkniętych).
+* Przed 2010 rokiem możliwość złączania ze sobą informacji o tych samych uczniach z danych CKE i OKE była bardzo ograniczona lub zgoła niemożliwa (brak było dobrego wspólnego identyfikatora ucznia pomiędzy zbiorami z OKE i CKE).
+* __Ponieważ złączanie nie było możliwe, zaistniała potrzeba przechowywania w bazie oddzielnych kopii danych z nominalnie tego samego egzaminu.__
+    * Kopię z danych OKE nazywamy "danymi EWD" lub "danymi OKE" (bowiem dane z OKE gromadzono na potrzeby wyliczania EWD).
+    * Kopię z danych CKE nazywamy "danymi PAOU/ZAOU" (bowiem były one gromadzone przez Zespół Analiz Osiągnięć Uczniów) lub "danymi CKE".
+    * __Dane z CKE są na poziomie uczniów niełączliwe między latami__, tzn. nie umiemy dla nich połączyć wyników np. sprawdzianu i egzaminu gimnazjalnego, jak również rozstrzygnąć, czy uczeń wielokrotnie przystępował do danego egzaminu.
+    * Powyższe zastrzeżenie dotyczy oszacowań umiejętności uczniów liczonych na podstawie tych danych.
+    * Patrz uwagi pod tabelą podsumowującą dane dostępne w bazie ([tutaj](http://zpd.ibe.edu.pl/doku.php?id=obazie) lub na kartce przed Państwem).
+
+__Od kiedy istnieje możliwość złączania__ ze sobą zbiorów danych z CKE i OKE, __dane złączone przechowywane są w bazie jako "dane EWD"__. Dane złączone obejmują:
+
+* wszystkie dane maturalne;
+* egzamin gimnazjalny od 2010 roku (włącznie);
+* sprawdzian od 2014 roku (włącznie).
+
+# Źródła dokumentacji
+
+Dokumentacja bazy dostępna jest na stronie http://zpd.ibe.edu.pl, szczegółowo zaś:
+
+* ogólna informacja o zakresie danych - [tutaj](http://zpd.ibe.edu.pl/doku.php?id=obazie)
+* ogólny opis grup danych - [tutaj](http://zpd.ibe.edu.pl/doku.php?id=r_gr)
+* indeks zmiennych w grupach danych - [tutaj](http://zpd.ibe.edu.pl/doku.php?id=r_zmienne)
+* opis pakietu ZPD dla R (także linki do szczegółowych opisów grup danych) - [tutaj](http://zpd.ibe.edu.pl/doku.php?id=r_zpd)
+* ćwiczenia, które będziemy przeprowadzać - [moodle IBE](http://moodle.ibe.edu.pl/course/view.php?id=9)

@@ -5,3 +5,6 @@ sciagawka.r
 *.Rproj
 *_cache
 inst/doc
+vignettes/*.RData
+vignettes/rysunki
+vignettes/*.pptx

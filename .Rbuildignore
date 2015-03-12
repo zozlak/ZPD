@@ -3,3 +3,4 @@
 ^sciagawka.r$
 ^.*_cache$
 ^\.travis\.yml$
+^\vignettes/.*$

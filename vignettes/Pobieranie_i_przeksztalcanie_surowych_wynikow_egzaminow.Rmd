@@ -1,38 +1,29 @@
 ---
 title: "Pobieranie i przekształcanie surowych wyników egzaminów"
 author: "Filip Kulon"
-date: '2015-03-11'
+date: "2015-03-11"
 output:
   html_document:
     number_sections: yes
 ---
 
 # Wymagania
-
-Do wykonania ćwiczeń niezbędnę będą pakiety: *ZPD, ggplot2*, a także ich zależności (*dplyr, RPostgreSQL, reshape2*). Upewnijmy się więc, że wszystkie te pakiety posiadamy:
-```{r, cache = TRUE, eval = F}
-install.packages(c("devtools", "ggplot2", "dplyr", "RPostgreSQL", "reshape2", "plyr"))
-devtools::install_github("zozlak/ZPD")
-```
-
 Załadujmy potrzebne pakiety i nawiążmy połączenie z bazą:
 ```{r, cache = FALSE, eval = TRUE, message = FALSE, warning = FALSE}
 library("ZPD")
 library("ggplot2")
-src <- polacz()
+src = polacz()
 ```
 
 # Uwagi dotyczące danych
 Pobieranie danych z bazy zajmuje dużo czasu. Na potrzeby warsztatów dane zostały pobrane wcześniej i zapisane przy użyciu funkcji `save()` do plików *.RData*. Dzięki temu można je szybko wczytać przy użyciu funkcji `load()`.
 Polecenia pobierające dane z bazy są poprzedzone znakiem komentarza (#), aby były nieaktywne i nie zostały przez przypadek uruchomione. Zamiast nich aktywne są polecenia wczytujące dane z plików (w takiej formie, jak zwróciłaby je baza).
 
-# Wyszukiwanie informacji
-
 # Pobieranie wyników surowych
 
 Do pobierania surowych wyników służy funkcja `pobierz_wyniki_egzaminu()`, dla której pomoc można wyświetlić za pomocą polecenia `?pobierz_wyniki_egzaminu`.
 
-Jej składnia jest następująca:
+Jej składnia jest następująca:  
 `pobierz_wyniki_egzaminu(src, rodzajEgzaminu, czescEgzaminu, rokEgzaminu, czyEwd, punktuj = TRUE, idSkali = NULL, skroc = TRUE)`  
 argumenty:  
 *src* - uchwyt źródła danych dplyr-a  
@@ -50,10 +41,11 @@ Najkrótsze zastosowanie tej funkcji to `pobierz_wyniki_egzaminu(src, rodzajEgza
 Pobierzmy wyniki z matematyki z egzaminu gimnazjalnego z 2014 roku:
 
 1. Sprawdzamy, jaki to rodzaj i część egzaminu - http://zpd.ibe.edu.pl/doku.php?id=czesci_egzaminu
-2. Sprawdzamy, czy będą to *dane EWD* czy *dane CKE* - http://zpd.ibe.edu.pl/doku.php?id=obazie
+2. Sprawdzamy, czy będą to *dane EWD* czy *dane PAOU* - http://zpd.ibe.edu.pl/doku.php?id=obazie
 3. Pobieramy dane:
     ```{r, cache = TRUE, eval = TRUE}
-    # gmm14.surowe <- pobierz_wyniki_egzaminu(src, "egzamin gimnazjalny", "matematyka", 2014, TRUE) %>% collect()
+    # UWAGA! Wykonywanie tego polecenia może zająć kilkanaście minut.
+    # gmm14.surowe = pobierz_wyniki_egzaminu(src, "egzamin gimnazjalny", "matematyka", 2014, TRUE) %>% collect()
     load("~/gmm14.surowe.RData")
     head(gmm14.surowe)
     ```
@@ -73,12 +65,12 @@ Przeprowadźmy jakieś operacje na pobranych danych:
 
     a) Stwórzmy zmienną zawierającą sumy punktów uczniów z pobranych danych z matematyki:
         ```{r, cache = TRUE, eval = TRUE}
-        gmm14.surowe.sumy <- zsumuj_punkty(gmm14.surowe)
+        gmm14.surowe.sumy = zsumuj_punkty(gmm14.surowe)
         head(gmm14.surowe.sumy)
         ```
     b) Dodajmy zmienną zawierającą sumy punktów uczniów do pobranych danych z matematyki:
         ```{r, cache = TRUE, eval = TRUE}
-        gmm14.surowe <- zsumuj_punkty(gmm14.surowe, FALSE)
+        gmm14.surowe = zsumuj_punkty(gmm14.surowe, FALSE)
         head(gmm14.surowe)
         ```
 
@@ -122,20 +114,21 @@ Pobierzmy dystraktory z przyrody z egzaminu gimnazjalnego z 2014 roku:
     znajduje się w niej tabela **sl_czesci_egzaminow**, która zawiera potrzebne nam informacje;  
     pobieramy z niej dane i filtrujemy tylko dane dotyczące egzaminu gimnazjalnego:
         ```{r, cache = TRUE, eval = TRUE}
-        czesci <- tbl(src, "sl_czesci_egzaminow") %>% collect() #pobieramy tabelę z częściami egzaminów
+        czesci = tbl(src, "sl_czesci_egzaminow") %>% collect() #pobieramy tabelę z częściami egzaminów
         head(czesci) #wyświetlamy kilka wierszy pobranej tabeli
         czesci %>% filter(rodzaj_egzaminu == "egzamin gimnazjalny") #filtrujemy tylko części dla egzaminu gimnazjalnego
         ```
-2. Sprawdzamy, czy będą to *dane EWD* czy *dane CKE* - http://zpd.ibe.edu.pl/doku.php?id=obazie
+2. Sprawdzamy, czy będą to *dane EWD* czy *dane PAOU* - http://zpd.ibe.edu.pl/doku.php?id=obazie
 3. Pobieramy dane:
     ```{r, cache = TRUE, eval = TRUE}
-    # gmp14.surowe.dys <- pobierz_wyniki_egzaminu(src, "egzamin gimnazjalny", "przedmioty przyrodnicze", 2014, TRUE, FALSE) %>% collect()
+    # UWAGA! Wykonywanie tego polecenia może zająć kilkanaście minut!
+    # gmp14.surowe.dys = pobierz_wyniki_egzaminu(src, "egzamin gimnazjalny", "przedmioty przyrodnicze", 2014, TRUE, FALSE) %>% collect()
     load("~/gmp14.surowe.dys.RData")
     head(gmp14.surowe.dys)
     ```
 
 ## Ćwiczenie 4
-Wyświetlmy tabelę częstości z wyborami odpowiedzi dla jakiegoś zadania.
+Wyświetlmy tabelę częstości z wyborami odpowiedzi dla jakiegoś zadania:
 
 1. Sprawdzamy, jaki jest identyfikator zadania, które nas interesuje w wyszukiwarce zadań - http://zpd.ibe.edu.pl/doku.php?id=bazatestypytania
 2. Wyświetlmy tabelę częstości dla wybranego zadania:
@@ -155,3 +148,152 @@ Wyświetlmy tabelę częstości z wyborami odpowiedzi dla jakiegoś zadania.
         ```{r, cache = TRUE, eval = TRUE}
         gmp14.surowe.dys %>% group_by(id_testu, k_7447) %>% filter(k_7447 > 0) %>% summarize(n = n()) %>% mutate(proc = n / sum(n))
         ```
+
+# Normalizacja ekwikwantylowa
+
+Mając dane ze zsumowanymi punktami możemy dokonać normalizacji ekwikwantylowej.
+
+W tym celu korzystamy z funkcji `normalizuj_ekwikwantylowo()` (pomoc: `?normalizuj_ekwikwantylowo`).
+    Jej składnia jest następująca:
+    `normalizuj_ekwikwantylowo(dane, src = NULL, kolWynik = "wynik", idSkali = NULL, ...)`  
+    argumenty:  
+    *dane* - ramka danych zawierająca wyniki  
+    *src* - uchwyt źródła danych dplyr-a (gdy normalizacja na podstawie norm w bazie)  
+    *kolWynik* - nazwa kolumny zawierającej wyniki  
+    *idSkali* - skala, której norma z bazy ma zostać zastosowana  
+    *...* - ew. parametry funkcji normy_ekwikwantylowe() (gdy normalizacja na podstawie danych)  
+
+Dostępne są dwie metody:
+
+* z normami wyliczanymi na podstawie danych (domyślnie),
+* z normami wczytanymi z bazy (wyliczonymi na potrzeby *Kalkulatora EWD*).
+
+## Ćwiczenie 5
+Wyliczmy normy z danych:
+
+```{r, cache = TRUE, eval = TRUE}
+gmm14.surowe.sumy = normalizuj_ekwikwantylowo(gmm14.surowe.sumy)
+head(gmm14.surowe.sumy)
+```
+
+## Ćwiczenie 6
+Wyliczmy normy z Kalkulatora EWD.
+
+Zastosowanie norm z Kalkulatora EWD wymaga zastosowania *skali*.
+*Skala* opisuje przekształcenia danych takiej jak sumowanie kryteriów oceny czy skracanie skal punktowych.
+Musimy zatem:
+
+1. Znaleźć stosowną skalę za pomocą funkcji `pobierz_skale()`.
+2. Znormalizować wyniki.
+
+```{r, cache = TRUE, eval = TRUE}
+# 1. wyszukujemy skalę
+pobierz_skale(src) %>%
+  filter(normy_ekwikwantylowe == TRUE, rodzaj_egzaminu == "egzamin gimnazjalny", czesc_egzaminu == "matematyka", rok == 2014)
+```
+Spośród wyświetlonych skal nas interesuje skala 723 (dotyczy tylko części *gm_m* - patrz kolumna *nazwa_skali*)
+```{r, cache = TRUE, eval = TRUE}
+# 2. normalizujemy (dodatkowo zmieniając nazwę poprzedniej normalizacji, żeby móc porównać wyniki)
+gmm14.surowe.sumy = gmm14.surowe.sumy %>% rename(wynik_norm_dane = wynik_norm) %>% normalizuj_ekwikwantylowo(src, idSkali = 723)
+head(gmm14.surowe.sumy)
+```
+
+Porównajmy wyniki przed i po normalizacji:
+```{r, cache = TRUE, eval = TRUE}
+# wyniki surowe
+gmm14.surowe.sumy %>% ggplot(aes(wynik)) + 
+  geom_density(color = "orange", size = 3, adjust = 2)
+
+# porównanie wyników znormalizowanych
+gmm14.surowe.sumy %>% ggplot() +
+  geom_density(aes(wynik_norm_dane), color = "orange", size = 3, adjust = 2) +
+  geom_density(aes(wynik_norm), color = "blue", size = 3, adjust = 2)
+```
+
+# Pomijanie uczniów przystępujących wielokrotnie do egzaminu
+
+Czasami (w wypadku EWD na ogół) interesować mogą nas tylko uczniowie piszący dany egzamin po raz pierwszy (na wyjściu) lub ostatni (na wejściu).
+
+Do ich odfiltrowywania służy funkcja `filtruj_przystapienia()` (pomoc: `?filtruj_przystapienia`). Dla wskazanego *rodzaju egzaminu* (lub tylko dla wybranej *części egzaminu*) oraz określenia z jakiego źródła (EWD/PAOU) mają pochodzić dane, zwraca ona zbiór zawierający jedynie pierwsze lub ostatnie przystąpienia uczniów do danego egzaminu.
+
+Jej składnia jest następująca:  
+`filtruj_przystapienia(src, pierwsze, rodzajEgzaminu, czescEgzaminu = NULL, czyEwd, obserwacje = NULL)`  
+argumenty:  
+*src* - uchwyt źródła danych dplyr-a  
+*pierwsze* - czy odfiltrować pierwsze podejście (jeśli FALSE, odfiltrowane zostanie ostatnie)  
+*rodzajEgzaminu* - rodzaj egzaminu - patrz http://zpd.ibe.edu.pl/doku.php?id=czesci_egzaminu  
+*czescEgzaminu* - wektor części egzaminu - patrz http://zpd.ibe.edu.pl/doku.php?id=czesci_egzaminu  
+*czyEwd* - czy korzystać z danych EWD czy PAOU (patrz opis)  
+*obserwacje* - wektor id_obserwacji lub ramka danych z kolumną id_obserwacji  
+
+Za pomocą złączenia *inner_join* lub filtrowania *semi_join* można odfiltrować pożądane wyniki egzaminu lub oszacowania umiejętności uczniów.
+
+Złączmy przygotowane powyżej sumy punktów z informacjami o pierwszym przystąpieniu do egzaminu gimnazjalnego:
+* sprawdzając przystąpienia tylko w obrębie części egzaminu *matematyka*,
+* sprawdzając przystąpienia w obrębie całego egzaminu gimnazjalnego.
+
+W obydwu wypadkach dla *danych EWD*, bo właśnie na takich danych mamy policzone sumy punktów.
+```{r, cache = TRUE, eval = TRUE}
+# UWAGA! Wykonywanie tych poleceń może zająć kilka minut.
+# filtrMat = filtruj_przystapienia(src, TRUE, "egzamin gimnazjalny", "matematyka", TRUE) %>% collect()
+# filtrGim = filtruj_przystapienia(src, TRUE, "egzamin gimnazjalny", NULL, TRUE) %>% collect()
+load("~/filtry.RData")
+head(filtrMat)
+head(filtrGim)
+
+# filtrujemy
+gmm14.filtrMat = gmm14.surowe.sumy %>% inner_join(filtrMat)
+gmm14.filtrGim = gmm14.surowe.sumy %>% inner_join(filtrGim)
+
+# jaka jest różnica w liczbie obserwacji?
+nrow(gmm14.filtrMat) - nrow(gmm14.filtrGim)
+```
+* Z czego wynika różnica w liczbie obserwacji pomiędzy jednym i drugim sposobem filtrowania?
+
+# Złączanie danych pomiędzy egzaminami
+
+Na wstępie warto zaznaczyć, że **nie wszystkie wyniki egzaminacyjne i oszacowania umiejętności uczniów są łączliwe między latami**. Szczegółowe informacje znajdują się pod adresem http://zpd.ibe.edu.pl/doku.php?id=obazie
+
+Złączanie następuje wprost po *id_obserwacji*, więc co najwyżej dane się nie połączą.
+
+Warto jeszcze zauważyć, że złączane zbiory mogą zawierać jednakowo nazywające się kolumny (np. _wynik_, _dysleksja_, itp.), które przed złączeniem należy zmienić im nazwy (np. na *wynik_spr*, *wynik_gh*, *dysleksja_spr*, *dysleksja_gh* itd.).
+
+Przyłączmy do policzonych sum surowych punktów z egzaminu GMM 2014 wyniki sprawdzianu 2011.
+W tym celu musimy:
+1. Pobrać wyniki sprawdzianu 2011 z danych EWD (dodatkowo policzymy sumę punktów).
+```{r, cache = TRUE, eval = TRUE}
+# UWAGA! Wykonywanie tego polecenia może zająć kilkanaście minut!
+# spr11 = pobierz_wyniki_egzaminu(src, "sprawdzian", "", 2011, TRUE) %>% collect()
+load("~/spr11.RData")
+spr11 = zsumuj_punkty(spr11)
+head(spr11)
+```
+2. Zmienić nazwy kolumn.
+```{r, cache = TRUE, eval = TRUE}
+spr11 = spr11 %>% rename(wynik_spr = wynik, rok_spr = rok, id_testu_spr = id_testu, id_szkoly_spr = id_szkoly)
+head(spr11)
+```
+3. Połączyć wyniki z obydwu egzaminów.
+```{r, cache = TRUE, eval = TRUE}
+polaczone = gmm14.surowe.sumy %>% left_join(spr11)
+head(polaczone)
+```
+
+Możemy sprawdzić, dla ilu uczniów połączyliśmy wyniki.
+```{r, cache = TRUE, eval = TRUE}
+polaczone %>% 
+  group_by(is.na(rok_spr)) %>%
+  summarize(n = n())
+```
+Jak widać nie przyłączyło się nieco ponad 27 tys. uczniów (np. o opóźnionym toku kształcenia).
+
+## Ćwiczenie 7
+Zróbmy wykres rozrzutu dla wyników obydwu egzaminów.
+
+```{r, cache = TRUE, eval = TRUE}
+#geom_point() utworzy wykres rozrzutu
+polaczone %>% ggplot(aes(wynik, wynik_spr)) + geom_point()
+
+#geom_jitter() doda nieco "szumu" do danych
+polaczone %>% ggplot(aes(wynik, wynik_spr)) + geom_jitter()
+```
