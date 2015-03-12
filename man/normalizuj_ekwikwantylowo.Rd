@@ -5,7 +5,7 @@
 \title{Normalizuje wyniki ekwikwantylowo}
 \usage{
 normalizuj_ekwikwantylowo(dane, src = NULL, kolWynik = "wynik",
-  idSkali = NULL, zBazy = TRUE, ...)
+  idSkali = NULL, ...)
 }
 \arguments{
 \item{dane}{ramka danych zawierająca wyniki}
@@ -15,8 +15,6 @@ normalizuj_ekwikwantylowo(dane, src = NULL, kolWynik = "wynik",
 \item{kolWynik}{nazwa kolumny zawierającej wyniki}
 
 \item{idSkali}{skala, której norma z bazy ma zostać zastosowana}
-
-\item{zBazy}{czy normalizowac na podstawie norm w bazie, czy na podstawie danych}
 
 \item{...}{ew. parametry funkcji normy_ekwikwantylowe() (gdy normalizacja na podstawie danych)}
 }

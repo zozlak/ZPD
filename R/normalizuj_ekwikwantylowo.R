@@ -22,7 +22,6 @@
 #' @param kolWynik nazwa kolumny zawierającej wyniki
 #' @param src uchwyt źródła danych dplyr-a (gdy normalizacja na podstawie norm w bazie)
 #' @param idSkali skala, której norma z bazy ma zostać zastosowana
-#' @param zBazy czy normalizowac na podstawie norm w bazie, czy na podstawie danych
 #' @param ... ew. parametry funkcji normy_ekwikwantylowe() (gdy normalizacja na podstawie danych)
 #' @import dplyr
 #' @export
@@ -31,22 +30,17 @@ normalizuj_ekwikwantylowo = function(
   src      = NULL,
   kolWynik = 'wynik',
   idSkali  = NULL,
-  zBazy    = TRUE,
   ...
 ){
   stopifnot(
     is.data.frame(dane) | is.tbl(dane),
     is.null(src) | is.src(src),
     is.vector(kolWynik), is.character(kolWynik), length(kolWynik) == 1,
-    is.null(idSkali) | is.vector(idSkali) & is.numeric(idSkali) & length(idSkali) == 1,
-    is.vector(zBazy), is.logical(zBazy), length(zBazy) == 1, zBazy %in% c(T, F)
+    is.null(idSkali) | is.vector(idSkali) & is.numeric(idSkali) & length(idSkali) == 1
   )
   
   resultCol = paste0(kolWynik, '_norm')
-  if(zBazy == TRUE){
-    stopifnot(
-      !is.null(src)
-    )
+  if(!is.null(src)){
     if(is.null(idSkali)){
       idSkali = attr(dane, 'idSkali')
     }
