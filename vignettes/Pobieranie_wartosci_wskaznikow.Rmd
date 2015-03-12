@@ -16,10 +16,10 @@ Poniżej zapoznamy się z:
 
 ## Przydatne linki:
 
-* [podsumowanie informacjio grupach danych[(http://zpd.ibe.edu.pl/doku.php?id=r_gr#podsumowanie_informacji_o_grupach_danych)
+* [podsumowanie informacji o grupach danych](http://zpd.ibe.edu.pl/doku.php?id=r_gr#podsumowanie_informacji_o_grupach_danych)
 * [indeks zmiennych w grupach danych](http://zpd.ibe.edu.pl/doku.php?id=r_zmienne)
 
-## Funkcje, z których będziemy korzystac:
+## Funkcje, z których będziemy korzystać:
 
 * `pobierz_wskazniki()`
 * `pobierz_wartosci_wskaznikow()`
@@ -27,8 +27,11 @@ Poniżej zapoznamy się z:
 
 ## Czynności wstępne
 
-Zacznijmy od załadowania pakietu ZPD i połączenia się z bazą danych: 
+Zacznijmy od załadowania pakietu ZPD i połączenia się z bazą danych: ]
+
 ```{r, message=FALSE}
+# devtools::install_github('zozlak/ZPD')
+
 # importujemy pakiet ZPD i nawiązujemy połączenie z bazą danych IBE
 library(ZPD)
 src = polacz() 
@@ -53,6 +56,7 @@ wskazniki = pobierz_wskazniki(src) %>%
 ```
 
 Podejrzyjmy teraz pierwsze kilka wierszy pobranego zbioru:
+
 ```{r}
 wskazniki
 ```
@@ -62,6 +66,7 @@ Opis poszczególnych zmiennych znajdziemy na [tej stronie](http://zpd.ibe.edu.pl
 Zmienne te będą nam służyć do późniejszego filtrowania wyników znajdujących się w bazie danych.
 
 Sprawdźmy jakie wartości przyjmują wybrane zmienne:
+
 ```{r}
 unique(wskazniki$rodzaj_wsk)
 unique(wskazniki$rodzaj_egzaminu)
@@ -71,18 +76,20 @@ unique(wskazniki$okres) # okres == 1 dla PWE i okres == 2 lub 3 dla EWD
 ```
 
 Zmienna *wskaznik* w zbiorze danych *wskazniki* to identyfikator oszacowania PWE lub EWD, którego opis znajdziemy w zmiennej *opis_wsk*:
+
 ```{r}
 unique(wskazniki$wskaznik)
 ```
 
 Korzystając z opisanych powyżej zmiennych możemy odpowiednio filtrować ramkę danych w poszukiwaniu interesującego nas wskaźnika.  
-W tym celu przydatne będą funkcje `filter()`, `select()` i `arrange()` omawiane na wcześniejszym warsztacie.  
+W tym celu przydatne będą funkcje `filter()`, `select()` oraz `arrange()` omawiane na wcześniejszym warsztacie.  
 Dodatkowo, możemy skorzystać z funkcji `distinct()`, która usuwa ze zbioru danych duplikaty.
 
 Spróbujmy zatem wyszukać wybrane wskaźniki PWE/EWD:
 
 
 1. Wskaźniki PWE dla sprawdzianu (takie jak w serwisie internetowym):
+
 ```{r}
 wskazniki %>%
   filter(
@@ -92,9 +99,11 @@ wskazniki %>%
   arrange(rok_do, skrot) %>%
   select(rodzaj_wsk, wskaznik, okres, wsk_do_prezentacji, skrot, rok_do, typ_szkoly, rodzaj_egzaminu, czesc_egzaminu)
 ```
+
 Jak widać w tym wypadku mamy do czynienia z jednym wskaźnikiem (zmienna *wskaznik*) **paou_sp**, który występuje dla lat 2002-2013.
 
 2. Wskaźniki EWD dla matury z języka polskiego:
+
 ```{r}
 wskazniki %>%
   filter(
@@ -106,6 +115,7 @@ wskazniki %>%
   arrange(rok_do, skrot) %>%
   select(rodzaj_wsk, wskaznik, okres, wsk_do_prezentacji, skrot, rok_do, typ_szkoly, rodzaj_egzaminu, czesc_egzaminu)
 ```
+
 W tym wypadku mamy do czynienia z 4 różnymi wskaźnikami (zmienna *wskaznik*):
 
 * __mlh_tl_wgr__ (wskaźnik humanistyczny dla LO), 
@@ -124,6 +134,7 @@ Znając identyfikator wskaźnika, który chcemy pobrać (wartość zmiennej *wsk
 Znajdują się one w grupie danych [wartości wskaźnków](http://zpd.ibe.edu.pl/doku.php?id=r_gr_wartosciwskaznikow), a do ich pobrania służy funkcja `pobierz_wartosci_wskaznikow()`.  
 
 Pobierzmy np. wartości wskaźnika **paou_sp** (PWE dla sprawdzianu):
+
 ```{r}
 pwe_spr = pobierz_wartosci_wskaznikow(src) %>%
   filter(wskaznik == 'paou_sp')
@@ -131,6 +142,7 @@ pwe_spr
 ```
 
 Zamiast podawać nazwę wskaźnika ręcznie, możemy dokonać odfiltrowania za pomocą funkcji `semi_join()` i odfiltrowanej wcześniej grupy danych [wskaźniki](http://zpd.ibe.edu.pl/doku.php?id=r_gr_wskazniki):
+
 ```{r, message=FALSE}
 # wyszukujemy wskaźnik PWE dla sprawdzianu
 wskaznik = pobierz_wskazniki(src) %>%
@@ -147,6 +159,7 @@ pwe_spr
 
 Spróbujmy teraz zwizualizować wyniki dla województw w sposób analogiczny do tego, jak w serwisie internetowym PWE:
 (95% przedziały ufności własności średniej, co odpowiada +/- 1,96 * błąd standardowy)
+
 ```{r}
 # odfiltrowujemy dane województw
 # i ograniczamy się do zmiennych: rok, województwo, srednia i bs
@@ -160,11 +173,12 @@ ggplot(pwe_spr_woj, aes(x = rok, y = srednia, color = wojewodztwo_jst, fill = wo
   geom_ribbon(aes(ymin = srednia - 1.96 * bs, ymax = srednia + 1.96 * bs), alpha = 0.2, colour = NA) +
   scale_x_continuous(breaks = 2002:2013) + 
   ggtitle("PWE dla sprawdzianu na przestrzeni lat") +
-  scale_y_continuous(limits=c(94, 104)) +
+  ylim(94, 104) +
   geom_hline(aes(yintercept = 100), linetype = "dashed")
 ```
 
 Podobnie możemy pobrać np. wskaźniki PWE dla części humanistycznej egzaminu gimnazjalnego dla powiatów z województwa pomorskiego:
+
 ```{r, message = FALSE}
 # wyszukujemy wskaźnik PWE dla części humanistycznej egzaminu gimnazjalnego
 wskaznik = pobierz_wskazniki(src) %>%
@@ -188,6 +202,7 @@ pwe_gh_pomorskie
 ```
 
 Teraz możemy jeszcze np. odfiltrować jedynie wyniki dla 2007 roku i posortować je od najwyższych do najniższych w województwie (na podstawie wartości średniej).
+
 ```{r, message = FALSE}
 pwe_gh_pomorskie %>%
   filter(rok == 2007) %>%
@@ -206,12 +221,14 @@ Zauważmy, że w tym wypadku:
 
 * Województwo, w którym leżą szkoły musimy odfiltrować w ramach grupy danych [szkoły](http://zpd.ibe.edu.pl/doku.php?id=r_gr_szkoly), bo właśnie tam znajduje się ta informacja.
 * Rok możemy odfiltrować w dowolnej grupie danych - albo tylko w grupie *szkoły* (jednostką obserwacji są tam dane adresowe szkoły w danym roku!) albo tylko w grupie *wartościWskaźników* albo w obydwu z nich.
+
 ```{r, message=FALSE}
 # wyszukujemy wskaźniki PWE dla gimnazjów
 wskazniki = pobierz_wskazniki(src) %>%
   filter(
     rodzaj_wsk == 'pwe', 
-    rodzaj_egzaminu == 'egzamin gimnazjalny'
+    rodzaj_egzaminu == 'egzamin gimnazjalny',
+    czesc_egzaminu == 'humanistyczna'
   )
 
 # wyszukujemy szkoły w woj. opolskim w 2010 roku
@@ -238,9 +255,19 @@ Pytania dla dociekliwych:
 * Dlaczego pobierając szkoły nie musieliśmy wskazać typu szkoły (gimnazjum), a mimo to otrzymaliśmy poprawny wynik?
 * Co trzeba by zrobić, aby wyszukując wskaźniki nie musieć filtrować po rodzaju egzaminu?
 
+Pobrane dane możemy przedstawić na wykresie uwzględniając dodatkowo dane o szkołach publicznych i niepublicznych:
+
+```{r, message=FALSE}
+
+ggplot(pwe_gim_opolskie, aes(x=srednia, fill=publiczna)) +
+  geom_histogram(aes(y=..density..), binwidth=1, position="identity", fill="grey", colour="white") +
+  geom_density(alpha=.3)
+
+```
+
 -----
 
-Podobne dane możemy pobrać dla EWD.
+### Pobieranie wskaźników EWD
 
 W poniższym przykładzie pobieramy 3-letnie wskaźniki EWD dla okresu 2010-2012 dla Techników w Krakowie, a następnie wyświetlamy pierwszych 20 wierszy pobranych danych:
 
