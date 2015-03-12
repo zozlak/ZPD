@@ -51,14 +51,14 @@ Na początek pobierzemy cały zbiór danych *wskazniki*.
 O ile nie jest to zalecane w przypadku większości zasobów bazy, w tym wypadku jest on na tyle mały, że nie będzie to stanowić problemu.
 
 ```{r}
-wskazniki = pobierz_wskazniki(src) %>%
+wskazniki_all = pobierz_wskazniki(src) %>%
   collect()
 ```
 
 Podejrzyjmy teraz pierwsze kilka wierszy pobranego zbioru:
 
 ```{r}
-wskazniki
+wskazniki_all
 ```
 
 Jak widzimy, ma on 210 obserwacji i 12 zmiennych.  
@@ -68,17 +68,17 @@ Zmienne te będą nam służyć do późniejszego filtrowania wyników znajdują
 Sprawdźmy jakie wartości przyjmują wybrane zmienne:
 
 ```{r}
-unique(wskazniki$rodzaj_wsk)
-unique(wskazniki$rodzaj_egzaminu)
-unique(wskazniki$typ_szkoly)
-unique(wskazniki$czesc_egzaminu)
-unique(wskazniki$okres) # okres == 1 dla PWE i okres == 2 lub 3 dla EWD
+unique(wskazniki_all$rodzaj_wsk)
+unique(wskazniki_all$rodzaj_egzaminu)
+unique(wskazniki_all$typ_szkoly)
+unique(wskazniki_all$czesc_egzaminu)
+unique(wskazniki_all$okres) # okres == 1 dla PWE i okres == 2 lub 3 dla EWD
 ```
 
 Zmienna *wskaznik* w zbiorze danych *wskazniki* to identyfikator oszacowania PWE lub EWD, którego opis znajdziemy w zmiennej *opis_wsk*:
 
 ```{r}
-unique(wskazniki$wskaznik)
+unique(wskazniki_all$wskaznik)
 ```
 
 Korzystając z opisanych powyżej zmiennych możemy odpowiednio filtrować ramkę danych w poszukiwaniu interesującego nas wskaźnika.  
@@ -91,7 +91,7 @@ Spróbujmy zatem wyszukać wybrane wskaźniki PWE/EWD:
 1. Wskaźniki PWE dla sprawdzianu (takie jak w serwisie internetowym):
 
 ```{r}
-wskazniki %>%
+wskazniki_all %>%
   filter(
     rodzaj_wsk == "pwe",
     rodzaj_egzaminu == "sprawdzian"
@@ -105,7 +105,7 @@ Jak widać w tym wypadku mamy do czynienia z jednym wskaźnikiem (zmienna *wskaz
 2. Wskaźniki EWD dla matury z języka polskiego:
 
 ```{r}
-wskazniki %>%
+wskazniki_all %>%
   filter(
     rodzaj_wsk == "ewd",
     wsk_do_prezentacji == TRUE, 
@@ -145,15 +145,15 @@ Zamiast podawać nazwę wskaźnika ręcznie, możemy dokonać odfiltrowania za p
 
 ```{r, message=FALSE}
 # wyszukujemy wskaźnik PWE dla sprawdzianu
-wskaznik = pobierz_wskazniki(src) %>%
+wskaznik_spr = pobierz_wskazniki(src) %>%
   filter(
     rodzaj_wsk == "pwe",
     rodzaj_egzaminu == "sprawdzian"
   ) 
-wskaznik %>% select(wskaznik) %>% distinct() # podglądamy nazwę wskaźnika
+wskaznik_spr %>% select(wskaznik) %>% distinct() # podglądamy nazwę wskaźnika
 
 pwe_spr = pobierz_wartosci_wskaznikow(src) %>%
-  semi_join(wskaznik)
+  semi_join(wskaznik_spr)
 pwe_spr
 ```
 
@@ -181,18 +181,18 @@ Podobnie możemy pobrać np. wskaźniki PWE dla części humanistycznej egzaminu
 
 ```{r, message = FALSE}
 # wyszukujemy wskaźnik PWE dla części humanistycznej egzaminu gimnazjalnego
-wskaznik = pobierz_wskazniki(src) %>%
+wskaznik_gh = pobierz_wskazniki(src) %>%
   filter(
     rodzaj_wsk == "pwe",
     rodzaj_egzaminu == "egzamin gimnazjalny",
     czesc_egzaminu == "humanistyczna"
   )
-wskaznik %>% select(wskaznik) %>% distinct() # podglądamy nazwę wskaźnika
+wskaznik_gh %>% select(wskaznik) %>% distinct() # podglądamy nazwę wskaźnika
 
 # pobieramy wartości wskaźnika odfiltrowując tylko powiaty w woj. pomorskim
 # (wskaźnik odfiltrowujemy złączając z pobraną przed chwilą nazwą wskaźnika)
 pwe_gh_pomorskie = pobierz_wartosci_wskaznikow(src) %>%
-  semi_join(wskaznik) %>%
+  semi_join(wskaznik_gh) %>%
   filter(
     wojewodztwo_jst == 'pomorskie',
     poziom_agregacji == 'powiat'
@@ -224,7 +224,7 @@ Zauważmy, że w tym wypadku:
 
 ```{r, message=FALSE}
 # wyszukujemy wskaźniki PWE dla gimnazjów
-wskazniki = pobierz_wskazniki(src) %>%
+wskazniki_gh = pobierz_wskazniki(src) %>%
   filter(
     rodzaj_wsk == 'pwe', 
     rodzaj_egzaminu == 'egzamin gimnazjalny',
@@ -241,7 +241,7 @@ szkoly_opolskie = pobierz_szkoly(src) %>%
 # pobieramy wartości wskaźników odiltrowując interesujące szkoły i wskaźniki
 # porzez złączenia z pobranymi wyżej danymi
 pwe_gim_opolskie = pobierz_wartosci_wskaznikow(src) %>%
-  semi_join(wskazniki) %>%
+  semi_join(wskazniki_gh) %>%
   inner_join(szkoly_opolskie) %>%
   collect()
 
@@ -273,7 +273,7 @@ W poniższym przykładzie pobieramy 3-letnie wskaźniki EWD dla okresu 2010-2012
 
 ```{r, message=FALSE}
 # wyszukujemy 3-letnie wskaźniki EWD kończące się w 2012 roku
-wskazniki = pobierz_wskazniki(src) %>%
+wskazniki_ewd = pobierz_wskazniki(src) %>%
   filter(
     rodzaj_wsk == "ewd",
     okres == 3,
@@ -281,7 +281,7 @@ wskazniki = pobierz_wskazniki(src) %>%
   )
 
 # wyszukujemy technika w Krakowie
-szkoly = pobierz_szkoly(src) %>%
+szkoly_ewd = pobierz_szkoly(src) %>%
   filter(
     powiat_szkoly == "Kraków",
     typ_szkoly == 'T'
@@ -289,8 +289,8 @@ szkoly = pobierz_szkoly(src) %>%
 
 # pobieramy wartości wskaźników odfiltrowując wyżej pobranymi danymi
 ewd_t_krakow = pobierz_wartosci_wskaznikow(src) %>%
-  semi_join(wskazniki) %>%
-  inner_join(szkoly) %>%
+  semi_join(wskazniki_ewd) %>%
+  inner_join(szkoly_ewd) %>%
   collect()
 
 # podglądamy wybrane zmienne pierwszych 20 wierszy
