@@ -1,0 +1,177 @@
+---
+title: "Pobieranie oszacowań umiejętności uczniów i samodzielne obliczanie PWE"
+author: "Mateusz Żółtak"
+output:
+  html_document:
+    highlight: tango
+---
+<!--
+%\VignetteEngine{knitr::rmarkdown}
+%\VignetteIndexEntry{Wstęp do R}
+\usepackage[utf8]{inputenc}
+-->
+# Wstęp
+
+Aby samodzielnie policzyć PWE, musimy:
+
+* znaleźć _skalowanie_, z którego chcemy skorzystać;
+* pobrać dla tego _skalowania_ oszacowania PV umiejętności uczniów;
+* dołączyć dane kontekstowe, które będą nam potrzebne do wskazania grup, dla których PWE zostaną policzone;
+* użyć funkcji `agreguj_pwe()` do obliczenia wskaźników PWE.
+
+## Przydatne linki:
+
+* [podsumowanie informacjio grupach danych[(http://zpd.ibe.edu.pl/doku.php?id=r_gr#podsumowanie_informacji_o_grupach_danych)
+* [indeks zmiennych w grupach danych](http://zpd.ibe.edu.pl/doku.php?id=r_zmienne)
+
+## Funkcje, z których będziemy korzystac:
+
+* `pobierz_testy()` (wyszukiwanie skalowań)
+* `pobierz_oszacowania_uczniow()` (pobieranie PV)
+* `pobierz_szkoly()`, `pobierz_uczniow()`, 'pobierz_dane_uczniowie_testy()` (ew. pobieranie danych kontekstowych)
+* `filtruj_przystapienia()` (ew. odfiltrowanie uczniów ponownie przystępujących do egzaminu)
+* `agreguj_pwe()`, `oblicz_wariancje_populacji()` (obliczanie PWE)
+
+## Czynności wstępne
+
+Jak zwykle na początku zaczniemy od załadowania pakietu ZPD i nawiązania połączenia z bazą IBE:
+```{r, message = FALSE, warning = FALSE}
+library(ZPD)
+src = polacz()
+```
+
+# Wyszukiwanie właściwego skalowania
+
+* Spis wszystkich skalowań znajduje się w grupie danych [skale](http://zpd.ibe.edu.pl/doku.php?id=r_gr_skale), stąd też do ich pobrania użyjemy funkcji `pobierz_skale()`.
+* Następnie odfiltrowujemy tylko te z nich, które posiadają w bazie oszacowania PV (zmienna *posiada_pv*) oraz odnoszą się do interesującego nas egzaminu i/lub roku (zmienne *rodzaj_egzaminu*, *czesc_egzaminu*, *rok*).
+
+Np. wyszukajmy skalowania części matematyczno-przyrodniczej egzaminu gimnazjalnego:
+```{r}
+skalowGim = pobierz_skale(src) %>%
+  filter(
+    rodzaj_egzaminu == 'egzamin gimnazjalny', 
+    posiada_pv == TRUE
+  ) %>%
+  select(id_skali, skalowanie, rodzaj_egzaminu, czesc_egzaminu, data_skalowania, nazwa_skali) %>%
+  distinct() %>%
+  arrange(id_skali, skalowanie, rodzaj_egzaminu) %>%
+  as.data.frame()
+skalowGim
+```
+Jak widać w bazie istnieją dwa skalowania spełniające te kryteria:
+- skalowanie o *id_skali* 854 i numerze skalowania 22001 - opisujące część humanistyczną egzaminu;
+- skalowanie o *id_skali* 855 i numerze skalowania 21001 - opisujące część matematyczno-przyrodniczą egzaminu.
+
+My w tej chwili ograniczmy się do części humanistycznej, a więc **skalowania 22001 na skali 854**.
+
+# Pobieranie PV
+
+* Pobieranie z bazy PV jest najbardziej kłopotliwym elementem omawianego procesu, zajmuje bowiem bardzo dużo czasu.  
+    * Wynika to z faktu, że w bazie znajduje się w chwili obecnej ponad 450 milionów rekordów z oszacowaniami umiejętności uczniów, które baza musi odfiltrować, a następnie przesłać na nasz komputer.
+* W szczególności w praktyce nie jest możliwe pobranie na komputer całej grupy danych [oszacowania](http://zpd.ibe.edu.pl/doku.php?id=r_gr_oszacowania) naraz.
+    * Niezbędne jest jej odfiltrowanie co najmniej po wybranej kombinacji zmiennych *id_skali* i *skalowanie*.
+    * Zalecane jest pobieranie PV latami (tym bardziej, że wyliczanie PWE odbywa się potem i tak w podziale na lata)
+* Z uwagi na powyższe ograniczenia ćwiczenia przeprowadzać będziemy na ograniczonej liczbie uczniów, zaś pełne dane ogólnopolskie wczytamy z wcześniej przygotowanego pliku .RData
+
+Pobierzmy oszacowania PV dla wyszukanego uprzednio skalowania 22001 na skali 854 (PWE gimnazjalne dla części humanistycznej egzaminu) dla wszystkich szkół w powiecie oławskim
+```{r}
+# najpierw wyszukajmy szkoły
+szkoly = pobierz_szkoly(src) %>%
+  filter(rok == 2013, typ_szkoly == 'gimn.', powiat_szkoly == 'oławski')
+# następnie pobierzmy pv odfiltrowując je za pomocą wyszukanych szkół
+pv = pobierz_oszacowania_uczniow(src) %>%
+  filter(id_skali == 854, skalowanie == 22001, rok == 2013, estymacja == 'PV') %>%
+  semi_join(szkoly) %>%
+  collect()
+```
+
+# Pobieranie informacji kontekstowych
+
+PWE wyliczamy dla grup uczniów (szkół, gmin, ale też np. chłopców i dziewcząt, itp.), musimy więc posiadać w zbiorze danych zmienne pozwalające podzielić PV na interesujące nas grupy.
+
+Zmienne znajdujące się w grupie danych [oszacowania](http://zpd.ibe.edu.pl/doku.php?) często okazą się tutaj niewystarczające i trzeba będzie dołączyć do nich dane z innych grup danych, np.:
+
+* [szkoly]() - informacje o szkołach i JST;
+* [uczniowie]() - niezmienne informacje o uczniach: płeć i rocznik szkolny;
+* [uczniowieTesty]() - informacje o uczniach mogące zmieniać się w czasie, np. dysleksja lub bycie laureatem egzaminu.
+
+W naszym przykładzie "pójdziemy na całość" i dołączymy informacje z wszystkich powyższych grup danych:
+```{r}
+# pobieramy na komputer dane szkół (te same, których użyliśmy do filtrowania PV)
+szkoly = szkoly %>%
+  collect()
+
+# pobieramy dane o uczniach (stałe i zmienne w czasie) 
+# ograniczając je tylko do uczniów, dla których pobraliśmy PV
+uczniowie = pobierz_uczniow(src) %>%
+  inner_join(pobierz_dane_uczniowie_testy(src)) %>%
+  semi_join(pv, copy = TRUE) %>%
+  collect()
+
+# dołączamy wszystkie dane do PV
+pv = pv %>%
+  inner_join(szkoly) %>%
+  inner_join(uczniowie)
+
+# podejrzyjmy wszystkie zmienne w złączonym zbiorze:
+colnames(pv)
+```
+
+# Obliczanie PWE z PV
+
+Mając PV z dołączonymi zmiennymi kontekstowymi umożliwiającymi wyróżnienie grup, możemy obliczyć interesujące nas PWE.  
+Użyjemy do tego funkcji `agreguj_pwe()` w kombinacji z funkcją `oblicz_wariancje_populacji()`.
+
+## Zdefiniowanie populacji odniesienia
+
+Przy obliczaniu PWE musimy odpowiedzieć sobie na pytanie, w stosunku do jakiej populacji chcemy odnosić nasze wyniki. Może to być np.:
+
+* Polska
+* region (np. tutaj powiat oławski)
+* możemy też nie określać populacji odniesienia.
+
+Wybór ten **nie będzie miał znaczenia dla oszacowań punktowych**, ale **będzie wpływał na błąd standardowy oszacowania średniej**.  
+Im więcej uczniów należy do populacji odniesienia, tym błędy standardowe oszacowania średniej będą większe.
+
+Kiedy już wybierzemy populację odniesienia, obliczamy dla niej wariancję wyników poprzez przekazanie PV uczniów z tej populacji do funkcji `oblicz_wariancje_populacji()`, np.:
+
+* przyjmujemy za populację odniesienia powiat oławski:
+```{r}
+warPop_pow = oblicz_wariancje_populacji(pv)
+warPop_pow
+```
+* przyjmujemy za populację odniesienia Polskę:  
+(w tym wypadku potrzebujemy PV dla uczniów z całej Polski, których pobranie z bazy trwałoby zbyt długo, dlatego wczytamy je z zawczasu przygotowanego pliku .RData)
+```{r}
+load('~/pv_gh_13.RData')
+warPop_pol = oblicz_wariancje_populacji(pv_854_22001_2013)
+warPop_pol
+```
+* nie przyjmujemy żadnej populacji odniesienia:
+```{r}
+warPop_brak = 0
+```
+
+## Obliczanie PWE
+
+Obliczanie PWE następuje z użyciem funkcji `agreguj_pwe(pv, nazwy_zmiennych_wyznaczających_grupy, wariancja_populacji)`.
+
+Policzmy np. PWE gmin (w naszym powiecie oławskim) w podziale na chłopców i dziewczęta. Porównajmy wyniki dla różnych populacji odniesienia:
+```{r}
+pwe_warPol  = agreguj_pwe(pv, c('gmina_szkoly', 'plec'), warPop_pol)
+pwe_warPow  = agreguj_pwe(pv, c('gmina_szkoly', 'plec'), warPop_pow)
+pwe_warBrak = agreguj_pwe(pv, c('gmina_szkoly', 'plec'), warPop_brak)
+
+# obejrzyjmy wyniki (dla przejrzystości tylko wybrane zmienne)
+pwe_warPol %>% select(gmina_szkoly, plec, n, q1, srednia, q3, bs)
+pwe_warPow %>% select(gmina_szkoly, plec, n, q1, srednia, q3, bs)
+pwe_warBrak %>% select(gmina_szkoly, plec, n, q1, srednia, q3, bs)
+```
+
+Jak widać wybór populacji nie ma znaczenia dla oszacowań punktowych, wpływa jednak na błąd standardowy oszacowania średniej.
+
+Obliczmy teraz wyniki dla całego powiatu z Polską jako populacją odniesienia i porównajmy je z wartościami prezentowanymi w serwisie http://pwe.ibe.edu.pl :
+```{r}
+agreguj_pwe(pv, 'powiat_szkoly', warPop_pol) %>% 
+  mutate(dg_prz_uf = srednia - 1.96 * bs, gg_prz_uf = srednia + 1.96 * bs)
+```

@@ -16,8 +16,8 @@ Poniżej zapoznamy się z:
 
 ## Przydatne linki:
 
-* http://zpd.ibe.edu.pl/doku.php?id=r_gr#podsumowanie_informacji_o_grupach_danych
-* http://zpd.ibe.edu.pl/doku.php?id=r_zmienne
+* [podsumowanie informacjio grupach danych[(http://zpd.ibe.edu.pl/doku.php?id=r_gr#podsumowanie_informacji_o_grupach_danych)
+* [indeks zmiennych w grupach danych](http://zpd.ibe.edu.pl/doku.php?id=r_zmienne)
 
 ## Funkcje, z których będziemy korzystac:
 
