@@ -14,6 +14,7 @@
       silent = TRUE
     )
     if(is.logical(wynik)){
+cat(tmp, ': ', file.exists(tmp), '\n')
       flaga = TRUE
       break
     }
@@ -21,7 +22,6 @@
 
   # sprawdzanie wersji
   if(flaga){
-    cat(tmp)
     opis = suppressWarnings(readLines(tmp))
     unlink(tmp)
   
