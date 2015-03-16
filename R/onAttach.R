@@ -9,10 +9,10 @@
         suppressMessages(suppressWarnings(
           download.file(url, destfile = tmp, method = metoda, quiet = TRUE)
         ))
-        TRUE
       },
       silent = TRUE
     )
+cat(wynik, '\n')
     if(is.logical(wynik)){
 cat(tmp, ': ', file.exists(tmp), ', ', wynik, '\n')
       flaga = TRUE
