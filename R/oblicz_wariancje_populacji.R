@@ -8,8 +8,8 @@
 #' @export
 oblicz_wariancje_populacji = function(
   dane, 
-  kolPV='^[pP][vV]_[0-9]+|wynik$', 
-  kolNrPV='nr_pv'
+  kolPV   = '^[pP][vV]_[0-9]+|wynik$', 
+  kolNrPV = 'nr_pv'
 ){
   stopifnot(
     is.data.frame(dane) | is.tbl(dane),
@@ -19,9 +19,12 @@ oblicz_wariancje_populacji = function(
   
 	dane = ramka_danych_pv(dane, kolPV, kolNrPV)
 	
-	warPop = mean(plyr::daply(dane, c('nr_pv'), function(x){
-		return(var(x$wynik))
-	}))
-	
-	return(warPop)	
+	warPop = dane %>%
+	  group_by_('nr_pv') %>%
+	  do_('war' = ~var(.$wynik)) %>%
+	  ungroup() %>%
+	  mutate_('war' = ~unlist(war)) %>%
+	  summarize_('warPop' = ~mean(war))
+
+	return(warPop[1, 1])
 }

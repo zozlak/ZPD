@@ -26,7 +26,7 @@ agreguj_pwe = function(
     is.vector(kolNrPV), is.character(kolNrPV), length(kolNrPV) == 1, !is.na(kolNrPV)
   )
   if(bladZrwn != 0){
-    warning(e('Błąd zrównywania na ogół jest już wliczony w PV. Use at your own risk!'))
+    message(e('Błąd zrównywania na ogół jest już wliczony w PV. Use at your own risk!'))
   }
   message(e(ifelse(
     wariancjaPop == 0, 
@@ -38,29 +38,46 @@ agreguj_pwe = function(
 	
 	#<-- liczenie
 	ilePV = length(unique(dane$nr_pv))
-	wynik = plyr::ddply(dane, kolGrupy, function(d, blZrwn2, varPop, ilePV){
-		srednia = mean(d$wynik)
-		d = plyr::ddply(d, c('nr_pv'), function(x){
-			x = c(
-				quantile(x$wynik, probs=c(0, 0.25, 0.5, 0.75, 1)),
-				mean(x$wynik),
-				nrow(x),
-				var(x$wynik)
-			)
-			names(x) = c('min', 'q1', 'mediana', 'q3', 'max', 'srednia', 'n', 'var')
-			return(x)
-		})
-		d$var[is.na(d$var)] = 0
-    if(varPop == 0){
-      d$bs = sqrt((1 + 1 / ilePV) * var(d$srednia) + mean(d$var) / mean(d$n) + blZrwn2)
-    }else{
-      d$bs = sqrt((1 + 1 / ilePV) * var(d$srednia) + varPop / mean(d$n) + blZrwn2)
-    }		
-		d$srednia = srednia
-		d = apply(d, 2, mean)
-		return(d)
-	}, bladZrwn^2, wariancjaPop, ilePV)
+	wynik = dane %>% 
+	  group_by_(.dots = as.list(kolGrupy)) %>%
+	  do_(~.oblicz_z_pv(., bladZrwn^2, wariancjaPop, ilePV))
 	
 	return(wynik)
 	#-->
+}
+
+#' @title Oblicza statystyki PWE zapisywane w bazie uśredniając po numerze PV
+#' @param d ramka danych z wartości oszacowań PV oraz numerami PV
+#' @param blZrwn2 kwadrat błędu zrównywania (jeśli niewliczony w PV)
+#' @param varPop wariancja w populacji
+#' @param ilePV liczba PV użytych do obliczeń
+#' @return [data.frame] obliczone statystyki
+.oblicz_z_pv = function(d, blZrwn2, varPop, ilePV){
+  srednia = mean(d$wynik)
+  d = d %>% 
+    group_by_('nr_pv') %>%
+    do_(~.oblicz_statystyki_pwe(.))
+  d$var[is.na(d$var)] = 0
+  if(varPop == 0){
+    d$bs = sqrt((1 + 1 / ilePV) * var(d$srednia) + mean(d$var) / mean(d$n) + blZrwn2)
+  }else{
+    d$bs = sqrt((1 + 1 / ilePV) * var(d$srednia) + varPop / mean(d$n) + blZrwn2)
+  }		
+  d$srednia = srednia
+  d = apply(d, 2, mean)
+  return(as.data.frame(as.list(d)))
+}
+
+#' @title Oblicza statystyki PWE zapisywane w bazie danych dla pojedynczego wektora PV i pojedynczej grupy
+#' @param x wektor pojedynczych oszacowań PV dla oblicznaego agregatu
+#' @return [data.frame] obliczone statystyki
+.oblicz_statystyki_pwe = function(x){
+  x = c(
+    quantile(x$wynik, probs=c(0, 0.25, 0.5, 0.75, 1)),
+    mean(x$wynik),
+    nrow(x),
+    var(x$wynik)
+  )
+  names(x) = c('min', 'q1', 'mediana', 'q3', 'max', 'srednia', 'n', 'var')
+  return(as.data.frame(as.list(x)))
 }
