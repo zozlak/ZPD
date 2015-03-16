@@ -14,7 +14,7 @@
       silent = TRUE
     )
     if(is.logical(wynik)){
-cat(tmp, ': ', file.exists(tmp), '\n')
+cat(tmp, ': ', file.exists(tmp), ', ', wynik, '\n')
       flaga = TRUE
       break
     }
