@@ -28,7 +28,7 @@
     wersja = gsub('^[^0-9]+', '', wersja)
 
     if(wersja != packageVersion('ZPD')){
-      warning('\n\nPosiadasz nieaktualna wersje pakietu ZPD\nRozwaz aktualizacje:\n  devtools::install_github("zozlak/ZPD")')
+      message('\n\nPosiadasz nieaktualna wersje pakietu ZPD\nRozwaz aktualizacje:\n  devtools::install_github("zozlak/ZPD")')
     }
   }
 }
