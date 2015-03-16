@@ -21,6 +21,7 @@
 
   # sprawdzanie wersji
   if(flaga){
+    cat('tmp')
     opis = suppressWarnings(readLines(tmp))
     unlink(tmp)
   
