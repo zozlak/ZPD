@@ -1,10 +1,7 @@
 .Rproj.user
 .Rhistory
 .RData
-sciagawka.r
 *.Rproj
 *_cache
 inst/doc
-vignettes/*.RData
-vignettes/rysunki
-vignettes/*.pptx
+vignettes/github

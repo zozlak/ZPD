@@ -1,0 +1,8 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Winietki online}
+-->
+
+# Winietki pakietu `ZPD`
+
+Winietki pakietu ZPD dostępne są [tutaj](https://github.com/zozlak/ZPD/wiki)
