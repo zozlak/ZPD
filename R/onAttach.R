@@ -12,9 +12,8 @@
       },
       silent = TRUE
     )
-cat(wynik, '\n')
+cat(metoda, ':\n', wynik, '\n-----\n')
     if(is.logical(wynik)){
-cat(tmp, ': ', file.exists(tmp), ', ', wynik, '\n')
       flaga = TRUE
       break
     }
