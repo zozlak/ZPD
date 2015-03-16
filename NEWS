@@ -1,13 +1,6 @@
 --------------------
 Zmiany w ZPD 1.1.2 (2015-03-10)
 
-- Zmiany techniczne:
-  - dodanie weryfikacji wersji pakietu (i ew. komunikatu sugerującego 
-    aktualizację) przy ładowaniu pakietu
-
---------------------
-Zmiany w ZPD 1.1.2 (2015-03-10)
-
 - Zmiany w grupie danych "wartościWskaźników":
   - zastąpienie kolumny "polska" kolumną "poziom_agregacji" wskazującą na to,
     czy jest to wartość wskaźnika dla szkoły, gminy, powiatu, województwa czy
