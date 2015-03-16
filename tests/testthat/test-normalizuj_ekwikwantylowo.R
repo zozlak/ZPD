@@ -5,7 +5,7 @@ src = polacz()
 test_that('normalizuj_ekwikwantylowo działa', {
   dane = data.frame(wynik = rep(1:40, 50))
   
-  norm = normalizuj_ekwikwantylowo(dane, zBazy = FALSE)
+  norm = normalizuj_ekwikwantylowo(dane)
   
   expect_equal(norm$wynik, dane$wynik)
   expect_less_than(abs(mean(norm$wynik_norm) - 100), 1)
