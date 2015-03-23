@@ -29,6 +29,9 @@ Z uwagi na brak przenośności niektórych operacji pomiędzy kodem R i SQL, jak
 również z uwagi na to, że operacja zamiany po stronie bazy danych na danych
 w postaci szerokiej byłaby bardzo kosztowna obliczeniowo, funkcja pobiera
 najpierw przekazane dane za pomocą \code{collect()}
+
+Kody liczbowe -1 i -2 oznaczają, odpowiednio, opuszczenie i wielokrotne
+zaznaczenie.
 \code{collect()}.
 }
 
