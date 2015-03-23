@@ -61,8 +61,10 @@ normalizuj_ekwikwantylowo = function(
     names(norms) = c(kolWynik, resultCol)
   }
   
-  dane = dane %>%
+  dane = suppressMessages(
+    dane %>%
     left_join(norms, copy = TRUE)
+  )
   
   return(dane)
 }

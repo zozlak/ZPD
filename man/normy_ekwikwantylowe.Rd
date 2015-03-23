@@ -4,32 +4,74 @@
 \alias{normy_ekwikwantylowe}
 \title{Normalizacja ekwikwantylowa.}
 \usage{
-normy_ekwikwantylowe(x, max = NULL, prog = 1e-06, sr = 100, os = 15,
-  uzupLuki = TRUE, ekstrapolacja = FALSE)
+normy_ekwikwantylowe(x, max = NULL, prog = 1e-06, srednia = 100,
+  os = 15, uzupLuki = TRUE, ekstrapolacja = FALSE, zaokraglij = FALSE,
+  nmin = NA_real_, nmax = NA_real_)
 }
 \arguments{
-\item{x}{wektor nieujemnych liczb całkowitych, na podstawie którego ma zostać wyliczona normalizacja}
+\item{x}{wektor nieujemnych liczb całkowitych, na podstawie którego ma zostać
+wyliczona normalizacja}
 
-\item{max}{liczba, opcjonalnie maksymalna wartość skali, na jakiej wyrażony jest x}
+\item{max}{liczba, opcjonalnie maksymalna wartość skali, na jakiej wyrażony
+jest x}
 
-\item{prog}{liczba, opcjonalnie, wszystkim wartościom, których skumulowana częstość występowania jest mniejsza niż \code{prog} lub większa niż \code{1-prog} zostaną przypisane wartości znormalizowane odpowiadające skumulowanej częstości odpowiednio \code{prog} i \code{1-prog}}
+\item{prog}{liczba, opcjonalnie, wszystkim wartościom, których skumulowana
+częstość występowania jest mniejsza niż \code{prog} lub większa niż
+\code{1-prog} zostaną przypisane wartości znormalizowane odpowiadające
+skumulowanej częstości odpowiednio \code{prog} i \code{1-prog}}
 
-\item{sr}{liczba - średnia znormalizowanej skali}
+\item{srednia}{liczba - średnia znormalizowanej skali}
 
 \item{os}{liczba - odchylenie standardowe znormalizowanej skali}
 
-\item{uzupLuki}{wartość logiczna - czy jeśli pomiędzy wartościami występującymi w wektorze \code{x} (oraz 0 i ew. wartością parametru \code{max}, jeśli został podany) istnieją liczby całkowite, które nie wystąpiły w \code{x}, to wartości znormalizowane mają być wyliczone również dla nich?}
+\item{uzupLuki}{wartość logiczna - czy jeśli pomiędzy wartościami
+występującymi w wektorze \code{x} (oraz 0 i ew. wartością parametru
+\code{max}, jeśli został podany) istnieją liczby całkowite, które nie
+wystąpiły w \code{x}, to wartości znormalizowane mają być wyliczone również
+dla nich?}
 
-\item{ekstrapolacja}{wartość logiczna - czy w przypadku, gdy wartości znormalizowane mają być przypisane wartościom niższym, niż najmniejsza występująca w wektorze \code{x} oraz większym, niż największa występujacaw wektorze \code{x}, to mają być one wyliczone poprzez ekstrapolację liniową?}
+\item{ekstrapolacja}{wartość logiczna - czy w przypadku, gdy wartości
+znormalizowane mają być przypisane wartościom niższym, niż najmniejsza
+występująca w wektorze \code{x} oraz większym, niż największa występujacaw
+wektorze \code{x}, to mają być one wyliczone poprzez ekstrapolację liniową?}
+
+\item{zaokraglij}{czy wartości wystandaryzowane mają zostać zaokrąglone do
+liczb całkowitych?}
+
+\item{nmin}{minimalna wartość wystandaryzowana}
+
+\item{nmax}{maksymalna wartość wystandaryzowana}
 }
 \value{
-Wektor liczbowy wartości znormalizowanych, z przypisanymi nazwami opisującymi wartości wejściowej zmiennej.
+Wektor liczbowy wartości znormalizowanych, z przypisanymi nazwami
+  opisującymi wartości wejściowej zmiennej.
 }
 \description{
 Funkcja wylicza normalizację ekwikwantylową zadanej zmiennej.
 }
 \details{
-Normalizacja wyliczana jest poprzez przekształcenie postaci: \code{u(X=i) = sr + os * F( [N(X<i) + N(X=i)/2 ] / n )}, gdzie \code{n} to liczba obserwacji (liczba elementów wektora \code{x} nie będących brakami danych), a \code{F} to funkcja odrotna do dystrybuanty rozkładu normalnego stanaryzowanego.
-Jeśli parametr \code{uzupLuki} ma wartość \code{FALSE}, to wartości, które nie wystąpiły w wektorze \code{x} nie zostaną uwzględnione w wynikach. Jeśli ma wartość \code{TRUE}, to wartości znormalizowane zostaną im przypisane na podstawie interpolacji/ekstrapolacji liniowej w oparciu o dwie najbliższe wartości (większą i mniejszą), które wystąpiły w wektorze \code{x}. Wartościom mniejszym niż najmniejsze i większym niż największe wartości, które wystąpiły w wektorze \code{x} przypisane zostaną wartości znormalizowane odpowiadające najmniejszej/największej wartości, która wystąpiła w danych (jeśli parametr \code{ekstrapolacja} przyjmuje wartość \code{FALSE}). Jeśli parametr \code{ekstrapolacja} przyjmuje wartość \code{TRUE}, wartościom tym zostaną przypisane wartości znormalizowane na podstawie ekstrapolacji liniowej w oparciu o dwie najmniejsz/największe wartości, które wystąpiły w wektorze \code{x}.
+Normalizacja wyliczana jest poprzez przekształcenie postaci:
+\code{u(X=i) = srednia + os * F( [N(X<i) + N(X=i)/2 ] / n )}, gdzie \code{n} to
+liczba obserwacji (liczba elementów wektora \code{x} nie będących brakami
+danych), a \code{F} to funkcja odrotna do dystrybuanty rozkładu normalnego
+stanaryzowanego.
+
+Jeśli parametr \code{uzupLuki} ma wartość \code{FALSE}, to wartości, które
+nie wystąpiły w wektorze \code{x} nie zostaną uwzględnione w wynikach. Jeśli
+ma wartość \code{TRUE}, to wartości znormalizowane zostaną im przypisane na
+podstawie interpolacji/ekstrapolacji liniowej w oparciu o dwie najbliższe
+wartości (większą i mniejszą), które wystąpiły w wektorze \code{x}.
+Wartościom mniejszym niż najmniejsze i większym niż największe wartości,
+które wystąpiły w wektorze \code{x} przypisane zostaną wartości
+znormalizowane odpowiadające najmniejszej/największej wartości, która
+wystąpiła w danych (jeśli parametr \code{ekstrapolacja} przyjmuje wartość
+\code{FALSE}). Jeśli parametr \code{ekstrapolacja} przyjmuje wartość
+\code{TRUE}, wartościom tym zostaną przypisane wartości znormalizowane na
+podstawie ekstrapolacji liniowej w oparciu o dwie najmniejsz/największe
+wartości, które wystąpiły w wektorze \code{x}.
+
+Za pomocą parametrów \code{zaokraglij}, \code{nmin} oraz \code{nmax} możliwe
+jest uzyskanie norm dla skal dyskretnych, w szczególności dla wartości
+\code{zaokraglij = TRUE, nmin = 1, nmax = 9} norm dla skali staninowej.
 }
 

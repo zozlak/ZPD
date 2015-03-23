@@ -1,4 +1,16 @@
 --------------------
+Zmiany w ZPD 1.1.5 (2015-03-23)
+
+- Zmiany w funkcji normy_ekwikwantylowe():
+  - zmiana nazwy parametru "sr" na "srednia", aby uniknąć konfliktu z partial
+    matching-iem nazw parametrów parametru "src" funkcji 
+    normalizuj_ekwikwantylowo()
+  - dodanie parametrów "dyskretne", "nmin" i "nmax" umożliwiających tworzenie
+    norm na skalach dyskretnych (w szczególności skali staninowej)
+- Dodanie funkcji odkoduj_dystraktory(), która zamienia liczbowe kody
+  dystraktorów z bazy na kody literowe, jak w arkuszach testowych
+
+--------------------
 Zmiany w ZPD 1.1.4 (2015-03-18)
 
 - Zmiany w grupie danych "testy":
