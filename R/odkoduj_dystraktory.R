@@ -13,7 +13,6 @@
 #' 
 #' Kody liczbowe -1 i -2 oznaczają, odpowiednio, opuszczenie i wielokrotne
 #' zaznaczenie.
-#' \code{collect()}.
 #' @param src uchwyt źródła danych dplyr-a
 #' @param dane ramka danych z wynikami uczniów
 #' @param kolDystr wyrażenie regularne dopasowujące nazwy kolumn z kodami
