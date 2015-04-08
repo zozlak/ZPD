@@ -45,6 +45,21 @@ pobierz_kryteria_oceny = function(
         WHERE grupa = 'standard egzaminacyjny - opis'
       ) AS o USING (id_kryterium)
     GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+    UNION
+    SELECT 
+      'p_' || id_pseudokryterium AS kryterium, 
+      null::integer, null::integer, 'pseudokryterium', null,
+      substring(p.opis from ';([^;]+);[^;]+$') AS numer_pytania,
+      substring(p.opis from '[^;]+$') AS numer_kryterium,
+      sum(l_punktow) AS l_punktow, null, null,
+      null, null, null,
+      null::integer, null::integer, null::integer,
+      null, null
+    FROM 
+      pseudokryteria_oceny p
+      JOIN pseudokryteria_oceny_kryteria USING (id_pseudokryterium)
+      JOIN kryteria_oceny USING (id_kryterium)
+    GROUP BY 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18
   "
   data = tbl(src, sql(e(query)))
   return(data)
