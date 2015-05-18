@@ -22,18 +22,9 @@ pobierz_odpowiedzi = function(
     is.vector(skroc), is.logical(skroc), length(skroc) == 1, skroc %in% c(T, F)
   )
 
-  if(!is.null(idSkali)){
-    query = sprintf("SELECT * FROM skale_elementy WHERE id_skali = %d", idSkali)
-    scale = tbl(src, sql(query)) %>% collect()
-    if(nrow(scale) == 0){
-      stop(e('Nie ma takiej skali lub skala nie ma określonych elementów'))
-    }
-  }
-    
   query = "
     SELECT 
       id_obserwacji, id_testu, id_szkoly, extract(year FROM COALESCE(a.data_egzaminu, t.data)) AS rok, 
-      id_kryterium,
       'k_' || id_kryterium AS kryterium,
       odpowiedz,
       CASE odpowiedz IS NULL
@@ -66,27 +57,7 @@ pobierz_odpowiedzi = function(
   data = tbl(src, sql(e(query)))
   
   if(!is.null(idSkali)){
-    query = sprintf(
-      "SELECT id_skrotu, COALESCE(s.id_kryterium, p.id_kryterium) AS id_kryterium, COALESCE('k_' || s.id_kryterium, 'p_' || id_pseudokryterium) AS kryterium
-       FROM skale_elementy s LEFT JOIN pseudokryteria_oceny_kryteria p USING (id_pseudokryterium) 
-       WHERE id_skali = %d",
-      idSkali
-    )
-    scale = tbl(src, sql(e(query)))
-    data = data %>% 
-      inner_join(scale) %>% 
-      group_by_('id_obserwacji', 'id_testu', 'id_szkoly', 'rok', 'kryterium', 'id_skrotu') %>% 
-      summarize_(.dots = list('ocena' = 'sum(ocena)')) %>% 
-      ungroup()
-    
-    query = "SELECT id_skrotu, wartosc, nowa_wartosc FROM skroty_skal_mapowania"
-    shorten = tbl(src, sql(e(query)))
-    data = data %>% 
-      rename_(.dots = list('wartosc' = 'ocena')) %>% 
-      left_join(shorten) %>% 
-      mutate_(.dots = list('ocena' = 'coalesce(nowa_wartosc, wartosc)'))
-    
-    data = data %>% select_('id_obserwacji', 'id_testu', 'id_szkoly', 'rok', 'kryterium', 'ocena')
+    data = zastosuj_skale(data, src, idSkali, skroc)
   }else{
     data = data %>% select_('id_obserwacji', 'id_testu', 'id_szkoly', 'rok', 'kryterium', 'odpowiedz', 'ocena')
   }

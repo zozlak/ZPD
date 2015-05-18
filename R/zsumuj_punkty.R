@@ -17,14 +17,14 @@ zsumuj_punkty = function(
   )
   
   colNames = colnames(dane)
-  if(sum(colNames == 'kryterium') == 1 & sum(colNames == 'ocena') == 1){
+  if(czy_postac_dluga(dane)){
     # postać długa
     groupCols = colNames[! colNames %in% c('kryterium', 'odpowiedz', 'ocena')]
     dane = dane %>% 
       group_by_(.dots = as.list(groupCols)) %>%
       summarize_(.dots = list('wynik' = 'sum(ocena)')) %>%
       ungroup()
-  } else if(sum(grepl('^[pk]_[0-9]+$', colNames)) > 0){
+  } else if(czy_postac_szeroka(dane)){
     # postać szeroka
     sumCols = grep('^[pk]_[0-9]+$', colNames, value = T)
     sumForm = list(wynik = paste0(sumCols, collapse = '+'))

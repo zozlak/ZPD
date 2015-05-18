@@ -1,4 +1,10 @@
 --------------------
+Zmiany w ZPD 1.2.0 (2015-05-18)
+
+- Dodanie funkcji zastosuj_skale() umożliwiającej zastosowanie skali na
+  dowolnych danych
+
+--------------------
 Zmiany w ZPD 1.1.7 (2015-04-28)
 
 - Zmiany w grupie danych "skale"
