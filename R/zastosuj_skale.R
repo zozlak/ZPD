@@ -43,10 +43,12 @@ zastosuj_skale = function(
   }
   
   if(czy_postac_dluga(dane)){
-    return(zastosuj_skale_dluga(dane, skala, skroty))
+    dane = zastosuj_skale_dluga(dane, skala, skroty)
   }else if(czy_postac_szeroka(dane)){
-    return(zastosuj_skale_szeroka(dane, skala, skroty))
+    dane = zastosuj_skale_szeroka(dane, skala, skroty)
   }
+  attr(dane, 'idSkali') = idSkali
+  return(dane)
 }
 
 zastosuj_skale_dluga = function(
