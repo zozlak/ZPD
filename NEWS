@@ -1,4 +1,10 @@
 --------------------
+Zmiany w ZPD 1.2.1 (2015-05-28)
+
+- Zmiany w grupie danych "testy":
+  - dodanie zmiennej "prefiks"
+
+--------------------
 Zmiany w ZPD 1.2.0 (2015-05-18)
 
 - Dodanie funkcji zastosuj_skale() umożliwiającej zastosowanie skali na
