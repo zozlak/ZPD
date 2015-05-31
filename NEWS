@@ -1,4 +1,12 @@
 --------------------
+Zmiany w ZPD 1.2.2 (2015-05-31)
+
+- Zmiany w grupie danych "skale":
+  - dodanie parametru "PvEap" do funkcji pobierz_skale(), który umożliwia
+    pobranie skal bez sprawdzania, czy mają oszacowania PV/EAP
+    dzięki czemu pobieranie skal zajmuje bez porównania mniej czasu
+
+--------------------
 Zmiany w ZPD 1.2.1 (2015-05-28)
 
 - Zmiany w grupie danych "testy":

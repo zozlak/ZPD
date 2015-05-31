@@ -17,18 +17,21 @@
 #' @param doPrezentacji czy wyświetlać tylko skale i skalowania oznaczone do
 #'   publicznej prezentacji
 #' @param czyKtt czy czy wyświetlać skale i skalowania KTT
+#' @param PvEap czy pobierać informacje o posiadaniu przez skale oszacowań umiejętności uczniów PV i EAP (bardzo czasochłonne)
 #' @import dplyr
 #' @export
 pobierz_skale = function(
   src,
   doPrezentacji = TRUE,
-  czyKtt = FALSE
+  czyKtt = FALSE,
+  PvEap = TRUE
 ){
   stopifnot(
     is.src(src),
     is.null(doPrezentacji) | 
       is.vector(doPrezentacji) & is.logical(doPrezentacji) & length(doPrezentacji) == 1,
-    is.vector(czyKtt), is.logical(czyKtt), length(czyKtt) == 1, czyKtt %in% c(TRUE, FALSE)
+    is.vector(czyKtt), is.logical(czyKtt), length(czyKtt) == 1, all(czyKtt %in% c(TRUE, FALSE)),
+    is.vector(PvEap), is.logical(PvEap), length(PvEap) == 1, all(PvEap %in% c(TRUE, FALSE))
   )
   
   query = "
@@ -41,8 +44,7 @@ pobierz_skale = function(
       extract(year from COALESCE(t.data, a.data_egzaminu)) AS rok, 
       skalowanie, ss.opis AS opis_skalowania, estymacja, ss.data AS data_skalowania,
       ss.do_prezentacji AS skalowanie_do_prezentacji,
-      n.id_skali IS NOT NULL AS normy_ekwikwantylowe,
-      eap.posiada_eap, pv.posiada_pv
+      n.id_skali IS NOT NULL AS normy_ekwikwantylowe
     FROM
       skale s
       LEFT JOIN skalowania ss USING (id_skali)
@@ -52,6 +54,9 @@ pobierz_skale = function(
       JOIN skale_testy st USING (id_skali)
       JOIN testy t USING (id_testu)
       LEFT JOIN arkusze a USING (arkusz)
+  "
+  if(PvEap){
+    queryPvEap = "
       LEFT JOIN (
         SELECT id_skali, skalowanie, true AS posiada_eap
         FROM skalowania ss1
@@ -76,7 +81,12 @@ pobierz_skale = function(
               AND (ss2.id_skali, ss2.skalowanie) = (so2.id_skali, so2.skalowanie)
           )
       ) AS pv USING (id_skali, skalowanie)
-  "
+    "
+    query = paste0(
+      sub('FROM', ', eap.posiada_eap, pv.posiada_pv FROM', query), 
+      queryPvEap
+    )
+  }
   
   where = c()
   if(!is.null(doPrezentacji) & !is.na(doPrezentacji)){
