@@ -4,7 +4,7 @@
 \alias{pobierz_skale}
 \title{Pobiera skale i skalowania}
 \usage{
-pobierz_skale(src, doPrezentacji = TRUE, czyKtt = FALSE)
+pobierz_skale(src, doPrezentacji = TRUE, czyKtt = FALSE, PvEap = TRUE)
 }
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}
@@ -13,6 +13,8 @@ pobierz_skale(src, doPrezentacji = TRUE, czyKtt = FALSE)
 publicznej prezentacji}
 
 \item{czyKtt}{czy czy wyświetlać skale i skalowania KTT}
+
+\item{PvEap}{czy pobierać informacje o posiadaniu przez skale oszacowań umiejętności uczniów PV i EAP (bardzo czasochłonne)}
 }
 \description{
 Pobiera listę skal połączoną z listą skalowań oraz testami powiązanymi z daną
