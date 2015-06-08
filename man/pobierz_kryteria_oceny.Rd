@@ -5,13 +5,26 @@
 \title{Pobiera informacje o kryteriach oceny i pytaniach oraz w których
   testach występują}
 \usage{
-pobierz_kryteria_oceny(src)
+pobierz_kryteria_oceny(src, testy = TRUE, skale = TRUE)
 }
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}
+
+\item{testy}{czy pobierać informacje o występowaniu kryteriów w testach
+(zmienne id_testu, kolejnosc_w_tescie, popr_dystraktor)}
+
+\item{skale}{czy pobierać informacje o występowaniu kryteriów w skalach
+(zmienne id_skali, kolejnosc_w_skali)}
 }
 \description{
 Każde kryterium oceny występuje w danych tyle razy, w ilu
 różnych testach występuje.
+
+Parametry \code{testy} i \code{skale} wpływają z jednej strony (w mniejszym
+stopniu) na szybkość pobierania danych (pobieranie każdej z tych informacji
+wydłuża czas ok. dwukrotnie), z drugiej zaś strony na liczbę zwracanych
+wierszy (rzędu 10^4 bez informacji o testach i skalach, ok. dwukrotnie więcej
+z informacją o testach lub skalach, rzędu 10^5 z informacją o testach i o
+skalach).
 }
 

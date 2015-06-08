@@ -8,6 +8,13 @@ Zmiany w ZPD 1.3.0 (2015-06-03)
     dla pseudokryteriów oceny - obecnie są one obliczane w locie na podstawie
     danych pytan/kryteriów oceny wchodzących w skład danego pseudokryterium
     (wcześnie były wycinane z opisu pseudokryterium)
+  - zmiana nazwy zmiennej "kolejnosc_kryt" na "kolejnosc_w_tescie"
+  - dodanie zmiennych "id_skali" oraz "kolejnosc_w_skali" pozwalających 
+    połączyć (pseudo)kryteria oceny ze skalami
+  - dodanie do funkcji pobierz_kryteria_oceny() opcjonalnych parametrów
+    "testy" i "skale" umożliwiających pominięcie pobierania danych o powiązaniu
+    (pseudo)kryteriów oceny z testami i/lub skalami (co wpływa na liczbę
+    zwracanych wyników - od 7 do 154 tys. oraz szybkość pobierania danych)
 - Zmiany w grupie danych "parametry":
   - dodadnie zmiennej "grupa" opisującej grupę w modelu wielogrupowym
   - dodanie funkcji pomocniczej oblicz_informacje_kryterium()
