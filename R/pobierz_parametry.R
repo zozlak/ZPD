@@ -6,18 +6,7 @@ pobierz_parametry = function(
   src
 ){
   stopifnot(is.src(src))
-  
-  query = "
-    SELECT 
-      id_skali, skalowanie, 
-      COALESCE('k_' || id_kryterium, 'p_' || id_pseudokryterium) AS kryterium, 
-      parametr, model, wartosc, bs
-    FROM
-      skalowania_elementy
-      LEFT JOIN skale_elementy USING (id_skali, kolejnosc)
-    ORDER BY id_skali, kolejnosc
-  "
-  data = tbl(src, sql(e(query)))
+  data = tbl(src, sql(e("SELECT * FROM widoki.pobierz_parametry")))
   return(data)  
 }
 attr(pobierz_parametry, 'grupa') = 'parametry'

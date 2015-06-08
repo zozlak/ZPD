@@ -1,4 +1,23 @@
 --------------------
+Zmiany w ZPD 1.3.0 (2015-06-03)
+
+- Zmiany w grupie danych "kryteria_oceny":
+  - rozszerzenie zakresu informacji pobieranego dla pseudokryteriów oceny
+    o id_testu, w którym występują kryteria z danego pseudokryterium
+  - zmiana sposobu wyliczania zmiennych numer_pytania i numer_kryterium
+    dla pseudokryteriów oceny - obecnie są one obliczane w locie na podstawie
+    danych pytan/kryteriów oceny wchodzących w skład danego pseudokryterium
+    (wcześnie były wycinane z opisu pseudokryterium)
+- Zmiany w grupie danych "parametry":
+  - dodadnie zmiennej "grupa" opisującej grupę w modelu wielogrupowym
+  - dodanie funkcji pomocniczej oblicz_informacje_kryterium()
+- Zmiany w grupie danych "oszacowania":
+  - dodadnie zmiennej "grupa" opisującej grupę w modelu wielogrupowym
+- Zmiany techniczne:
+  - wstawienie zapytań pobierających dane z bazy z funkcji pobierz_parametry()
+    i pobierz_kryteria_oceny() do bazy (schemat widoki)
+    
+--------------------
 Zmiany w ZPD 1.2.2 (2015-05-31)
 
 - Zmiany w grupie danych "skale":
