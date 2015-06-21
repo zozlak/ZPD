@@ -7,6 +7,6 @@ rozlacz = function(
   src
 ){
   stopifnot(is.src(src))
-  DBI::dbDisconnect(src)
+  DBI::dbDisconnect(src$con)
   return(invisible(TRUE))
 }
