@@ -4,7 +4,6 @@
 #' @param port port, na którym nasłuchuje serwer baz danych
 #' @param user użytkownik
 #' @param password hasło
-#' @import dplyr
 #' @export
 #' @import RPostgreSQL
 polacz = function(
