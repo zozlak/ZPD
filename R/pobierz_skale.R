@@ -44,46 +44,48 @@ pobierz_skale = function(
       extract(year from COALESCE(t.data, a.data_egzaminu)) AS rok, 
       skalowanie, ss.opis AS opis_skalowania, estymacja, ss.data AS data_skalowania,
       ss.do_prezentacji AS skalowanie_do_prezentacji,
-      n.id_skali IS NOT NULL AS normy_ekwikwantylowe
+      sg.grupa,
+      n.id_skali IS NOT NULL AS posiada_normy
     FROM
       skale s
       LEFT JOIN skalowania ss USING (id_skali)
+      LEFT JOIN skalowania_grupy sg USING (id_skali, skalowanie)
       LEFT JOIN (
-        SELECT DISTINCT id_skali FROM normy_ekwikwantylowe
-      ) AS n USING (id_skali)
-      JOIN skale_testy st USING (id_skali)
-      JOIN testy t USING (id_testu)
+        SELECT DISTINCT id_skali, skalowanie, grupa FROM normy
+      ) AS n USING (id_skali, skalowanie, grupa)
+      LEFT JOIN skale_testy st USING (id_skali)
+      LEFT JOIN testy t USING (id_testu)
       LEFT JOIN arkusze a USING (arkusz)
   "
   if(PvEap){
     queryPvEap = "
       LEFT JOIN (
-        SELECT id_skali, skalowanie, true AS posiada_eap
-        FROM skalowania ss1
+        SELECT id_skali, skalowanie, grupa, true AS posiada_eap
+        FROM skalowania_grupy sg1
         WHERE
           EXISTS (
             SELECT 1 
             FROM skalowania_obserwacje so1 
             WHERE 
               estymacja = 'EAP' 
-              AND (ss1.id_skali, ss1.skalowanie) = (so1.id_skali, so1.skalowanie)
+              AND (sg1.id_skali, sg1.skalowanie, sg1.grupa) = (so1.id_skali, so1.skalowanie, so1.grupa)
           )
-      ) AS eap USING (id_skali, skalowanie)
+      ) AS eap USING (id_skali, skalowanie, grupa)
       LEFT JOIN (
-        SELECT id_skali, skalowanie, true AS posiada_pv
-        FROM skalowania ss2
+        SELECT id_skali, skalowanie, grupa, true AS posiada_pv
+        FROM skalowania_grupy sg2
         WHERE
           EXISTS (
             SELECT 1 
             FROM skalowania_obserwacje so2
             WHERE 
               estymacja = 'PV' 
-              AND (ss2.id_skali, ss2.skalowanie) = (so2.id_skali, so2.skalowanie)
+              AND (sg2.id_skali, sg2.skalowanie, sg2.grupa) = (so2.id_skali, so2.skalowanie, so2.grupa)
           )
-      ) AS pv USING (id_skali, skalowanie)
+      ) AS pv USING (id_skali, skalowanie, grupa)
     "
     query = paste0(
-      sub('FROM', ', eap.posiada_eap, pv.posiada_pv FROM', query), 
+      sub('FROM', ', COALESCE(eap.posiada_eap, false) AS posiada_eap, COALESCE(pv.posiada_pv, false) AS posiada_pv FROM', query), 
       queryPvEap
     )
   }

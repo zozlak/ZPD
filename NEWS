@@ -1,4 +1,23 @@
 --------------------
+Zmiany w ZPD 1.4.0 (2015-08-06)
+
+- Zmiany w grupie danych "skale":
+  - dostosowanie do zmian w bazie danych umożliwiających określanie grup dla
+    skalowań wielogrupowych oraz przenoszących definicję norm na poziom
+    {id_skali, skalowanie, grupa} (dotąd tylko {id_skali})
+    - dodanie zmiennej "grupa"
+    - zmodyfikowanie funkcji normalizuj_ekwikwantylowo() poprzez:
+      - dodanie parametrów "skalowanie" i "grupa"
+      - rozszerzenie komunikatu błędu informującego o braku wskazanej normy
+        w bazie o przykładowe polecenie listujące wszystkie dostępne w bazie 
+        normy
+  - zmiana nazwy zmiennej "normy_ekwikwantylowe" na "posiada_normy" w związku
+    z faktem, że przechoywane obecnie w bazie normy mogą być nie tylko normami
+    ekwikwantylowymi (np. normy pochodzące ze zrównywania nie są ekwikwantylowe)
+  - zmiana wartości zmiennych "posiada_eap" i "posiada_pv" - przyjmują one teraz
+    wartości TRUE lub FALSE (dotychczas TRUE lub NA)
+
+--------------------
 Zmiany w ZPD 1.3.1 (2015-06-21)
 
 - Dodanie funkcji rozlacz()

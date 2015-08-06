@@ -15,55 +15,80 @@
 #' danych, mozliwe jest wymuszenie skali, ktorej norma ma zostac uzyta za 
 #' pomoca parametru "idSkali".
 #' 
-#' Normalizacji mozna tez dokonac na podstawie danych - uznane one zostana
-#' wtedy za populacyjne, na ich podstawie obliczone zostana normy, ktore
-#' nastepnie zostana zastosowane do danych.
+#' Normalizacji mozna tez dokonac na podstawie danych - uznane one zostana wtedy
+#' za populacyjne, na ich podstawie obliczone zostana normy, ktore nastepnie
+#' zostana zastosowane do danych.
 #' @param dane ramka danych zawierająca wyniki
 #' @param kolWynik nazwa kolumny zawierającej wyniki
-#' @param src uchwyt źródła danych dplyr-a (gdy normalizacja na podstawie norm w bazie)
+#' @param src uchwyt źródła danych dplyr-a (gdy normalizacja na podstawie norm w
+#'   bazie)
 #' @param idSkali skala, której norma z bazy ma zostać zastosowana
-#' @param ... ew. parametry funkcji normy_ekwikwantylowe() (gdy normalizacja na podstawie danych)
+#' @param skalowanie skalowanie w ramach wybranej skali, którego norma z bazy ma
+#'   zostać zastosowana
+#' @param grupa grupa w ramach wybranego skalowania, którego norma z bazy ma
+#'   zostać zastosowana
+#' @param ... ew. parametry funkcji normy_ekwikwantylowe() (gdy normalizacja na
+#'   podstawie danych)
 #' @import dplyr
 #' @export
 normalizuj_ekwikwantylowo = function(
   dane,
-  src      = NULL,
-  kolWynik = 'wynik',
-  idSkali  = NULL,
+  src        = NULL,
+  kolWynik   = 'wynik',
+  idSkali    = NULL,
+  skalowanie = NULL,
+  grupa      = NULL,
   ...
 ){
   stopifnot(
     is.data.frame(dane) | is.tbl(dane),
     is.null(src) | is.src(src),
     is.vector(kolWynik), is.character(kolWynik), length(kolWynik) == 1,
-    is.null(idSkali) | is.vector(idSkali) & is.numeric(idSkali) & length(idSkali) == 1
+    suppressWarnings(
+      is.null(idSkali) & is.null(skalowanie) & is.null(grupa) | 
+        is.vector(idSkali) & is.numeric(idSkali) & length(idSkali) == 1 & all(!is.na(idSkali)) &
+        is.vector(skalowanie) & is.numeric(skalowanie) & length(skalowanie) == 1 & all(!is.na(skalowanie)) &
+        is.vector(grupa) & is.character(grupa) & length(grupa) == 1 & all(!is.na(grupa))
+    )
   )
   
-  resultCol = paste0(kolWynik, '_norm')
+  kolWynikNazwa = paste0(kolWynik, '_norm')
   if(!is.null(src)){
     if(is.null(idSkali)){
       idSkali = attr(dane, 'idSkali')
     }
     if(is.null(idSkali)){
-      stop(e('Nie okreslono skali, której normy mają zostać zastosowane'))
+      stop(e('Nie określono skali, której normy mają zostać zastosowane'))
     }
-    norms = tbl(src, sql(e("SELECT * FROM normy_ekwikwantylowe"))) %>%
-      filter_(~id_skali == idSkali) %>%
+    
+    skl = skalowanie
+    grp = grupa
+    normy = tbl(src, sql(e("SELECT * FROM normy"))) %>%
+      filter_(~id_skali == idSkali, ~skalowanie == skl, ~grupa == grp) %>%
       select_('wartosc', 'wartosc_zr') %>%
-      rename_(.dots = setNames(list('wartosc', 'wartosc_zr'), c(kolWynik, resultCol)))
-    if(nrow(norms %>% collect()) == 0){
-      stop(e('W bazie nie ma określonych norm dla tej skali (lub nie ma takiej skali)'))
+      rename_(.dots = setNames(list('wartosc', 'wartosc_zr'), c(kolWynik, kolWynikNazwa)))
+    normyPobrane = normy %>% collect()
+    if(nrow(normyPobrane) == 0){
+      stop(e(paste0(
+        'W bazie nie ma określonych norm dla podanych skali, skalowania oraz grupy (lub w ogóle nie ma danej skali/skalowania/grupy)\n',
+        'Aby wyszukać dostępne normy, użyj polecenia:\n  ',
+        'pobierz_skale(src, PvEap = FALSE, doPrezentacji = NA) %>% ',
+        'filter(posiada_normy == TRUE) %>% ',
+        'select(id_skali, opis_skali, skalowanie, opis_skalowania, grupa) %>% ',
+        'distinct()'
+      )))
     }
+    
   }else{
     dane = as.data.frame(dane)
-    norms = suppressMessages(normy_ekwikwantylowe(dane[, kolWynik], ...))
-    norms = data_frame(as.numeric(names(norms)), norms)
-    names(norms) = c(kolWynik, resultCol)
+    normy = suppressMessages(normy_ekwikwantylowe(dane[, kolWynik], ...))
+    normy = data_frame(as.numeric(names(normy)), normy)
+    names(normy) = c(kolWynik, kolWynikNazwa)
   }
   
   dane = suppressMessages(
     dane %>%
-    left_join(norms, copy = TRUE)
+    left_join(normy, copy = TRUE)
   )
   
   return(dane)

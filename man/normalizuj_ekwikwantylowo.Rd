@@ -5,18 +5,26 @@
 \title{Normalizuje wyniki ekwikwantylowo}
 \usage{
 normalizuj_ekwikwantylowo(dane, src = NULL, kolWynik = "wynik",
-  idSkali = NULL, ...)
+  idSkali = NULL, skalowanie = NULL, grupa = NULL, ...)
 }
 \arguments{
 \item{dane}{ramka danych zawierająca wyniki}
 
-\item{src}{uchwyt źródła danych dplyr-a (gdy normalizacja na podstawie norm w bazie)}
+\item{src}{uchwyt źródła danych dplyr-a (gdy normalizacja na podstawie norm w
+bazie)}
 
 \item{kolWynik}{nazwa kolumny zawierającej wyniki}
 
 \item{idSkali}{skala, której norma z bazy ma zostać zastosowana}
 
-\item{...}{ew. parametry funkcji normy_ekwikwantylowe() (gdy normalizacja na podstawie danych)}
+\item{skalowanie}{skalowanie w ramach wybranej skali, którego norma z bazy ma
+zostać zastosowana}
+
+\item{grupa}{grupa w ramach wybranego skalowania, którego norma z bazy ma
+zostać zastosowana}
+
+\item{...}{ew. parametry funkcji normy_ekwikwantylowe() (gdy normalizacja na
+podstawie danych)}
 }
 \description{
 Znormalizowane wyniki doklejane są do danych jako nowa zmienna z sufiksem
@@ -34,8 +42,8 @@ Jesli jednak jestesmy swiadomi ryzyka zastosowania normy niewlasciwej do
 danych, mozliwe jest wymuszenie skali, ktorej norma ma zostac uzyta za
 pomoca parametru "idSkali".
 
-Normalizacji mozna tez dokonac na podstawie danych - uznane one zostana
-wtedy za populacyjne, na ich podstawie obliczone zostana normy, ktore
-nastepnie zostana zastosowane do danych.
+Normalizacji mozna tez dokonac na podstawie danych - uznane one zostana wtedy
+za populacyjne, na ich podstawie obliczone zostana normy, ktore nastepnie
+zostana zastosowane do danych.
 }
 
