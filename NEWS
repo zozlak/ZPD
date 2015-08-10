@@ -1,4 +1,10 @@
 --------------------
+Zmiany w ZPD 1.4.1 (2015-08-10)
+
+- Zmiany w grupie danych "skale":
+  - dodanie funkcji "pobierz_normy()"
+
+--------------------
 Zmiany w ZPD 1.4.0 (2015-08-06)
 
 - Zmiany w grupie danych "skale":

@@ -63,7 +63,7 @@ normalizuj_ekwikwantylowo = function(
     
     skl = skalowanie
     grp = grupa
-    normy = tbl(src, sql(e("SELECT * FROM normy"))) %>%
+    normy = pobierz_normy(src) %>%
       filter_(~id_skali == idSkali, ~skalowanie == skl, ~grupa == grp) %>%
       select_('wartosc', 'wartosc_zr') %>%
       rename_(.dots = setNames(list('wartosc', 'wartosc_zr'), c(kolWynik, kolWynikNazwa)))
