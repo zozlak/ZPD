@@ -9,7 +9,7 @@ Author:
   Tymoteusz Wołodźko <t.wolodzko@ibe.edu.pl>
 Maintainer: Mateusz Zoltak <zozlak@zozlak.org>
 Depends: 
-    dplyr (>= 0.4),
+    dplyr (>= 0.4.3),
     RPostgreSQL
 Imports:
     DBI,
