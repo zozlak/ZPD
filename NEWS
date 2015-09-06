@@ -1,4 +1,15 @@
 --------------------
+Zmiany w ZPD 1.4.2 (2015-09-06)
+
+- Zmiany w grupie danych "parametry":
+  - dodanie zmiennej "parametr_uwagi" odpowiadającą zmiennej "uwagi"
+    w tablicy "skalowania_elementy" w bazie
+- Korekty błędów:
+  - od 2015-03-16 oblicz_wariancje_populacji() zwracała ramkę danych zamiast
+    jednoelementowego wektora liczbowego - obecnie znów zwraca jednoelementowy
+    wektor liczbowy
+
+--------------------
 Zmiany w ZPD 1.4.1 (2015-08-10)
 
 - Zmiany w grupie danych "skale":

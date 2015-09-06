@@ -26,5 +26,5 @@ oblicz_wariancje_populacji = function(
 	  mutate_('war' = ~unlist(war)) %>%
 	  summarize_('warPop' = ~mean(war))
 
-	return(warPop[1, 1])
+	return(as.numeric(warPop[1, 1]))
 }
