@@ -3,7 +3,7 @@
 export(agreguj_pwe)
 export(e)
 export(filtruj_przystapienia)
-export(normalizuj_ekwikwantylowo)
+export(normalizuj)
 export(normy_ekwikwantylowe)
 export(oblicz_informacje_kryterium)
 export(oblicz_wariancje_populacji)

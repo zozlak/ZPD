@@ -21,7 +21,7 @@
 #'   podstawie danych)
 #' @import dplyr
 #' @export
-normalizuj_ekwikwantylowo = normalizuj = function(
+normalizuj = function(
   dane,
   src        = NULL,
   kolWynik   = 'wynik',
@@ -86,5 +86,4 @@ normalizuj_ekwikwantylowo = normalizuj = function(
   
   return(dane)
 }
-# alias dla zgodności wstecznej
 normalizuj_ekwikwantylowo = normalizuj
