@@ -39,7 +39,7 @@ pobierz_wskazniki = function(
       sl_wskazniki w
       LEFT JOIN sl_wskazniki_typy_szkol tsz USING (rodzaj_wsk, wskaznik)
       LEFT JOIN (SELECT * FROM sl_kategorie_lu WHERE rodzaj_egzaminu IS NOT NULL) p USING (rodzaj_wsk, wskaznik)
-      LEFT JOIN wskazniki USING (rodzaj_wsk, wskaznik)
+      LEFT JOIN wskazniki ww USING (rodzaj_wsk, wskaznik)
       LEFT JOIN wskazniki_skalowania ws USING (rodzaj_wsk, wskaznik, rok_do)",
     ifelse(
       wszystkieKolumny == TRUE, 
@@ -50,7 +50,7 @@ pobierz_wskazniki = function(
   )
   if(!is.na(doPrezentacji)){
     query = sprintf(
-      "%s WHERE do_prezentacji = %s",
+      "%s WHERE w.do_prezentacji AND ww.do_prezentacji = %s ",
       query,
       ifelse(doPrezentacji == TRUE, 'true', 'false')
     )

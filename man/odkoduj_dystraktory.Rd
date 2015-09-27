@@ -4,13 +4,13 @@
 \alias{odkoduj_dystraktory}
 \title{Zamienia liczbowe kody dystraktorów na kody literowe}
 \usage{
-odkoduj_dystraktory(src, dane, kolDystr = "^(odpowiedz|k_[0-9]+)$",
+odkoduj_dystraktory(dane, src, kolDystr = "^(odpowiedz|k_[0-9]+)$",
   kolKryt = "^kryterium$")
 }
 \arguments{
-\item{src}{uchwyt źródła danych dplyr-a}
-
 \item{dane}{ramka danych z wynikami uczniów}
+
+\item{src}{uchwyt źródła danych dplyr-a}
 
 \item{kolDystr}{wyrażenie regularne dopasowujące nazwy kolumn z kodami
 liczbowymi dystraktorów do zamiany na kody literowe}

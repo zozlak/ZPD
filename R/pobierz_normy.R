@@ -9,4 +9,4 @@ pobierz_normy = function(
   
   return(tbl(src, sql(e("SELECT * FROM normy"))))
 }
-attr(pobierz_normy, 'grupa') = 'skale'
+attr(pobierz_normy, 'grupa') = 'normy'

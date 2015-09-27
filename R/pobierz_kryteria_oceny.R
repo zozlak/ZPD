@@ -1,7 +1,20 @@
-#' @title Pobiera informacje o kryteriach oceny i pytaniach oraz w których
-#'   testach występują
-#' @description Każde kryterium oceny występuje w danych tyle razy, w ilu
-#' różnych testach występuje.
+#' @title Pobiera informacje o pytaniach, (pseudo)kryteriach ocenypytaniach oraz
+#'   tym, w których testach i skalach występują
+#' @description 
+#' Pobierane są informacje o wszystkich pytaniach, (pseudo)kryteriach oceny, ich
+#' wystąpieniach w testach oraz skalach. Ponieważ często tak szczegółowe dane
+#' nie są potrzebne (a ich szczegółowość wydłuża pobieranie danych oraz naraża
+#' na błędy związane z wielokrotnym występowaniem tego samego
+#' pytania/(pseudo)kryterium oceny w danych), za pomocą parametrów \code{testy}
+#' oraz \code{skale} można pominąć pobieranie informacji o występowaniu
+#' (pseudo)kryteriów oceny w testach i/lub skalach.
+#' 
+#' Warto zwrócić uwagę, że pobierane dane zawierają także "nietypowe" rekordy,
+#' jak np. pseudokryteria oceny czy pseudopytania (te ostatnie odpowiadają
+#' całemu zestawowi pytań, dla którego w zbiorach danych z wynikami egzaminu
+#' gromadzona była jedynie suma punktów, bez podziału na poszczególne kryteria
+#' oceny), które na ogół trzeba będzie usunąć, np. filtrując po zmiennej
+#' \code{typ_pytania}.
 #' 
 #' Parametry \code{testy} i \code{skale} wpływają z jednej strony (w mniejszym
 #' stopniu) na szybkość pobierania danych (pobieranie każdej z tych informacji

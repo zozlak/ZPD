@@ -1,15 +1,18 @@
-#' @title Pobiera skale i skalowania
+#' @title Pobiera informacje o skalach i skalowaniach
 #' @description
-#' Pobiera listę skal połączoną z listą skalowań oraz testami powiązanymi z daną
-#' skalą. Tak więc każda skala występować będzie tyle razy, ile wynosi iloczyn
-#' liczby testów, z którymi jest powiązana oraz liczby skalowań, które na niej
-#' bazują.
+#' Pobiera listę skal, skalowań i grup wyróżnionych w ramach skalowań połączoną
+#' z listą testów przypisanych danej skali.
+#' 
+#' Ponieważ domyślna forma pobierania danych może być zbyt szczegółowa, za 
+#' pomocą parametrów \code{skalowania} oraz \code{grupy} można pominąć 
+#' pobieranie informacji skalowaniach i/lub grupach wyróżnionych w ramach
+#' skalowań.
 #' 
 #' Domyślnie pomijane są skale i skalowania, które nie zostały oznaczone jako
 #' do_prezentacji. W większości wypadków powoduje to, że danej skali przypisane
 #' jest co najwyżej jedno skalowanie, co powinno ułatwiać wybór poszukiwanego
 #' skalowania. Jeśli chcemy uzyskać listę wszystkich skal, należy parametr
-#' "doPrezentacji" ustawić na NA.
+#' \code{doPrezentacji} ustawić na NA.
 #' 
 #' Domyślnie pomijane są wszystie skale i skalowania KTT. Aby wyszukać skale i
 #' skalowania KTT, ustaw parametr "ktt" na TRUE.
@@ -17,97 +20,99 @@
 #' @param doPrezentacji czy wyświetlać tylko skale i skalowania oznaczone do
 #'   publicznej prezentacji
 #' @param czyKtt czy czy wyświetlać skale i skalowania KTT
-#' @param PvEap czy pobierać informacje o posiadaniu przez skale oszacowań umiejętności uczniów PV i EAP (bardzo czasochłonne)
+#' @param testy czy pobierać informację o powiązaniu skal z testami
+#' @param skalowania czy pobierać informacje o skalowaniach w ramach skal
+#' @param grupy czy pobierać informacje o grupach w ramach skalowań (tylko gdy parametr skalowania = TRUE)
 #' @import dplyr
 #' @export
 pobierz_skale = function(
   src,
   doPrezentacji = TRUE,
   czyKtt = FALSE,
-  PvEap = TRUE
+  skalowania = TRUE,
+  grupy = TRUE
 ){
   stopifnot(
     is.src(src),
-    is.null(doPrezentacji) | 
-      is.vector(doPrezentacji) & is.logical(doPrezentacji) & length(doPrezentacji) == 1,
+    is.vector(doPrezentacji), is.logical(doPrezentacji), length(doPrezentacji) == 1,
     is.vector(czyKtt), is.logical(czyKtt), length(czyKtt) == 1, all(czyKtt %in% c(TRUE, FALSE)),
-    is.vector(PvEap), is.logical(PvEap), length(PvEap) == 1, all(PvEap %in% c(TRUE, FALSE))
+    is.vector(skalowania), is.logical(skalowania), length(skalowania) == 1, all(skalowania %in% c(TRUE, FALSE)),
+    is.vector(grupy), is.logical(grupy), length(grupy) == 1, all(grupy %in% c(TRUE, FALSE))
   )
   
-  query = "
-    SELECT 
-      id_skali, s.opis AS opis_skali, rodzaj_skali, 
-      s.do_prezentacji AS skala_do_prezentacji,
-      COALESCE(t.rodzaj_egzaminu, a.rodzaj_egzaminu) AS rodzaj_egzaminu ,
-      COALESCE(t.czesc_egzaminu, a.czesc_egzaminu) AS czesc_egzaminu, 
-      id_testu,
-      extract(year from COALESCE(t.data, a.data_egzaminu)) AS rok, 
-      skalowanie, ss.opis AS opis_skalowania, estymacja, ss.data AS data_skalowania,
-      ss.do_prezentacji AS skalowanie_do_prezentacji,
-      sg.grupa,
-      n.id_skali IS NOT NULL AS posiada_normy
-    FROM
-      skale s
-      LEFT JOIN skalowania ss USING (id_skali)
-      LEFT JOIN skalowania_grupy sg USING (id_skali, skalowanie)
-      LEFT JOIN (
-        SELECT DISTINCT id_skali, skalowanie, grupa FROM normy
-      ) AS n USING (id_skali, skalowanie, grupa)
-      LEFT JOIN skale_testy st USING (id_skali)
-      LEFT JOIN testy t USING (id_testu)
-      LEFT JOIN arkusze a USING (arkusz)
+  select = "
+    id_skali, s.opis AS opis_skali, rodzaj_skali, 
+    s.do_prezentacji AS skala_do_prezentacji,
+    COALESCE(t.rodzaj_egzaminu, a.rodzaj_egzaminu) AS rodzaj_egzaminu ,
+    COALESCE(t.czesc_egzaminu, a.czesc_egzaminu) AS czesc_egzaminu, 
+    id_testu,
+    extract(year from COALESCE(t.data, a.data_egzaminu)) AS rok 
   "
-  if(PvEap){
-    queryPvEap = "
-      LEFT JOIN (
-        SELECT id_skali, skalowanie, grupa, true AS posiada_eap
-        FROM skalowania_grupy sg1
-        WHERE
-          EXISTS (
-            SELECT 1 
-            FROM skalowania_obserwacje so1 
-            WHERE 
-              estymacja = 'EAP' 
-              AND (sg1.id_skali, sg1.skalowanie, sg1.grupa) = (so1.id_skali, so1.skalowanie, so1.grupa)
-          )
-      ) AS eap USING (id_skali, skalowanie, grupa)
-      LEFT JOIN (
-        SELECT id_skali, skalowanie, grupa, true AS posiada_pv
-        FROM skalowania_grupy sg2
-        WHERE
-          EXISTS (
-            SELECT 1 
-            FROM skalowania_obserwacje so2
-            WHERE 
-              estymacja = 'PV' 
-              AND (sg2.id_skali, sg2.skalowanie, sg2.grupa) = (so2.id_skali, so2.skalowanie, so2.grupa)
-          )
-      ) AS pv USING (id_skali, skalowanie, grupa)
-    "
-    query = paste0(
-      sub('FROM', ', COALESCE(eap.posiada_eap, false) AS posiada_eap, COALESCE(pv.posiada_pv, false) AS posiada_pv FROM', query), 
-      queryPvEap
+  from = "
+    skale s
+    LEFT JOIN skale_testy st USING (id_skali)
+    LEFT JOIN testy t USING (id_testu)
+    LEFT JOIN arkusze a USING (arkusz)
+  "
+  where = c()
+  if(!is.na(doPrezentacji)){
+    where = append(
+      where, 
+      paste0("s.do_prezentacji = ", ifelse(doPrezentacji, 'true', 'false'))
     )
   }
   
-  where = c()
-  if(!is.null(doPrezentacji) & !is.na(doPrezentacji)){
-    where = append(
-      where, 
-      sprintf(
-        "s.do_prezentacji = %s AND (ss.do_prezentacji = %s OR ss.do_prezentacji IS NULL)",
-        ifelse(doPrezentacji == TRUE, 'true', 'false'),
-        ifelse(doPrezentacji == TRUE, 'true', 'false')
-      )
+  if(skalowania){
+    select = paste0(
+      select,
+      ",
+        skalowanie, ss.opis AS opis_skalowania, ss.estymacja, ss.data AS data_skalowania,
+        ss.do_prezentacji AS skalowanie_do_prezentacji,
+        n.id_skali IS NOT NULL AS posiada_normy,
+        COALESCE(eap.n > 0, false) AS posiada_eap,
+        COALESCE(pv.n > 0, false) AS posiada_pv
+      "
     )
+    from = paste0(
+      from,
+      "
+        LEFT JOIN skalowania ss USING (id_skali)
+        LEFT JOIN (
+          SELECT DISTINCT id_skali, skalowanie FROM normy
+        ) AS n USING (id_skali, skalowanie)
+        LEFT JOIN (
+          SELECT * FROM widoki.skalowania_obserwacje_eap_pv WHERE estymacja = 'EAP'
+        ) AS eap USING (id_skali, skalowanie)
+        LEFT JOIN (
+          SELECT * FROM widoki.skalowania_obserwacje_eap_pv WHERE estymacja = 'PV'
+        ) AS pv USING (id_skali, skalowanie)
+      "
+    )
+    if(!is.na(doPrezentacji)){
+      where = append(
+        where, 
+        paste0("(ss.do_prezentacji = ", ifelse(doPrezentacji, 'true', 'false'), " OR ss.do_prezentacji IS NULL )")
+      )
+    }
   }
+  
+  if(grupy & skalowania){
+    select = paste0(select, ", sg.grupa")
+    from = paste0(from, " LEFT JOIN skalowania_grupy sg USING (id_skali, skalowanie) ")
+  }
+
   if(czyKtt == FALSE){
     where = append(where, "s.rodzaj_skali <> 'ktt'")
   }
-  if(length(where) > 0){
-    query = sprintf('%s WHERE %s', query, paste0(where, collapse = ' AND '))
-  }
-  
+
+  where = ifelse(length(where) > 0, paste('WHERE', paste0(where, collapse = ' AND ')), '')
+    
+  query = paste(
+    "SELECT", select, 
+    "FROM", from,
+    where
+  )
+
   data = tbl(src, sql(e(query)))
   return(data)  
 }

@@ -13,8 +13,8 @@
 #' 
 #' Kody liczbowe -1 i -2 oznaczają, odpowiednio, opuszczenie i wielokrotne
 #' zaznaczenie.
-#' @param src uchwyt źródła danych dplyr-a
 #' @param dane ramka danych z wynikami uczniów
+#' @param src uchwyt źródła danych dplyr-a
 #' @param kolDystr wyrażenie regularne dopasowujące nazwy kolumn z kodami
 #'   liczbowymi dystraktorów do zamiany na kody literowe
 #' @param kolKryt wyrażenie regularne dopasowujęce nazwę kolumny z
@@ -22,8 +22,8 @@
 #' @import dplyr
 #' @export
 odkoduj_dystraktory = function(
-  src,
   dane,
+  src,
   kolDystr = '^(odpowiedz|k_[0-9]+)$',
   kolKryt  = '^kryterium$'
 ){
@@ -59,10 +59,7 @@ odkoduj_dystraktory = function(
     )
   }else{
     # dane w postaci szerokiej
-    stopifnot(
-      all(kolDystr %in% schematy$kryterium)
-    )
-    for(kol in kolDystr){
+    for(kol in kolDystr[kolDystr %in% schematy$kryterium]){
       schemat = schematy %>%
         filter_(~kryterium == kol) %>%
         rename_(.dots = setNames(list('kolejnosc_dystr'), kol)) %>%
@@ -73,6 +70,10 @@ odkoduj_dystraktory = function(
         mutate_(.dots = setNames(list(paste0('ifelse(is.na(dystraktor), ', kol, ', dystraktor)')), kol)) %>%
         select_('-dystraktor')
       )
+    }
+    filtr = !kolDystr %in% schematy$kryterium
+    if(sum(filtr) > 0){
+      message(paste0('Pominięto pytania otwarte: ', paste0(kolDystr[filtr], collapse = ', ')))
     }
   }
   

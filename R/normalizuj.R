@@ -1,23 +1,13 @@
-#' @title Normalizuje wyniki ekwikwantylowo
+#' @title Normalizuje wyniki
 #' @description
 #' Znormalizowane wyniki doklejane są do danych jako nowa zmienna z sufiksem
 #' "_norm".
 #' 
-#' Wyniki normalizowane są do rozkładu normalnego o średniej 100 i odchyleniu
-#' standardowym 15.
-#' 
-#' IdSkali, której norma ma zostać zastosowana jest typowo przekazywane przez
-#' atrybut parametru "dane" (funkcje pobierz_wyniki_...() ustawiają go 
-#' automatycznie, jeśli stosowaly skale przy pobieraniu danych). Jest to 
-#' bezpieczny, a przez to najbardziej polecany sposob uzycia.
-#' 
-#' Jesli jednak jestesmy swiadomi ryzyka zastosowania normy niewlasciwej do 
-#' danych, mozliwe jest wymuszenie skali, ktorej norma ma zostac uzyta za 
-#' pomoca parametru "idSkali".
-#' 
-#' Normalizacji mozna tez dokonac na podstawie danych - uznane one zostana wtedy
-#' za populacyjne, na ich podstawie obliczone zostana normy, ktore nastepnie
-#' zostana zastosowane do danych.
+#' Wyniki normalizowane są dna jeden z dwóch sposobów - albo ekwikwantylowo na 
+#' podstawie przekazanych danych (gdy nie podano parametru \code{src}) albo za
+#' pomoca wskazanej normy w bazie danych (podajac parametry \code{src},
+#' \code{idSkali}, \code{skalowanie} i ew. \code{grupa}).
+#' @seealso normy_ekwikwantylowe  
 #' @param dane ramka danych zawierająca wyniki
 #' @param kolWynik nazwa kolumny zawierającej wyniki
 #' @param src uchwyt źródła danych dplyr-a (gdy normalizacja na podstawie norm w
@@ -31,7 +21,7 @@
 #'   podstawie danych)
 #' @import dplyr
 #' @export
-normalizuj_ekwikwantylowo = function(
+normalizuj_ekwikwantylowo = normalizuj = function(
   dane,
   src        = NULL,
   kolWynik   = 'wynik',
@@ -41,7 +31,7 @@ normalizuj_ekwikwantylowo = function(
   ...
 ){
   stopifnot(
-    is.data.frame(dane) | is.tbl(dane),
+    is.data.frame(dane) | is.tbl(dane), sum(colnames(dane) %in% kolWynik) == 1, 
     is.null(src) | is.src(src),
     is.vector(kolWynik), is.character(kolWynik), length(kolWynik) == 1,
     suppressWarnings(
@@ -79,6 +69,9 @@ normalizuj_ekwikwantylowo = function(
       )))
     }
     
+    if(length(unique(normyPobrane$grupa)) > 1 & !any(colnames(dane) %in% 'grupa')){
+      stop(e('Norma rozróżnia wiele grup, tymczasem dane nie zawierają zmiennej "grupa"'))
+    }
   }else{
     dane = as.data.frame(dane)
     normy = suppressMessages(normy_ekwikwantylowe(dane[, kolWynik], ...))
@@ -93,3 +86,5 @@ normalizuj_ekwikwantylowo = function(
   
   return(dane)
 }
+# alias dla zgodności wstecznej
+normalizuj_ekwikwantylowo = normalizuj

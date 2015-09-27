@@ -1,11 +1,11 @@
-context('normalizuj_ekwikwantylowo')
+context('normalizuj')
 
 src = polacz()
 
-test_that('normalizuj_ekwikwantylowo działa', {
+test_that('normalizuj działa', {
   dane = data.frame(wynik = rep(1:40, 50))
   
-  norm = normalizuj_ekwikwantylowo(dane)
+  norm = normalizuj(dane)
   
   expect_equal(norm$wynik, dane$wynik)
   expect_less_than(abs(mean(norm$wynik_norm) - 100), 1)
@@ -17,7 +17,7 @@ test_that('normalizuj_ekwikwantylowo działa', {
     select(id_skali, skalowanie, grupa) %>%
     distinct() %>%
     collect()
-  norm = normalizuj_ekwikwantylowo(dane, src, idSkali = skale$id_skali[1], skalowanie = skale$skalowanie[1], grupa = skale$grupa[1])
+  norm = normalizuj(dane, src, idSkali = skale$id_skali[1], skalowanie = skale$skalowanie[1], grupa = skale$grupa[1])
   
   expect_equal(norm$wynik, dane$wynik)
   expect_more_than(min(norm$wynik_norm), 0)

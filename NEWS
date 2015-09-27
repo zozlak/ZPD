@@ -1,4 +1,35 @@
 --------------------
+Zmiany w ZPD 1.5.0 (2015-09-20)
+
+- Zmiany w grupie danych "wyniki":
+  - zamiana kolejności parametrów funkcji odkoduj_dystraktory(), tak by "dane"
+    były pierwszym parametrem (co umożliwia stosowanie operatora %>%)
+  - korekta w funkcji odkoduj_dystraktory() - dotychczas wymagała, aby 
+    wszystkie zmienne w zbiorze pochodziły z zadań zamkniętych, obecnie pomija
+    zadania otwarte wyświetlając stosowny komunikat
+  - zmiana nazwy funkcji normalizuj_ekwikwantylowo() na normalizuj() w związku
+    z faktem, że może ona stosować także normy niebędące normami 
+    ekwikwantylowymi
+  - dodanie doatkowych sprawdzeń do funkcji normalizuj():
+    - jeśli norma w bazie danych zawiera więcej niż jedną grupę, funkcja 
+      upewnia się, że zbiór danych zawiera zmienna "grupa"
+    - funkcja sprawdza, czy w zbiorze istnieje kolumna pasująca do wzorca 
+      przekazanego w parametrze "kolWynik"
+  - zmiana konstrukcji zapytania generowanego przez funkcję 
+    pobierz_odpowiedzi() - w tej chwili zapytania odnoszące się do cech testów
+    (id_testu, rok) powinny wykonywać się znacznie szybciej
+- Zmiany w grupie danych "skale":
+  - usunięcie parametru "PvEap" funkcji pobiersz_skale()
+    obecnie inofrmacje o posiadaniu oszacowań PV i/lub EAP dla skalowania są
+    pobierane zawsze i nie wydłuża to czasu pobierania danych (co stało się
+    możliwe dzieki zmianom w strukturze bazy danych)
+  - dodanie parametrów "skalowania" oraz "grupy" do funkcji pobierz_skale()
+    umożliwiających pominięcie informacji o skalowaniach i/lub grupach w ramach
+    skalowań
+- Zmiany w grupie danych "wskazniki":
+  - dostosowanie funkcji pobierz_wskazniki() do zmian w strukturze bazy danych
+
+--------------------
 Zmiany w ZPD 1.4.2 (2015-09-06)
 
 - Zmiany w grupie danych "parametry":
