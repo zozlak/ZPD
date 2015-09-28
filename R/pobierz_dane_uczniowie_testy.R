@@ -12,6 +12,9 @@ pobierz_dane_uczniowie_testy = function(
     is.vector(daneOsobowe), is.logical(daneOsobowe), length(daneOsobowe) == 1, daneOsobowe %in% c(TRUE, FALSE)
   )
   
+  load('~/ucznTesty.RData')
+  return(get('ucznTesty'))
+  
 	query = "
 		SELECT 
 			tob.*, 

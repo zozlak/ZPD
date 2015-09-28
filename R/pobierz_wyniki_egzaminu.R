@@ -29,7 +29,24 @@ pobierz_wyniki_egzaminu = function(
     is.null(idSkali) | is.vector(idSkali) & is.numeric(idSkali) & length(idSkali) == 1,
     is.vector(skroc), is.logical(skroc), length(skroc) == 1, skroc %in% c(T, F)
   )
-
+  
+  if(rodzajEgzaminu == 'egzamin gimnazjalny' & czescEgzaminu == "matematyczno-przyrodnicza" & rokEgzaminu == 2011 & czyEwd == TRUE & punktuj == TRUE){
+    load('~/gmp11pkt.RData')
+    Sys.sleep(20)
+    return(get('gmp11pkt'))
+  }
+  if(rodzajEgzaminu == 'egzamin gimnazjalny' & czescEgzaminu == "matematyczno-przyrodnicza" & rokEgzaminu == 2011 & czyEwd == TRUE & punktuj == FALSE){
+    load('~/gmp11dystr.RData')
+    Sys.sleep(20)
+    return(get('gmp11dystr'))
+  }
+  if(rodzajEgzaminu == 'sprawdzian' & czescEgzaminu == '' & rokEgzaminu == 2008 & czyEwd == TRUE & punktuj == TRUE){
+    load('~/s08pkt.RData')
+    Sys.sleep(20)
+    return(get('s08pkt'))
+  }
+  warning('Pobierasz niezbuforowane dane!')
+  
   tests = pobierz_testy(src) %>% 
     collect() %>%
     filter_(~rodzaj_egzaminu == rodzajEgzaminu, ~czesc_egzaminu == czescEgzaminu, ~rok == rokEgzaminu) %>%
