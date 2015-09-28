@@ -12,8 +12,13 @@ pobierz_dane_uczniowie_testy = function(
     is.vector(daneOsobowe), is.logical(daneOsobowe), length(daneOsobowe) == 1, daneOsobowe %in% c(TRUE, FALSE)
   )
   
-  load('~/ucznTesty.RData')
-  return(get('ucznTesty'))
+  stos = unlist(lapply(sys.calls(), function(x){
+    return(deparse(x)[1])
+  }))
+  if(grepl('^pobierz_wyniki_egzaminu', stos[1])){
+    load('~/ucznTesty.RData')
+    return(get('ucznTesty'))
+  }
   
 	query = "
 		SELECT 
