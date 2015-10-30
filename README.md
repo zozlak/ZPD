@@ -7,7 +7,9 @@ Pakiet zawierający zestaw funkcji ułatwiających korzystanie z połączonych b
 
 ## Uwagi
 
-1. Baza danych, do której dostęp daje pakiet podlega stałemu rozwojowi, co może powodować niekompatybilność ze starszymi wersjami pakietu. Stąd **jeśli zobaczysz nieznany błąd, na początek upewnij się, że korzystasz z najnowszej wersji pakietu**. Od czasu do czasu warto również zapoznać się z zawartością pliku NEWS.
+1. Baza danych, do której dostęp daje pakiet podlega stałemu rozwojowi, co może powodować niekompatybilność ze starszymi wersjami pakietu. Stąd **jeśli zobaczysz nieznany błąd, na początek upewnij się, że korzystasz z najnowszej wersji pakietu**.
+
+  Od czasu do czasu warto również zapoznać się z zawartością pliku NEWS.
 
 2. Aby dowiedzieć się więcej o strukturze bazy danych, zapoznaj się z:
   * http://zpd.ibe.edu.pl/doku.php?id=obazie
@@ -16,7 +18,7 @@ Pakiet zawierający zestaw funkcji ułatwiających korzystanie z połączonych b
 
 ## Instalacja
 
-Pakiet nie jest wypchnięty na CRAN-a, więc instalować trzeba ze źródeł.
+Pakiet nie jest (i zapewne nigdy nie będzie) dostępny poprzez CRAN-a, więc instalować trzeba ze źródeł.
 
 Ponieważ jednak zawiera jedynie kod w R, nie ma potrzeby zaopatrywać się w kompilatory, itp.
 
@@ -40,3 +42,13 @@ git clone https://github.com/zozlak/ZPD.git
 R CMD INSTALL ZPD
 ```
 
+## Cytowanie
+
+Jeśli korzystasz z danych udostępnianych przez pakiet ZPD, jako źródło danych zacytuj proszę:
+
+Szaleniec, H., Kondratek, B., Kulon, F., Pokropek, A., Skórska, P., Świst, K., Wołodźko, T. i Żółtak, M. (2015). _Porównywalne wyniki egzaminacyjne._ Warszawa: Instytut Badań Edukacyjnych. 
+
+## Sponsorzy
+
+Pakiet ZPD nie powstałby, gdyby nie środki UE:
+![KL+IBE+EFS](http://zpd.ibe.edu.pl/logo-IBE-EE.png)

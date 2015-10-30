@@ -1,4 +1,11 @@
 --------------------
+Zmiany w ZPD 1.5.1 (2015-10-30)
+
+- Dodanie prośby o cytowanie przy ładowaniu pakietu oraz loga KL+IBE+EFS do
+  pliku README
+- Korekta dokumentacji funkcji pobierz_skale()
+
+--------------------
 Zmiany w ZPD 1.5.0 (2015-09-20)
 
 - Zmiany w grupie danych "wyniki":
@@ -20,7 +27,7 @@ Zmiany w ZPD 1.5.0 (2015-09-20)
     (id_testu, rok) powinny wykonywać się znacznie szybciej
 - Zmiany w grupie danych "skale":
   - usunięcie parametru "PvEap" funkcji pobiersz_skale()
-    obecnie inofrmacje o posiadaniu oszacowań PV i/lub EAP dla skalowania są
+    obecnie informacje o posiadaniu oszacowań PV i/lub EAP dla skalowania są
     pobierane zawsze i nie wydłuża to czasu pobierania danych (co stało się
     możliwe dzieki zmianom w strukturze bazy danych)
   - dodanie parametrów "skalowania" oraz "grupy" do funkcji pobierz_skale()

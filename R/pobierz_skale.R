@@ -20,7 +20,6 @@
 #' @param doPrezentacji czy wyświetlać tylko skale i skalowania oznaczone do
 #'   publicznej prezentacji
 #' @param czyKtt czy czy wyświetlać skale i skalowania KTT
-#' @param testy czy pobierać informację o powiązaniu skal z testami
 #' @param skalowania czy pobierać informacje o skalowaniach w ramach skal
 #' @param grupy czy pobierać informacje o grupach w ramach skalowań (tylko gdy parametr skalowania = TRUE)
 #' @import dplyr

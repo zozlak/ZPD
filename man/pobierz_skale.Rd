@@ -18,8 +18,6 @@ publicznej prezentacji}
 \item{skalowania}{czy pobierać informacje o skalowaniach w ramach skal}
 
 \item{grupy}{czy pobierać informacje o grupach w ramach skalowań (tylko gdy parametr skalowania = TRUE)}
-
-\item{testy}{czy pobierać informację o powiązaniu skal z testami}
 }
 \description{
 Pobiera listę skal, skalowań i grup wyróżnionych w ramach skalowań połączoną
