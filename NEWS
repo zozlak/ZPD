@@ -1,6 +1,12 @@
 --------------------
 Zmiany w ZPD 1.5.1 (2015-10-30)
 
+- Zmiany w grupie danych "kryteriaOceny":
+  - Rozszerzenie funkcji pobierz_kryteria_oceny() o możliwość pobranie 
+    informacji o kryteriach składowych pseudokryteriów oceny (zmienna 
+    "kryterium_skladowe").
+    O tym, czy informacje zostaną pobrane, decyduje nowy parametr 
+    "krytSkladowe"
 - Dodanie prośby o cytowanie przy ładowaniu pakietu oraz loga KL+IBE+EFS do
   pliku README
 - Korekta dokumentacji funkcji pobierz_skale()

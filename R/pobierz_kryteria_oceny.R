@@ -27,17 +27,21 @@
 #'   (zmienne id_testu, kolejnosc_w_tescie, popr_dystraktor)
 #' @param skale czy pobierać informacje o występowaniu kryteriów w skalach
 #'   (zmienne id_skali, kolejnosc_w_skali)
+#' @param krytSkladowe czy dla pseudokryteriów oceny pobierać informacje o
+#'   kryteriach, z których się składają
 #' @import dplyr
 #' @export
 pobierz_kryteria_oceny = function(
   src,
   testy = TRUE,
-  skale = TRUE
+  skale = TRUE,
+  krytSkladowe = TRUE
 ){
   stopifnot(
     is.src(src),
     is.vector(testy), is.logical(testy), length(testy) == 1, all(!is.na(testy)),
-    is.vector(skale), is.logical(skale), length(skale) == 1, all(!is.na(skale))
+    is.vector(skale), is.logical(skale), length(skale) == 1, all(!is.na(skale)),
+    is.vector(krytSkladowe), is.logical(krytSkladowe), length(krytSkladowe) == 1, all(!is.na(krytSkladowe))
   )
   
   data = tbl(src, sql(e("SELECT * FROM widoki.pobierz_kryteria_oceny")))
@@ -68,6 +72,15 @@ pobierz_kryteria_oceny = function(
         kolejnosc AS kolejnosc_w_skali
       FROM skale_elementy"
     data = data %>%
+      left_join(tbl(src, sql(e(query))))
+  }
+  if(krytSkladowe){
+    query = "
+    SELECT
+      'p_' || id_pseudokryterium AS kryterium,
+      'k_' || id_kryterium AS kryt_skladowe
+    FROM pseudokryteria_oceny_kryteria"
+    data = data %>% 
       left_join(tbl(src, sql(e(query))))
   }
 

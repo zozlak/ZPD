@@ -5,7 +5,8 @@
 \title{Pobiera informacje o pytaniach, (pseudo)kryteriach ocenypytaniach oraz
   tym, w których testach i skalach występują}
 \usage{
-pobierz_kryteria_oceny(src, testy = TRUE, skale = TRUE)
+pobierz_kryteria_oceny(src, testy = TRUE, skale = TRUE,
+  krytSkladowe = TRUE)
 }
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}
@@ -15,6 +16,9 @@ pobierz_kryteria_oceny(src, testy = TRUE, skale = TRUE)
 
 \item{skale}{czy pobierać informacje o występowaniu kryteriów w skalach
 (zmienne id_skali, kolejnosc_w_skali)}
+
+\item{krytSkladowe}{czy dla pseudokryteriów oceny pobierać informacje o
+kryteriach, z których się składają}
 }
 \description{
 Pobierane są informacje o wszystkich pytaniach, (pseudo)kryteriach oceny, ich
