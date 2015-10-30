@@ -18,7 +18,7 @@ Pakiet zawierający zestaw funkcji ułatwiających korzystanie z połączonych b
 
 ## Instalacja
 
-Pakiet nie jest (i zapewne nigdy nie będzie) dostępny poprzez CRAN-a, więc instalować trzeba ze źródeł.
+Pakiet nie jest (i zapewne nigdy nie będzie) dostępny poprzez CRAN, więc instalować trzeba ze źródeł.
 
 Ponieważ jednak zawiera jedynie kod w R, nie ma potrzeby zaopatrywać się w kompilatory, itp.
 
