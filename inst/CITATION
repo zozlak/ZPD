@@ -1,0 +1,19 @@
+bibentry(
+  bibtype = 'Book',
+  title = 'Porównywalne wyniki egzaminacyjne',
+  author = c(
+    person("Henryk", "Szaleniec"),
+    person("Bartosz", "Kondratek"),
+    person("Filip", "Kulon"),
+    person("Artur", "Pokropek"),
+    person("Paulina", "Skórska"),
+    person("Karolina", "Świst"),
+    person("Tomasz", "Wołodźko"),
+    person("Mateusz", "Żółtak")
+  ),
+  year = 2015,
+  publisher = 'Instytut Badań Edukacyjnych',
+  address = 'Warszawa',
+  url = 'http://pwe.ibe.edu.pl/opisy/pwe2015/PWE_2015.pdf',
+  note = paste0("R package ",  meta$Package, " version ", meta$Version)
+)

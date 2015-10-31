@@ -50,5 +50,5 @@ Szaleniec, H., Kondratek, B., Kulon, F., Pokropek, A., Skórska, P., Świst, K.,
 
 ## Sponsorzy
 
-Pakiet ZPD nie powstałby, gdyby nie środki UE:
+Pakiet został opracowany w ramach projektów systemowych "Badanie efektywności edukacji oraz instytucjonalizacja zaplecza badawczego" oraz "Rozwój metody edukacyjnej wartości dodanej na potrzeby wzmocnienia ewaluacyjnej funkcji egzaminów zewnętrznych", współfinansowanych przez Unię Europejską ze środków Europejskiego Funduszu społecznego, realizowanych przez Instytut Badań Edukacyjnych.
 ![KL+IBE+EFS](http://zpd.ibe.edu.pl/logo-IBE-EE.png)
