@@ -1,4 +1,4 @@
-#' @title Zwraca piersze lub ostatnie przystąpienia do danego egzaminu w
+#' @title Zwraca pierwsze lub ostatnie przystąpienia do danego egzaminu w
 #'   zadanych latach
 #' @description
 #' Najczęściej podczas analiz interesuje nas jedynie pierwsze podejście ucznia 

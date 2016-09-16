@@ -1,4 +1,10 @@
 --------------------
+Zmiany w ZPD 1.5.2 (2016-09-16)
+
+- Korekta błędu w funkcji normalizuj() generującego komunikat ostrzeżenia
+  "Unknown column 'grupa'"
+
+--------------------
 Zmiany w ZPD 1.5.1 (2015-10-30)
 
 - Zmiany w grupie danych "kryteriaOceny":

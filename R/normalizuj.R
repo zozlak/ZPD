@@ -55,7 +55,7 @@ normalizuj = function(
     grp = grupa
     normy = pobierz_normy(src) %>%
       filter_(~id_skali == idSkali, ~skalowanie == skl, ~grupa == grp) %>%
-      select_('wartosc', 'wartosc_zr') %>%
+      select_('grupa', 'wartosc', 'wartosc_zr') %>%
       rename_(.dots = setNames(list('wartosc', 'wartosc_zr'), c(kolWynik, kolWynikNazwa)))
     normyPobrane = normy %>% collect()
     if(nrow(normyPobrane) == 0){
