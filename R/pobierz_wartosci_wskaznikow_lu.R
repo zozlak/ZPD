@@ -1,5 +1,6 @@
 #' @title Pobiera informacje o liczbie uczniów uwzględnionych przy wyliczaniu
 #'   wskaźników w podziale na przedmioty (dokładniej części egzaminu)
+#' @description 
 #' @param src uchwyt źródła danych dplyr-a
 #' @import dplyr
 #' @export

@@ -1,4 +1,5 @@
 #' @title Pobiera ramke danych z wynikami egzaminacyjnymi testow zrownujacych
+#' @description 
 #' @param src uchwyt źródła danych dplyr-a
 #' @param rodzajEgzaminu rodzaj egzaminu, ktorego wyniki maja zostac pobrane
 #' @param punktuj wybor, czy dane maja byc pobrane w postaci dystraktorow, czy punktow

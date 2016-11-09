@@ -26,7 +26,7 @@ oszacuj_czas_wykonania = function(
   }
   query = paste0(
     'EXPLAIN (FORMAT ', format, ') ',
-    dane$query$sql
+    sql_render(dane)
   )
   results = DBI::dbGetQuery(dane$src$con, e(query))
   

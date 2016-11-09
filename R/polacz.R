@@ -1,4 +1,5 @@
 #' @title Zwraca połączenie dplyr-a z bazą danych ZPD
+#' @description 
 #' @param dbname nazwa bazy danych
 #' @param host adres serwera bazy danych
 #' @param port port, na którym nasłuchuje serwer baz danych

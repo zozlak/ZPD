@@ -8,9 +8,9 @@ test_that('normalizuj działa', {
   norm = normalizuj(dane)
   
   expect_equal(norm$wynik, dane$wynik)
-  expect_less_than(abs(mean(norm$wynik_norm) - 100), 1)
-  expect_less_than(abs(median(norm$wynik_norm) - 100), 1)
-  expect_less_than(abs(sd(norm$wynik_norm) - 15), 1)
+  expect_lt(abs(mean(norm$wynik_norm) - 100), 1)
+  expect_lt(abs(median(norm$wynik_norm) - 100), 1)
+  expect_lt(abs(sd(norm$wynik_norm) - 15), 1)
   
   skale = pobierz_skale(src) %>% 
     filter(posiada_normy == T, rodzaj_egzaminu == 'sprawdzian', rok == 2010, rodzaj_skali == 'zrównywanie') %>% 
@@ -20,7 +20,7 @@ test_that('normalizuj działa', {
   norm = normalizuj(dane, src, idSkali = skale$id_skali[1], skalowanie = skale$skalowanie[1], grupa = skale$grupa[1])
   
   expect_equal(norm$wynik, dane$wynik)
-  expect_more_than(min(norm$wynik_norm), 0)
-  expect_less_than(max(norm$wynik_norm), 40.001)
-  expect_less_than(sd(norm$wynik_norm), 15)
+  expect_gt(min(norm$wynik_norm), 0)
+  expect_lt(max(norm$wynik_norm), 40.001)
+  expect_lt(sd(norm$wynik_norm), 15)
 })

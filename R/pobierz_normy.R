@@ -1,4 +1,5 @@
 #' @title Pobiera z bazy normy (np. zrównywania lub ekwikwantylowe)
+#' @description 
 #' @param src uchwyt źródła danych dplyr-a (np. z funkcji polacz())
 #' @import dplyr
 #' @export

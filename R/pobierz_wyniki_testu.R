@@ -1,4 +1,5 @@
 #' @title Pobiera wyniki testu
+#' @description 
 #' @param src uchwyt źródła danych dplyr-a
 #' @param idTestu identyfikator testu do pobrania
 #' @param punktuj wybor, czy dane maja byc pobrane w postaci dystraktorow, czy punktow

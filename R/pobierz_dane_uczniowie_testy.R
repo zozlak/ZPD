@@ -1,4 +1,5 @@
 #' @title Pobiera informacje o uczniach specyficzne dla testu / egzaminu
+#' @description 
 #' @param src uchwyt źródła danych dplyr-a
 #' @param daneOsobowe czy pobierac z bazy takze dane osobowe (wymaga specjalnych uprawnien)
 #' @import dplyr

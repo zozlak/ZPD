@@ -1,4 +1,5 @@
 #' @title Pobiera wyniki części egzaminu
+#' @description 
 #' @param src uchwyt źródła danych dplyr-a
 #' @param rodzajEgzaminu rodzaj egzaminu, ktorego wyniki maja zostac pobrane
 #' @param czescEgzaminu czesc egzaminu, ktorego wyniki maja zostac pobrane

@@ -1,4 +1,5 @@
 #' @title Pobiera informacje o testach / egzaminach
+#' @description 
 #' @param src uchwyt źródła danych dplyr-a
 #' @import dplyr
 #' @export
