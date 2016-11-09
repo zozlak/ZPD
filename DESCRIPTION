@@ -15,7 +15,8 @@ Imports:
     reshape2
 Suggests:
     testthat,
-    knitr
+    knitr,
+    covr
 License: MIT + file LICENSE
 NeedsCompilation: no
 Encoding: UTF-8
