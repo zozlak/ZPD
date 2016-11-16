@@ -111,7 +111,7 @@ zastosuj_skale_szeroka = function(
     filter_('!is.na(mutate)') %>%
     collect()
   if(nrow(przekszt) > 0){
-    przekszt = setNames(as.list(przekszt$mutate), przekszt$kryterium_s)
+    przekszt = stats::setNames(as.list(przekszt$mutate), przekszt$kryterium_s)
     usun = paste0('-', (skala %>% filter_(~kryterium_s %in% names(przekszt)))$kryterium)
     dane = dane %>%
       mutate_(.dots = przekszt) %>%
@@ -132,10 +132,10 @@ zastosuj_skale_szeroka = function(
       tmp = skroty %>% 
         filter_(~id_skrotu == i$id_skrotu) %>%
         select_('-id_skrotu') %>%
-        rename_(.dots = setNames(list('wartosc', 'nowa_wartosc'), c(i$kryterium_s, i$kryterium_ss))) %>%
+        rename_(.dots = stats::setNames(list('wartosc', 'nowa_wartosc'), c(i$kryterium_s, i$kryterium_ss))) %>%
         collect()
       dane = left_join(dane, tmp, copy = TRUE)
-      przezwij = append(przezwij, setNames(list(i$kryterium_ss), i$kryterium_s))
+      przezwij = append(przezwij, stats::setNames(list(i$kryterium_ss), i$kryterium_s))
     }
     dane = dane %>%
       select_(.dots = paste0('-', names(przezwij))) %>%

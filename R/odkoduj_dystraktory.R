@@ -53,8 +53,8 @@ odkoduj_dystraktory = function(
     # dane w postaci dlugiej
     dane = suppressMessages(
       dane %>%
-      left_join(schematy %>% rename_(.dots = setNames(list('kolejnosc_dystr'), kolDystr))) %>%
-      mutate_(.dots = setNames(list(paste0('ifelse(is.na(dystraktor), ', kolDystr, ', dystraktor)')), kolDystr)) %>%
+      left_join(schematy %>% rename_(.dots = stats::setNames(list('kolejnosc_dystr'), kolDystr))) %>%
+      mutate_(.dots = stats::setNames(list(paste0('ifelse(is.na(dystraktor), ', kolDystr, ', dystraktor)')), kolDystr)) %>%
       select_('-dystraktor')
     )
   }else{
@@ -62,12 +62,12 @@ odkoduj_dystraktory = function(
     for(kol in kolDystr[kolDystr %in% schematy$kryterium]){
       schemat = schematy %>%
         filter_(~kryterium == kol) %>%
-        rename_(.dots = setNames(list('kolejnosc_dystr'), kol)) %>%
+        rename_(.dots = stats::setNames(list('kolejnosc_dystr'), kol)) %>%
         select_('-kryterium')
       dane = suppressMessages(
         dane %>%
         left_join(schemat) %>%
-        mutate_(.dots = setNames(list(paste0('ifelse(is.na(dystraktor), ', kol, ', dystraktor)')), kol)) %>%
+        mutate_(.dots = stats::setNames(list(paste0('ifelse(is.na(dystraktor), ', kol, ', dystraktor)')), kol)) %>%
         select_('-dystraktor')
       )
     }

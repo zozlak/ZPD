@@ -11,4 +11,7 @@ pobierz_dane_uczniowie_testy(src, daneOsobowe = FALSE)
 
 \item{daneOsobowe}{czy pobierac z bazy takze dane osobowe (wymaga specjalnych uprawnien)}
 }
+\description{
+Pobiera informacje o uczniach specyficzne dla testu / egzaminu
+}
 

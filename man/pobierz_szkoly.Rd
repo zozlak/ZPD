@@ -9,4 +9,7 @@ pobierz_szkoly(src)
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}
 }
+\description{
+Pobiera informacje o szkołach
+}
 

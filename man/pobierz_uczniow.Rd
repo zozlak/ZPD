@@ -11,4 +11,7 @@ pobierz_uczniow(src, daneOsobowe = FALSE)
 
 \item{daneOsobowe}{czy pobierac z bazy takze dane osobowe (wymaga specjalnych uprawnien)}
 }
+\description{
+Pobiera informacje o uczniach
+}
 

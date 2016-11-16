@@ -59,9 +59,9 @@ agreguj_pwe = function(
     do_(~.oblicz_statystyki_pwe(.))
   d$var[is.na(d$var)] = 0
   if(varPop == 0){
-    d$bs = sqrt((1 + 1 / ilePV) * var(d$srednia) + mean(d$var) / mean(d$n) + blZrwn2)
+    d$bs = sqrt((1 + 1 / ilePV) * stats::var(d$srednia) + mean(d$var) / mean(d$n) + blZrwn2)
   }else{
-    d$bs = sqrt((1 + 1 / ilePV) * var(d$srednia) + varPop / mean(d$n) + blZrwn2)
+    d$bs = sqrt((1 + 1 / ilePV) * stats::var(d$srednia) + varPop / mean(d$n) + blZrwn2)
   }		
   d$srednia = srednia
   d = apply(d, 2, mean)
@@ -73,10 +73,10 @@ agreguj_pwe = function(
 #' @return [data.frame] obliczone statystyki
 .oblicz_statystyki_pwe = function(x){
   x = c(
-    quantile(x$wynik, probs=c(0, 0.25, 0.5, 0.75, 1)),
+    stats::quantile(x$wynik, probs=c(0, 0.25, 0.5, 0.75, 1)),
     mean(x$wynik),
     nrow(x),
-    var(x$wynik)
+    stats::var(x$wynik)
   )
   names(x) = c('min', 'q1', 'mediana', 'q3', 'max', 'srednia', 'n', 'var')
   return(as.data.frame(as.list(x)))

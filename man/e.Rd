@@ -9,4 +9,7 @@ e(s)
 \arguments{
 \item{s}{wektor lub macierz do konwersji}
 }
+\description{
+Konwertuje łańcuch znaków na lokalne kodowanie komputera
+}
 

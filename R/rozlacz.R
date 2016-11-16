@@ -1,5 +1,6 @@
 #' @title Rozłącza połączenie z bazą
 #' @description 
+#' Rozłącza połączenie z bazą
 #' @param src uchwyt połączenia zwrócony przez funkcję polacz()
 #' @import dplyr
 #' @export

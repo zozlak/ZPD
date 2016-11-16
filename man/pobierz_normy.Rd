@@ -2,11 +2,14 @@
 % Please edit documentation in R/pobierz_normy.R
 \name{pobierz_normy}
 \alias{pobierz_normy}
-\title{Pobiera z bazy normy (np. zrównywania lub ekwikwantylowe)}
+\title{Pobiera z bazy normy}
 \usage{
 pobierz_normy(src)
 }
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a (np. z funkcji polacz())}
+}
+\description{
+Pobiera z bazy normy (np. zrównywania lub ekwikwantylowe)
 }
 

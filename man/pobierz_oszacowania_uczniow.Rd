@@ -9,4 +9,7 @@ pobierz_oszacowania_uczniow(src)
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}
 }
+\description{
+Pobiera oszacowania umiejętności uczniów
+}
 

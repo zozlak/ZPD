@@ -18,4 +18,7 @@ pobierz_wyniki_testu(src, idTestu, punktuj = TRUE, idSkali = NULL,
 
 \item{skroc}{czy do danych zastosowac skrocenia skal opisane w skali}
 }
+\description{
+Pobiera wyniki testu w postaci szerokiej
+}
 

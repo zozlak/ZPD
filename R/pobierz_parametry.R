@@ -1,5 +1,6 @@
 #' @title Pobiera parametry kryteriów i pseudokryteriów obliczone w skalowaniach
 #' @description 
+#' Pobiera parametry kryteriów i pseudokryteriów obliczone w skalowaniach
 #' @param src uchwyt źródła danych dplyr-a 
 #' @import dplyr
 #' @export

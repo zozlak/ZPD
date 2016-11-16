@@ -9,4 +9,7 @@ rozlacz(src)
 \arguments{
 \item{src}{uchwyt połączenia zwrócony przez funkcję polacz()}
 }
+\description{
+Rozłącza połączenie z bazą
+}
 

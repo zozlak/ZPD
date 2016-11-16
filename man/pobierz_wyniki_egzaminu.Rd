@@ -24,4 +24,7 @@ pobierz_wyniki_egzaminu(src, rodzajEgzaminu, czescEgzaminu, rokEgzaminu, czyEwd,
 
 \item{skroc}{czy do danych zastosowac skrocenia skal opisane w skali}
 }
+\description{
+Pobiera wyniki części egzaminu w postaci szerokiej
+}
 

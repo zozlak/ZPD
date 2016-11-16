@@ -2,7 +2,7 @@
 % Please edit documentation in R/pobierz_wyniki_zrownywania.R
 \name{pobierz_wyniki_zrownywania}
 \alias{pobierz_wyniki_zrownywania}
-\title{Pobiera ramke danych z wynikami egzaminacyjnymi testow zrownujacych}
+\title{Pobiera wyniki testow zrownujacych}
 \usage{
 pobierz_wyniki_zrownywania(src, rodzajEgzaminu, rok, punktuj = TRUE,
   idSkali = NULL, skroc = TRUE)
@@ -19,5 +19,8 @@ pobierz_wyniki_zrownywania(src, rodzajEgzaminu, rok, punktuj = TRUE,
 \item{idSkali}{identyfikator skali, ktora ma zostac zastosowana do danych}
 
 \item{skroc}{czy do danych zastosowac skrocenia skal opisane w skali}
+}
+\description{
+Pobiera ramke danych z wynikami testow zrownujacych w postaci szerokiej
 }
 

@@ -1,5 +1,6 @@
-#' @title Pobiera ramke danych z wynikami egzaminacyjnymi testow zrownujacych
+#' @title Pobiera wyniki testow zrownujacych
 #' @description 
+#' Pobiera ramke danych z wynikami testow zrownujacych w postaci szerokiej
 #' @param src uchwyt źródła danych dplyr-a
 #' @param rodzajEgzaminu rodzaj egzaminu, ktorego wyniki maja zostac pobrane
 #' @param punktuj wybor, czy dane maja byc pobrane w postaci dystraktorow, czy punktow
@@ -33,7 +34,7 @@ pobierz_wyniki_zrownywania = function(
 		stop(e('w bazie nie ma takiego zrownywania'))
 	}
 
-	tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), runif(1))))
+	tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), stats::runif(1))))
 	DBI::dbGetQuery(src$con, e(paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1")))
 	query = sprintf(
     "SELECT zbuduj_widok_zrownywania(%s, %s, %d, %s, %s, %s, true)",

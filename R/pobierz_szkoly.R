@@ -1,5 +1,6 @@
 #' @title Pobiera informacje o szkołach
 #' @description 
+#' Pobiera informacje o szkołach
 #' @param src uchwyt źródła danych dplyr-a
 #' @import dplyr
 #' @export

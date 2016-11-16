@@ -9,4 +9,7 @@ pobierz_parametry(src)
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}
 }
+\description{
+Pobiera parametry kryteriów i pseudokryteriów obliczone w skalowaniach
+}
 

@@ -30,7 +30,7 @@ ramka_danych_pv = function(
 		stop(e('niejednoznaczna nazwa kolumny z numerem PV'))
 	}	else if(length(kolNrPV) == 0){
 		# ramka danych w postaci szerokiej - skonwertuj do długiej
-		dane = reshape2::melt(dane[, na.omit(c(kolPozostale, kolPV))], id.vars = kolPozostale)	
+		dane = reshape2::melt(dane[, stats::na.omit(c(kolPozostale, kolPV))], id.vars = kolPozostale)	
 		names(dane) = sub('^variable$', 'nr_pv', names(dane))
 		names(dane) = sub('^value$', 'wynik', names(dane))
 	} else if(length(kolPV) != 1){

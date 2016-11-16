@@ -18,4 +18,7 @@ polacz(dbname = "ewd", host = "ewd.ibe.edu.pl", port = 5432,
 
 \item{password}{hasło}
 }
+\description{
+Zwraca połączenie dplyr-a z bazą danych ZPD
+}
 

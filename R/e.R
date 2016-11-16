@@ -1,4 +1,6 @@
 #' @title Konwertuje łańcuch znaków na lokalne kodowanie komputera
+#' @description 
+#' Konwertuje łańcuch znaków na lokalne kodowanie komputera
 #' @param s wektor lub macierz do konwersji
 #' @export
 e = function(s){

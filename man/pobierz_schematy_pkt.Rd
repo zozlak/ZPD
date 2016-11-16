@@ -9,4 +9,7 @@ pobierz_schematy_pkt(src)
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}
 }
+\description{
+Pobiera dozwolone wartości punktowe kryteriów oceny
+}
 

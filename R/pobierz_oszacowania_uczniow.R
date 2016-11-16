@@ -1,5 +1,6 @@
 #' @title Pobiera oszacowania umiejętności uczniów
 #' @description 
+#' Pobiera oszacowania umiejętności uczniów
 #' @param src uchwyt źródła danych dplyr-a
 #' @import dplyr
 #' @export

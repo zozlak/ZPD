@@ -102,7 +102,7 @@ normy_ekwikwantylowe = function(
   skum[rozklad == 0] = NA
   skum[skum > (1 - prog)] = 1 - prog
   skum[skum < prog] = prog
-  norma = qnorm(skum, 0, 1)
+  norma = stats::qnorm(skum, 0, 1)
   # generowanie wartości znormalizowanych dla wartości surowych, które nie występują w danych
   zera = c(1:length(norma))[is.na(norma)]
   lz = length(zera)
@@ -162,5 +162,5 @@ normy_ekwikwantylowe = function(
     norma = ifelse(norma > nmax, nmax, norma)
   }
   
-  return(setNames(as.numeric(norma), names(norma)))
+  return(stats::setNames(as.numeric(norma), names(norma)))
 }

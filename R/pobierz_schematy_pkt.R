@@ -1,5 +1,6 @@
 #' @title Pobiera dozwolone wartości punktowe kryteriów oceny
 #' @description 
+#' Pobiera dozwolone wartości punktowe kryteriów oceny
 #' @param src uchwyt źródła danych dplyr-a
 #' @import dplyr
 #' @export

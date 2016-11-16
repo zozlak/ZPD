@@ -1,5 +1,6 @@
 #' @title Pobiera informacje o uczniach
 #' @description 
+#' Pobiera informacje o uczniach
 #' @param src uchwyt źródła danych dplyr-a
 #' @param daneOsobowe czy pobierac z bazy takze dane osobowe (wymaga specjalnych uprawnien)
 #' @import dplyr

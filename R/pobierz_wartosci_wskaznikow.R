@@ -1,5 +1,6 @@
 #' @title Ppobiera wartości wskaźników (EWD i PWE)
 #' @description 
+#' Ppobiera wartości wskaźników (EWD i PWE)
 #' @param src uchwyt źródła danych dplyr-a
 #' @param czyPomin czy uwzględniać wartości wskaźników oznaczone jako do pominięcia
 #' @import dplyr

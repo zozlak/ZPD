@@ -1,5 +1,6 @@
 #' @title Pobiera wyniki testu
 #' @description 
+#' Pobiera wyniki testu w postaci szerokiej
 #' @param src uchwyt źródła danych dplyr-a
 #' @param idTestu identyfikator testu do pobrania
 #' @param punktuj wybor, czy dane maja byc pobrane w postaci dystraktorow, czy punktow
@@ -29,7 +30,7 @@ pobierz_wyniki_testu = function(
     stop(e('nie ma takiego testu'))
   }
   
-  tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), runif(1))))
+  tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), stats::runif(1))))
   DBI::dbGetQuery(src$con, e(paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1")))
   query = sprintf(
     "SELECT zbuduj_widok_testu('%s', %d, %s, %s, %s, true);",

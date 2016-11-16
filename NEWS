@@ -1,4 +1,9 @@
 --------------------
+Zmiany w ZPD 1.5.4 (2016-11-16)
+
+- Uzgodnienie z bardziej restrykcyjnymi testami R 3.3
+
+--------------------
 Zmiany w ZPD 1.5.3 (2016-11-09)
 
 - Doprowadzenie do zgodności z aktualną wersją dplyr-a i testthat

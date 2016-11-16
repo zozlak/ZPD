@@ -1,5 +1,6 @@
 #' @title Pobiera wyniki części egzaminu
 #' @description 
+#' Pobiera wyniki części egzaminu w postaci szerokiej
 #' @param src uchwyt źródła danych dplyr-a
 #' @param rodzajEgzaminu rodzaj egzaminu, ktorego wyniki maja zostac pobrane
 #' @param czescEgzaminu czesc egzaminu, ktorego wyniki maja zostac pobrane
@@ -43,7 +44,7 @@ pobierz_wyniki_egzaminu = function(
     stop(e('w bazie nie ma wyników takiego egzaminu, ale istnieją dla innego źródła danych (patrz parametr czyEwd)'))
   }
   
-  tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), runif(1))))
+  tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), stats::runif(1))))
   DBI::dbGetQuery(src$con, e(paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1")))
   query = sprintf(
     "SELECT zbuduj_widok_czesci_egzaminu('%s', %s, %s, %d, %s, %s, %s, %s, true);",

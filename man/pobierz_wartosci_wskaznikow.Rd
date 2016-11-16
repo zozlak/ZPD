@@ -11,4 +11,7 @@ pobierz_wartosci_wskaznikow(src, czyPomin = FALSE)
 
 \item{czyPomin}{czy uwzględniać wartości wskaźników oznaczone jako do pominięcia}
 }
+\description{
+Ppobiera wartości wskaźników (EWD i PWE)
+}
 

@@ -2,12 +2,16 @@
 % Please edit documentation in R/pobierz_wartosci_wskaznikow_lu.R
 \name{pobierz_wartosci_wskaznikow_lu}
 \alias{pobierz_wartosci_wskaznikow_lu}
-\title{Pobiera informacje o liczbie uczniów uwzględnionych przy wyliczaniu
-  wskaźników w podziale na przedmioty (dokładniej części egzaminu)}
+\title{Pobiera informacje o liczbie uczniów uwzględnionych przy wyliczaniu 
+  wskaźników}
 \usage{
 pobierz_wartosci_wskaznikow_lu(src)
 }
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}
+}
+\description{
+Pobiera informacje o liczbie uczniów uwzględnionych przy wyliczaniu 
+wskaźników w podziale na przedmioty (dokładniej części egzaminu)
 }
 
