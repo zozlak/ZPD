@@ -1,4 +1,9 @@
 --------------------
+Zmiany w ZPD 1.5.3 (2016-11-09)
+
+- Doprowadzenie do zgodności z aktualną wersją dplyr-a i testthat
+
+--------------------
 Zmiany w ZPD 1.5.2 (2016-09-16)
 
 - Korekta błędu w funkcji normalizuj() generującego komunikat ostrzeżenia
