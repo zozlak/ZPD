@@ -1,4 +1,11 @@
 --------------------
+Zmiany w ZPD 1.5.5 (2017-02-01)
+
+- Zmiana domyślnych parametrów połączenia z bazą danych
+  (tak by domyślne ustawienia działały po zamieszaniu z rekonfiguracją 
+  domen ewd)
+
+--------------------
 Zmiany w ZPD 1.5.4 (2016-11-16)
 
 - Uzgodnienie z bardziej restrykcyjnymi testami R 3.3
