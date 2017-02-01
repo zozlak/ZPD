@@ -10,7 +10,7 @@
 #' @import RPostgreSQL
 polacz = function(
   dbname = 'ewd',
-  host = 'ewd.ibe.edu.pl',
+  host = '89.231.23.130',
   port = 5432,
   user = 'ewd_baza',
   password = 'CalEBo9'
