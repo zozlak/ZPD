@@ -12,4 +12,3 @@ pobierz_normy(src)
 \description{
 Pobiera z bazy normy (np. zrównywania lub ekwikwantylowe)
 }
-

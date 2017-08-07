@@ -14,4 +14,3 @@ pobierz_wartosci_wskaznikow_lu(src)
 Pobiera informacje o liczbie uczniów uwzględnionych przy wyliczaniu 
 wskaźników w podziale na przedmioty (dokładniej części egzaminu)
 }
-

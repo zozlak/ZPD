@@ -37,4 +37,3 @@ skalowania. Jeśli chcemy uzyskać listę wszystkich skal, należy parametr
 Domyślnie pomijane są wszystie skale i skalowania KTT. Aby wyszukać skale i
 skalowania KTT, ustaw parametr "ktt" na TRUE.
 }
-

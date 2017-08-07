@@ -12,4 +12,3 @@ czy_postac_szeroka(dane)
 \description{
 Postac szeroka musi zawierac kolumny z prefiksem \code{k_} lub \code{p_}
 }
-

@@ -12,4 +12,3 @@ pobierz_testy(src)
 \description{
 Pobiera informacje o testach / egzaminach
 }
-

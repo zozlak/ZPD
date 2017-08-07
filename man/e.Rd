@@ -12,4 +12,3 @@ e(s)
 \description{
 Konwertuje łańcuch znaków na lokalne kodowanie komputera
 }
-

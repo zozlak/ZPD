@@ -14,4 +14,3 @@ pobierz_dane_uczniowie_testy(src, daneOsobowe = FALSE)
 \description{
 Pobiera informacje o uczniach specyficzne dla testu / egzaminu
 }
-

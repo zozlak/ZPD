@@ -21,4 +21,3 @@ pobierz_wyniki_testu(src, idTestu, punktuj = TRUE, idSkali = NULL,
 \description{
 Pobiera wyniki testu w postaci szerokiej
 }
-

@@ -27,4 +27,3 @@ pobierz_wyniki_egzaminu(src, rodzajEgzaminu, czescEgzaminu, rokEgzaminu, czyEwd,
 \description{
 Pobiera wyniki części egzaminu w postaci szerokiej
 }
-

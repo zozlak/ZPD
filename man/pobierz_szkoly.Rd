@@ -12,4 +12,3 @@ pobierz_szkoly(src)
 \description{
 Pobiera informacje o szkołach
 }
-

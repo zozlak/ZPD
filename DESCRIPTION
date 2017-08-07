@@ -8,10 +8,11 @@ Author: Mateusz Zoltak <zozlak@zozlak.org>,
     Tymoteusz Wołodźko <t.wolodzko@ibe.edu.pl>
 Maintainer: Mateusz Zoltak <zozlak@zozlak.org>
 Depends:
-    dplyr (>= 0.5.0),
+    dplyr (>= 0.7.2),
     RPostgreSQL
 Imports:
     DBI,
+    dbplyr (>= 1.1.0),
     reshape2
 Suggests:
     testthat,
@@ -21,4 +22,4 @@ License: MIT + file LICENSE
 NeedsCompilation: no
 Encoding: UTF-8
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

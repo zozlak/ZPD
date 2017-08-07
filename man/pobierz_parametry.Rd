@@ -12,4 +12,3 @@ pobierz_parametry(src)
 \description{
 Pobiera parametry kryteriów i pseudokryteriów obliczone w skalowaniach
 }
-

@@ -33,4 +33,3 @@ najpierw przekazane dane za pomocą \code{collect()}
 Kody liczbowe -1 i -2 oznaczają, odpowiednio, opuszczenie i wielokrotne
 zaznaczenie.
 }
-

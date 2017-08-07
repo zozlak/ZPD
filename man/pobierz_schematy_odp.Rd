@@ -18,4 +18,3 @@ w teście.
 Innym zastosowaniem może być sprawdzanie, czy zbiór danych z wynikami testu 
 nie zawiera wartości spoza możliwych do wyboru dla danego zadania odpowiedzi.
 }
-

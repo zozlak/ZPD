@@ -4,7 +4,7 @@
 \alias{polacz}
 \title{Zwraca połączenie dplyr-a z bazą danych ZPD}
 \usage{
-polacz(dbname = "ewd", host = "ewd.ibe.edu.pl", port = 5432,
+polacz(dbname = "ewd", host = "89.231.23.130", port = 5432,
   user = "ewd_baza", password = "CalEBo9")
 }
 \arguments{
@@ -21,4 +21,3 @@ polacz(dbname = "ewd", host = "ewd.ibe.edu.pl", port = 5432,
 \description{
 Zwraca połączenie dplyr-a z bazą danych ZPD
 }
-

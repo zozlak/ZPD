@@ -16,4 +16,3 @@ Parametr "usunKryteria" dziala tylko dla danych w postaci szerokiej. Dla
 danych w postaci dlugiej nastepuje agregacja, ktora sila rzeczy usuwa
 informacje o poszczegolnych kryteriach.
 }
-

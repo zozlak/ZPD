@@ -12,4 +12,3 @@ czy_postac_dluga(dane)
 \description{
 Postac dluga musi zawierac kolumny \code{kryterium} oraz \code{ocena}
 }
-

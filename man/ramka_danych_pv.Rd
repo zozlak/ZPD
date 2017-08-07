@@ -22,4 +22,3 @@ ramka_danych_pv(dane, kolPV = "^[pP][vV]_[0-9]+|wynik$", kolNrPV = "nr_pv",
 \description{
 _
 }
-

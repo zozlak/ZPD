@@ -43,4 +43,3 @@ wierszy (rzędu 10^4 bez informacji o testach i skalach, ok. dwukrotnie więcej
 z informacją o testach lub skalach, rzędu 10^5 z informacją o testach i o
 skalach).
 }
-

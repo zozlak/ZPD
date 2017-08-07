@@ -14,4 +14,3 @@ pobierz_wartosci_wskaznikow(src, czyPomin = FALSE)
 \description{
 Ppobiera wartości wskaźników (EWD i PWE)
 }
-

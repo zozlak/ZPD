@@ -19,4 +19,3 @@ parametr, model, wartosc}.
 
 Zwraca ramkę danych z kolumnami \code{theta} oraz \code{informacja}.
 }
-

@@ -73,4 +73,3 @@ Zakres filtrowanych danych można ograniczyć przekazując w parametrze
 ten może być albo wektorem id_obserwacji albo ramką danych z kolumną
 "id_obserwacji".
 }
-

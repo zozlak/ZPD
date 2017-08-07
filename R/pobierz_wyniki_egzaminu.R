@@ -37,10 +37,10 @@ pobierz_wyniki_egzaminu = function(
     filter_(~rodzaj_egzaminu == rodzajEgzaminu, ~czesc_egzaminu == czescEgzaminu, ~rok == rokEgzaminu) %>%
     group_by_('dane_ewd') %>%
     summarize(n = n())
-  if(nrow(tests) == 0){
+  if (nrow(tests) == 0) {
     stop(e('w bazie nie ma wyników takiego egzaminu'))
   }
-  if(nrow(tests %>% filter_(~dane_ewd == czyEwd)) == 0){
+  if (nrow(tests %>% filter_(~dane_ewd == czyEwd)) == 0) {
     stop(e('w bazie nie ma wyników takiego egzaminu, ale istnieją dla innego źródła danych (patrz parametr czyEwd)'))
   }
   
@@ -49,8 +49,8 @@ pobierz_wyniki_egzaminu = function(
   query = sprintf(
     "SELECT zbuduj_widok_czesci_egzaminu('%s', %s, %s, %d, %s, %s, %s, %s, true);",
     tmpName,
-    escape(rodzajEgzaminu),
-    escape(czescEgzaminu),
+    dbplyr::escape(rodzajEgzaminu),
+    dbplyr::escape(czescEgzaminu),
     rokEgzaminu,
     ifelse(czyEwd, 'true', 'false'),
     ifelse(punktuj, 'true', 'false'),

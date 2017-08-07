@@ -21,4 +21,3 @@ W wypadku zwracania tylko podsumowania wyswietlane są dolny i górny szacunek
 w jednostkach szacowania czasu planera wraz z komentarzem opisującym rząd
 wielkości czasu, jakiemu dana wartość odpowiada.
 }
-

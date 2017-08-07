@@ -21,4 +21,3 @@ ze zwrocony zbior danych pozbawiony bedzie kolumny "odpowiedz"
 Zastosowanie skali spowoduje rowniez automatyczne przyciecie kryteriow 
 jedynie do tych, ktore naleza do wskazanej skali.
 }
-

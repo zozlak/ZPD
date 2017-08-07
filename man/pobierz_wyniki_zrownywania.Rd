@@ -23,4 +23,3 @@ pobierz_wyniki_zrownywania(src, rodzajEgzaminu, rok, punktuj = TRUE,
 \description{
 Pobiera ramke danych z wynikami testow zrownujacych w postaci szerokiej
 }
-

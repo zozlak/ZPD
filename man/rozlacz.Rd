@@ -12,4 +12,3 @@ rozlacz(src)
 \description{
 Rozłącza połączenie z bazą
 }
-

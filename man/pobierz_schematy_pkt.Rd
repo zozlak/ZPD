@@ -12,4 +12,3 @@ pobierz_schematy_pkt(src)
 \description{
 Pobiera dozwolone wartości punktowe kryteriów oceny
 }
-

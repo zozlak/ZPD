@@ -26,4 +26,3 @@ agreguj_pwe(dane, kolGrupy, wariancjaPop = 0, bladZrwn = 0,
 \description{
 _
 }
-

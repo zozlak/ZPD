@@ -74,4 +74,3 @@ Za pomocą parametrów \code{zaokraglij}, \code{nmin} oraz \code{nmax} możliwe
 jest uzyskanie norm dla skal dyskretnych, w szczególności dla wartości
 \code{zaokraglij = TRUE, nmin = 1, nmax = 9} norm dla skali staninowej.
 }
-

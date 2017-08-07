@@ -12,4 +12,3 @@ pobierz_oszacowania_uczniow(src)
 \description{
 Pobiera oszacowania umiejętności uczniów
 }
-

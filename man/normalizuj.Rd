@@ -38,4 +38,3 @@ pomoca wskazanej normy w bazie danych (podajac parametry \code{src},
 \seealso{
 normy_ekwikwantylowe
 }
-

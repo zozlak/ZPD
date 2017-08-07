@@ -20,4 +20,3 @@ oblicz_wariancje_populacji(dane, kolPV = "^[pP][vV]_[0-9]+|wynik$",
 \description{
 _
 }
-

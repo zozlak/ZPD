@@ -14,4 +14,3 @@ pobierz_uczniow(src, daneOsobowe = FALSE)
 \description{
 Pobiera informacje o uczniach
 }
-

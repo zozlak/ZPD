@@ -32,4 +32,3 @@ Parametr "wszystkieKolumny" pozwala pobrać również kolumny mające jedynie
 zastosowania techiczne, np. kolor prezntacji na stronie WWW, dopełniacz nazwy
 egzaminu wyświetlany przy osi wykresu na stronie WWW, itp.
 }
-
