@@ -43,11 +43,11 @@ normalizuj = function(
   )
   
   kolWynikNazwa = paste0(kolWynik, '_norm')
-  if(!is.null(src)){
-    if(is.null(idSkali)){
+  if (!is.null(src)) {
+    if (is.null(idSkali)) {
       idSkali = attr(dane, 'idSkali')
     }
-    if(is.null(idSkali)){
+    if (is.null(idSkali)) {
       stop(e('Nie określono skali, której normy mają zostać zastosowane'))
     }
     
@@ -56,9 +56,11 @@ normalizuj = function(
     normy = pobierz_normy(src) %>%
       filter_(~id_skali == idSkali, ~skalowanie == skl, ~grupa == grp) %>%
       select_('grupa', 'wartosc', 'wartosc_zr') %>%
-      rename_(.dots = stats::setNames(list('wartosc', 'wartosc_zr'), c(kolWynik, kolWynikNazwa)))
+      collect() %>%
+      rename_(.dots = stats::setNames(list('wartosc'), kolWynik)) %>%
+      rename_(.dots = stats::setNames(list('wartosc_zr'), kolWynikNazwa)) # ugly workaround for https://github.com/tidyverse/dplyr/issues/2943
     normyPobrane = normy %>% collect()
-    if(nrow(normyPobrane) == 0){
+    if (nrow(normyPobrane) == 0) {
       stop(e(paste0(
         'W bazie nie ma określonych norm dla podanych skali, skalowania oraz grupy (lub w ogóle nie ma danej skali/skalowania/grupy)\n',
         'Aby wyszukać dostępne normy, użyj polecenia:\n  ',
@@ -69,7 +71,7 @@ normalizuj = function(
       )))
     }
     
-    if(length(unique(normyPobrane$grupa)) > 1 & !any(colnames(dane) %in% 'grupa')){
+    if (length(unique(normyPobrane$grupa)) > 1 & !any(colnames(dane) %in% 'grupa')) {
       stop(e('Norma rozróżnia wiele grup, tymczasem dane nie zawierają zmiennej "grupa"'))
     }
   }else{

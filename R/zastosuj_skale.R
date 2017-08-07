@@ -32,19 +32,19 @@ zastosuj_skale = function(
     idSkali
   )
   skala = tbl(src, sql(e(query))) %>% collect()
-  if(nrow(skala) == 0){
+  if (nrow(skala) == 0) {
     stop(e('Nie ma takiej skali lub skala nie ma określonych elementów'))
   }
   
   skroty = NULL
-  if(skroc == TRUE){
+  if (skroc == TRUE) {
     query = "SELECT id_skrotu, wartosc, nowa_wartosc FROM skroty_skal_mapowania"
     skroty = tbl(src, sql(e(query)))
   }
   
-  if(czy_postac_dluga(dane)){
+  if (czy_postac_dluga(dane)) {
     dane = zastosuj_skale_dluga(dane, skala, skroty)
-  }else if(czy_postac_szeroka(dane)){
+  } else if(czy_postac_szeroka(dane)) {
     dane = zastosuj_skale_szeroka(dane, skala, skroty)
   }
   attr(dane, 'idSkali') = idSkali
@@ -67,7 +67,7 @@ zastosuj_skale_dluga = function(
     summarize_(.dots = list('ocena' = 'sum(ocena)')) %>% 
     ungroup()
   
-  if(is.tbl(skroty)){
+  if (is.tbl(skroty)) {
     przeksztalcenie = ifelse(
       any(class(dane) %in% 'tbl_sql'),
       'coalesce(nowa_wartosc, wartosc)',
@@ -89,7 +89,7 @@ zastosuj_skale_szeroka = function(
   skroty
 ){
   zbuduj_przeksztalcenie = function(k, d){
-    if(nrow(k) == 1){
+    if (nrow(k) == 1) {
       return(data_frame(mutate = NA_character_))
     }
     return(data_frame(
@@ -98,7 +98,7 @@ zastosuj_skale_szeroka = function(
   }
   
   kolUsun = grep('^[pk]_[0-9]+$', setdiff(colnames(dane), skala$kryterium), value = TRUE)
-  if(length(kolUsun) > 0){
+  if (length(kolUsun) > 0) {
     dane = dane %>%
       select_(.dots = paste0('-', kolUsun))
   }
@@ -110,7 +110,7 @@ zastosuj_skale_szeroka = function(
     do_(~zbuduj_przeksztalcenie(., dane)) %>%
     filter_('!is.na(mutate)') %>%
     collect()
-  if(nrow(przekszt) > 0){
+  if (nrow(przekszt) > 0) {
     przekszt = stats::setNames(as.list(przekszt$mutate), przekszt$kryterium_s)
     usun = paste0('-', (skala %>% filter_(~kryterium_s %in% names(przekszt)))$kryterium)
     dane = dane %>%
@@ -123,16 +123,17 @@ zastosuj_skale_szeroka = function(
     distinct() %>% 
     filter_(~!is.na(id_skrotu)) %>%
     collect()
-  if(is.tbl(skroty) & nrow(doSkrocenia) > 0){
+  if (is.tbl(skroty) & nrow(doSkrocenia) > 0) {
     sufiks = '__'
     przezwij = c()
-    for(i in seq_along(doSkrocenia$id_skrotu)){
+    for (i in seq_along(doSkrocenia$id_skrotu)) {
       i = as.list(doSkrocenia[i, ])
       i$kryterium_ss = paste0(i$kryterium_s, sufiks)
       tmp = skroty %>% 
         filter_(~id_skrotu == i$id_skrotu) %>%
         select_('-id_skrotu') %>%
-        rename_(.dots = stats::setNames(list('wartosc', 'nowa_wartosc'), c(i$kryterium_s, i$kryterium_ss))) %>%
+        rename_(.dots = stats::setNames(list('wartosc'), i$kryterium_s)) %>%
+        rename_(.dots = stats::setNames(list('nowa_wartosc'), i$kryterium_ss)) %>% # ugly workaround for https://github.com/tidyverse/dplyr/issues/2943
         collect()
       dane = left_join(dane, tmp, copy = TRUE)
       przezwij = append(przezwij, stats::setNames(list(i$kryterium_ss), i$kryterium_s))

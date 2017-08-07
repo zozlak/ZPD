@@ -4,4 +4,4 @@
 *.Rproj
 *_cache
 inst/doc
-vignettes/github
+/vignettes/github
