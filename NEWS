@@ -1,4 +1,12 @@
 --------------------
+Zmiany w ZPD 1.5.7 (2017-11-09)
+
+- Funkcja polacz() ustawia minimalny poziom raportowania komunikatów przez bazę
+  danych na WARNINGS, co pozwala uniknąć wyświetlania użytkownikowi 
+  konfudujących informacji w rodzaju "widok X nie istnieje" przy korzystaniu
+  z funkcji pobeirz_wyniki_*
+
+--------------------
 Zmiany w ZPD 1.5.6 (2017-08-07)
 
 - Doprowadzenie do zgodności z aktualną wersją dplyr-a
