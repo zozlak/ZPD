@@ -16,12 +16,14 @@ polacz = function(
   password = 'CalEBo9'
 ){
   conn = src_postgres(dbname, host, port, user, password)
+  #conn = DBI::dbConnect(RPostgres::Postgres(), dbname, host, port, password, user)
+  #conn = dbplyr::src_dbi(conn, auto_disconnect = TRUE)
   enc = tolower(Sys.getlocale('LC_CTYPE'))
-  if(!grepl('utf-8', enc)){
+  if (!grepl('utf-8', enc)) {
     # get the encoding name and set client encoding for the connection
     enc = paste0('WIN', sub('^[^0-9]+([0-9]+)$', '\\1', enc))
     RPostgreSQL::dbGetQuery(conn$con, sprintf("SET NAMES '%s'", enc))
-    RPostgreSQL::dbGetQuery(conn$con, 'SET client_min_messages to WARNING')
   }
+  RPostgreSQL::dbGetQuery(conn$con, 'SET client_min_messages to WARNING')
   return(conn)
 }

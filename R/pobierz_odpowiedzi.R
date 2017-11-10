@@ -47,10 +47,10 @@ pobierz_odpowiedzi = function(
         )
       END AS ocena
     FROM 
-      testy t
+      odpowiedzi o 
+      JOIN testy t USING (id_testu)
       LEFT JOIN arkusze a USING (arkusz)
-      JOIN testy_obserwacje USING (id_testu)
-      JOIN odpowiedzi o USING (id_obserwacji, id_testu)
+      JOIN testy_obserwacje USING (id_obserwacji, id_testu)
       JOIN testy_kryteria USING (id_testu, id_kryterium)
       JOIN kryteria_oceny USING (id_kryterium)
   "

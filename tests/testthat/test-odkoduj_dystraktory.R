@@ -4,7 +4,7 @@ src = polacz()
 
 test_that('odkoduj_dystraktory działa', {
   dane = pobierz_odpowiedzi(src) %>% 
-    filter(kryterium %in% c('k_1000', 'k_1001'), id_testu == 871, id_szkoly == 17705) %>%
+    filter(kryterium %in% c('k_1000', 'k_1001'), id_testu == 871L, id_szkoly == 17705L) %>%
     collect()
 
   dystr = odkoduj_dystraktory(dane, src)
