@@ -24,3 +24,5 @@ test_that('normalizuj działa', {
   expect_lt(max(norm$wynik_norm), 40.001)
   expect_lt(sd(norm$wynik_norm), 15)
 })
+
+DBI::dbDisconnect(src$con)

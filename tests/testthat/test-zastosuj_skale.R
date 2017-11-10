@@ -64,3 +64,5 @@ test_that('zastosuj_skale dane dlugie', {
   expect_equal(zastosuj_skale(daneDl, src, 765, TRUE), wzor)
   expect_equal(zastosuj_skale(daneDl, src, 765), wzor)
 })
+
+DBI::dbDisconnect(src$con)

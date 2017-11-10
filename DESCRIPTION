@@ -18,6 +18,8 @@ Suggests:
     testthat,
     knitr,
     covr
+Remote:
+    r-dbi/RPostgres
 License: MIT + file LICENSE
 NeedsCompilation: no
 Encoding: UTF-8

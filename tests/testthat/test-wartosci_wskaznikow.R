@@ -8,5 +8,7 @@ test_that('pobierz_wartosci_wskaznikow działa', {
     collect() %>%
     summarize_('lu_na' = 'sum(lu >= 0) - n()')
   expect_equal(wynik$lu_na, 0)
+  
+  DBI::dbDisconnect(src$con)
 })
   

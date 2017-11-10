@@ -5,7 +5,9 @@ cache: packages
 
 r:
   - release
-  - devel
+
+r_github_packages:
+  - r-dbi/RPostgres
 
 after_success:
   - Rscript -e 'covr::coveralls(function_exclusions = c("\\.onLoad"))'

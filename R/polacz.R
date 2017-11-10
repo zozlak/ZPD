@@ -15,9 +15,9 @@ polacz = function(
   user = 'ewd_baza',
   password = 'CalEBo9'
 ){
-  conn = src_postgres(dbname, host, port, user, password)
-  #conn = DBI::dbConnect(RPostgres::Postgres(), dbname, host, port, password, user)
-  #conn = dbplyr::src_dbi(conn, auto_disconnect = TRUE)
+  #conn = src_postgres(dbname, host, port, user, password)
+  conn = DBI::dbConnect(RPostgres::Postgres(), dbname, host, port, password, user)
+  conn = dbplyr::src_dbi(conn, auto_disconnect = TRUE)
   enc = tolower(Sys.getlocale('LC_CTYPE'))
   if (!grepl('utf-8', enc)) {
     # get the encoding name and set client encoding for the connection

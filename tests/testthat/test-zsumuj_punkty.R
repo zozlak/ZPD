@@ -54,3 +54,5 @@ test_that('zsumuj_punkty sumuje poprawnie', {
   kol = match(lokUsun$id_obserwacji, dlLDop$id_obserwacji)
   expect_equal(all(dlLDop$wynik[kol] == sumy), TRUE)
 })
+
+DBI::dbDisconnect(src$con)
