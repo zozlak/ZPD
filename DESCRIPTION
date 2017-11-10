@@ -17,8 +17,9 @@ Imports:
 Suggests:
     testthat,
     knitr,
-    covr
-Remote:
+    covr,
+    RPostgres
+Remotes:
     r-dbi/RPostgres
 License: MIT + file LICENSE
 NeedsCompilation: no
