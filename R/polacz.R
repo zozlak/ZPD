@@ -22,8 +22,8 @@ polacz = function(
   if (!grepl('utf-8', enc)) {
     # get the encoding name and set client encoding for the connection
     enc = paste0('WIN', sub('^[^0-9]+([0-9]+)$', '\\1', enc))
-    RPostgreSQL::dbGetQuery(conn$con, sprintf("SET NAMES '%s'", enc))
+    DBI::dbGetQuery(conn$con, sprintf("SET NAMES '%s'", enc))
   }
-  RPostgreSQL::dbGetQuery(conn$con, 'SET client_min_messages to WARNING')
+  DBI::dbGetQuery(conn$con, 'SET client_min_messages to WARNING')
   return(conn)
 }
