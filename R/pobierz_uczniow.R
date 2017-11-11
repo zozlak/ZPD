@@ -15,14 +15,14 @@ pobierz_uczniow = function(
   )
 
   query = "
-	  SELECT o.*, oi.id AS id_cke
+	  SELECT o.id_obserwacji, o.plec::text, o.rocznik, oi.id AS id_cke
 	  FROM 
 			obserwacje o 
 			LEFT JOIN (
         SELECT * FROM obserwacje_id WHERE typ_id = 'cke'
     ) oi USING (id_obserwacji)
 	"
-  if(daneOsobowe == TRUE){
+  if (daneOsobowe == TRUE) {
     query = sub('obserwacje o', 'dane_osobowe.obserwacje o', query)
   }
   data = tbl(src, sql(e(query)))
