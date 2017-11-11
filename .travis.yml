@@ -7,7 +7,7 @@ r:
   - release
 
 r_github_packages:
-  - r-dbi/RPostgres
+  - r-dbi/RPostgres@v0.1-8
 
 after_success:
   - Rscript -e 'covr::coveralls(function_exclusions = c("\\.onLoad"))'
