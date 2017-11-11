@@ -19,7 +19,7 @@ Suggests:
     knitr,
     covr
 Remotes:
-    r-dbi/RPostgres@v0.1-8
+    r-dbi/RPostgres@v0.1-7
 License: MIT + file LICENSE
 NeedsCompilation: no
 Encoding: UTF-8
