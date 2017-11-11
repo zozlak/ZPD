@@ -1,4 +1,20 @@
 --------------------
+Zmiany w ZPD 1.6.0 (2017-11-11)
+
+- Wprowadzenie możliwości wyboru pakietu używanego jako backend do komunikacji
+  z bazą danych:
+  - RPostgreSQL (domyślny) - dotychczasowy używany pakiet.
+    Posiada wiele narowów, np. segfaultuje jeśli baza danych wygeneruje 
+    jakikolwiek komunikat (choćby o braku praw dostępu do tablicy czy "notice" 
+    o tym, że usuwany obiekt nie istniał przy wykonywaniu zapytania "DROP VIEW 
+    IF EXISTS moj_widok") oraz ma tendencje do wyciekania pamięci, nie jest już
+    też rozwijany ani poprawiany.
+    Jednocześnie cały czas jest jedynym zgodnym z DBI (a więc i z dplyr-em)
+    pakietem do komunikacji z Postgresql-em, który jest dostępny w CRAN-ie.
+  - RPostgres - nowa implementacja komunikacji z Postgresql-em zgodna z DBI.
+    Obiecująca, niestety póki co dostępna tylko na github-ie.
+
+--------------------
 Zmiany w ZPD 1.5.8 (2017-11-10)
 
 - Korekta w zapytaniu SQL funkcji pobierz_odpowiedzi() zapewniająca efektywne

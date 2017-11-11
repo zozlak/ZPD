@@ -1,23 +1,25 @@
 Package: ZPD
 Title: Tools for a Polish examination data and item bank database
 Description: Tools for a Polish examination data and item bank database.
-Version: 1.5.8
+Version: 1.6.0
 Author: Mateusz Zoltak <zozlak@zozlak.org>,
     Tomasz Zoltak <tomek@zozlak.org>,
     Filip Kulon <f.kulon.ibe.edu.pl>,
     Tymoteusz Wołodźko <t.wolodzko@ibe.edu.pl>
 Maintainer: Mateusz Zoltak <zozlak@zozlak.org>
 Depends:
-    dplyr (>= 0.7.2),
-    RPostgreSQL
+    dplyr (>= 0.7.2)
 Imports:
     DBI,
     dbplyr (>= 1.1.0),
-    reshape2
+    reshape2,
+    RPostgreSQL
 Suggests:
     testthat,
     knitr,
     covr
+Remotes:
+    r-dbi/RPostgres
 License: MIT + file LICENSE
 NeedsCompilation: no
 Encoding: UTF-8

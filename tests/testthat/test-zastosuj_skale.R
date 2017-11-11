@@ -48,6 +48,7 @@ test_that('zastosuj_skale dane dlugie', {
   wzor = daneDl %>% 
     filter_(~kryterium %in% c('id_obserwacji', 'k_6543', 'k_6540', 'k_6546')) %>%
     mutate_(ocena = ~tab[paste0(kryterium, "_", ocena)])
+  names(wzor$ocena) = NULL
   expect_equal(zastosuj_skale(daneDl, src, 760, TRUE), wzor)
   expect_equal(zastosuj_skale(daneDl, src, 760), wzor)
 
@@ -64,3 +65,5 @@ test_that('zastosuj_skale dane dlugie', {
   expect_equal(zastosuj_skale(daneDl, src, 765, TRUE), wzor)
   expect_equal(zastosuj_skale(daneDl, src, 765), wzor)
 })
+
+DBI::dbDisconnect(src$con)

@@ -14,3 +14,5 @@ test_that('oszacuj_czas_wykonania działa', {
   wynik = oszacuj_czas_wykonania(pobierz_odpowiedzi(src), TRUE)
   expect_is(wynik, 'data.frame')
 })
+
+DBI::dbDisconnect(src$con)

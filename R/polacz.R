@@ -6,6 +6,8 @@
 #' @param port port, na którym nasłuchuje serwer baz danych
 #' @param user użytkownik
 #' @param password hasło
+#' @param backend nazwa pakietu do komunikacji z bazą danych
+#'   RPostgreSQL lub RPostgres
 #' @export
 #' @import RPostgreSQL
 polacz = function(
@@ -13,11 +15,18 @@ polacz = function(
   host = '89.231.23.130',
   port = 5432,
   user = 'ewd_baza',
-  password = 'CalEBo9'
+  password = 'CalEBo9',
+  backend = 'RPostgreSQL'
 ){
-  conn = src_postgres(dbname, host, port, user, password)
-  #conn = DBI::dbConnect(RPostgres::Postgres(), dbname, host, port, password, user)
-  #conn = dbplyr::src_dbi(conn, auto_disconnect = TRUE)
+  stopifnot(
+    is.vector(backend), is.character(backend), length(backend) == 1, all(!is.na(backend)), all(backend %in% c('RPostgreSQL', 'RPostgres'))
+  )
+  if (backend == 'RPostgres') {
+    conn = DBI::dbConnect(RPostgres::Postgres(), dbname, host, port, password, user);
+  } else {
+    conn = DBI::dbConnect(RPostgreSQL::PostgreSQL(), user, password, host, dbname, port);
+  }
+  conn = dbplyr::src_dbi(conn, auto_disconnect = TRUE)
   enc = tolower(Sys.getlocale('LC_CTYPE'))
   if (!grepl('utf-8', enc)) {
     # get the encoding name and set client encoding for the connection
