@@ -5,7 +5,6 @@ cache: packages
 
 r:
   - release
-  - devel
 
 after_success:
   - Rscript -e 'covr::coveralls(function_exclusions = c("\\.onLoad"))'
