@@ -8,12 +8,11 @@ Author: Mateusz Zoltak <zozlak@zozlak.org>,
     Tymoteusz Wołodźko <t.wolodzko@ibe.edu.pl>
 Maintainer: Mateusz Zoltak <zozlak@zozlak.org>
 Depends:
-    dplyr (>= 0.7.2)
 Imports:
     DBI,
-    dbplyr (>= 1.1.0),
+    dbplyr (>= 1.2.0),
     reshape2,
-    RPostgreSQL
+    RPostgres
 Suggests:
     testthat,
     knitr,
