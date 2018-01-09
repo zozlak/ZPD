@@ -48,11 +48,11 @@ pobierz_wskazniki = function(
       'w.rodzaj_wsk, w.wskaznik, w.okres, w.do_prezentacji AS wsk_do_prezentacji, w.skrot, w.opis AS opis_wsk'
     )
   )
-  if(!is.na(doPrezentacji)){
+  if (!is.na(doPrezentacji)) {
+    filtr = ifelse(doPrezentacji == TRUE, 'true', 'false')
     query = sprintf(
-      "%s WHERE w.do_prezentacji AND ww.do_prezentacji = %s ",
-      query,
-      ifelse(doPrezentacji == TRUE, 'true', 'false')
+      "%s WHERE w.do_prezentacji = %s AND ww.do_prezentacji = %s ",
+      query, filtr, filtr
     )
   }
   data = tbl(src, sql(e(query)))
