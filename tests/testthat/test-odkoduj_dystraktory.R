@@ -3,7 +3,7 @@ context('odkoduj_dystraktory')
 src = polacz()
 
 test_that('odkoduj_dystraktory działa', {
-  dane = pobierz_odpowiedzi(src) %>% 
+  dane = pobierz_odpowiedzi(src) %>%
     filter(kryterium %in% c('k_1000', 'k_1001'), id_testu == 871L, id_szkoly == 17705L) %>%
     collect()
 
@@ -11,7 +11,7 @@ test_that('odkoduj_dystraktory działa', {
   expect_is(dystr, 'data.frame')
   expect_is(dystr$odpowiedz, 'character')
   expect_equal(all(dystr$odpowiedz %in% c('A', 'B', 'C', 'D', '-1', '-2') | is.na(dystr$odpowiedz)), TRUE)
-  
+
   dane = dane %>% reshape2::dcast(id_obserwacji + id_testu + id_szkoly + rok ~ kryterium, value.var = 'odpowiedz')
   dystr = odkoduj_dystraktory(dane, src)
   expect_is(dystr, 'data.frame')

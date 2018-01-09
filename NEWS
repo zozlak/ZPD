@@ -1,4 +1,15 @@
 --------------------
+Zmiany w ZPD 1.7.0 (2018-01-09)
+
+- Zmiana backendu bazodanowego na RPostgres (który pojawił sie wreszcie w
+  CRAN-ie). RPostgreSQL posiada wiele narowów i od kilku lat nie jest 
+  aktualizowany.
+- Parametr `doPrezentacji` funkcji `pobierz_wskazniki()` jest teraz stosowany
+  zarówno do tablicy `wskazniki`, jak i `sl_wskazniki` (dotychczas filtr tablicy
+  `sl_wskazniki` był na sztywno ustawiony na `TRUE`, co uniemożliwiało pobranie
+  wskaźników oznaczonych w niej jako nie do prezentacji).
+
+--------------------
 Zmiany w ZPD 1.6.0 (2017-11-11)
 
 - Wprowadzenie możliwości wyboru pakietu używanego jako backend do komunikacji

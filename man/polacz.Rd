@@ -5,7 +5,7 @@
 \title{Zwraca połączenie dplyr-a z bazą danych ZPD}
 \usage{
 polacz(dbname = "ewd", host = "89.231.23.130", port = 5432,
-  user = "ewd_baza", password = "CalEBo9", backend = "RPostgreSQL")
+  user = "ewd_baza", password = "CalEBo9")
 }
 \arguments{
 \item{dbname}{nazwa bazy danych}
@@ -17,9 +17,6 @@ polacz(dbname = "ewd", host = "89.231.23.130", port = 5432,
 \item{user}{użytkownik}
 
 \item{password}{hasło}
-
-\item{backend}{nazwa pakietu do komunikacji z bazą danych
-RPostgreSQL lub RPostgres}
 }
 \description{
 Zwraca połączenie dplyr-a z bazą danych ZPD

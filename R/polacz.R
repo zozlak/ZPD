@@ -6,10 +6,7 @@
 #' @param port port, na którym nasłuchuje serwer baz danych
 #' @param user użytkownik
 #' @param password hasło
-#' @param backend nazwa pakietu do komunikacji z bazą danych
-#'   RPostgreSQL lub RPostgres
 #' @export
-#' @import RPostgreSQL
 polacz = function(
   dbname = 'ewd',
   host = '89.231.23.130',
