@@ -1,4 +1,10 @@
 --------------------
+Zmiany w ZPD 1.7.1 (2018-01-10)
+
+- Korekta kodowania znaków odczytywanych z bazy (RPostgres obsługuje to nieco
+  inaczej niż obsługiwał RPostgreSQL)
+
+--------------------
 Zmiany w ZPD 1.7.0 (2018-01-10)
 
 - Zmiana backendu bazodanowego na RPostgres (który pojawił sie wreszcie w
