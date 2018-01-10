@@ -17,7 +17,8 @@
 #' egzaminu wyświetlany przy osi wykresu na stronie WWW, itp.
 #' @param src uchwyt źródła danych dplyr-a
 #' @param doPrezentacji czy pobierać tylko wskaźniki oznaczone do publicznej
-#'   prezentacji
+#'   prezentacji (TRUE - pobierz tylko publiczne, FALSE - tylko niepuliczne, NA
+#'   - wszystkie)
 #' @param wszystkieKolumny czy pobierać także techniczne kolumny używane do
 #'   prezentacji wskaźników na stronach WWW
 #' @import dplyr
@@ -43,9 +44,9 @@ pobierz_wskazniki = function(
       LEFT JOIN wskazniki_skalowania ws USING (rodzaj_wsk, wskaznik, rok_do)",
     ifelse(
       wszystkieKolumny == TRUE, 
-      'w.okres, w.nazwa, w.kolejnosc, w.do_prezentacji AS wsk_do_prezentacji, 
-        w.kolor, w.skrot, w.os_y, w.egz_dop, w.opis AS opis_wsk, w.grupa, w.rodzaj_wsk, w.wskaznik', 
-      'w.rodzaj_wsk, w.wskaznik, w.okres, w.do_prezentacji AS wsk_do_prezentacji, w.skrot, w.opis AS opis_wsk'
+      'w.okres, w.nazwa, w.kolejnosc, w.do_prezentacji AS wsk_do_prezentacji_sl, 
+        w.kolor, w.skrot, w.os_y, w.egz_dop, w.opis AS opis_wsk, w.grupa, w.rodzaj_wsk, w.wskaznik, ww.do_prezentacji AS wsk_do_prezentacji', 
+      'w.rodzaj_wsk, w.wskaznik, w.okres, ww.do_prezentacji AS wsk_do_prezentacji, w.do_prezentacji AS wsk_do_prezentacji_sl, w.skrot, w.opis AS opis_wsk'
     )
   )
   if (!is.na(doPrezentacji)) {

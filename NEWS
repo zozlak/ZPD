@@ -1,5 +1,5 @@
 --------------------
-Zmiany w ZPD 1.7.0 (2018-01-09)
+Zmiany w ZPD 1.7.0 (2018-01-10)
 
 - Zmiana backendu bazodanowego na RPostgres (który pojawił sie wreszcie w
   CRAN-ie). RPostgreSQL posiada wiele narowów i od kilku lat nie jest 
@@ -8,6 +8,9 @@ Zmiany w ZPD 1.7.0 (2018-01-09)
   zarówno do tablicy `wskazniki`, jak i `sl_wskazniki` (dotychczas filtr tablicy
   `sl_wskazniki` był na sztywno ustawiony na `TRUE`, co uniemożliwiało pobranie
   wskaźników oznaczonych w niej jako nie do prezentacji).
+- Zmienna "wsk_do_prezentacji" w grupie danych "wskazniki" odpowiada teraz
+  kolumnie "wskazniki.do_prezentacji", a kolumna "sl_wskazniki.do_prezentacji"
+  reprezentowana jest przez zmienną "wsk_do_prezentacji_sl".
 
 --------------------
 Zmiany w ZPD 1.6.0 (2017-11-11)
