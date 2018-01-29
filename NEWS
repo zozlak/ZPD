@@ -1,4 +1,12 @@
 --------------------
+Zmiany w ZPD 1.7.2 (2018-01-29)
+
+- Usunięcie ostrzeżeń generowanych przez RPostgres
+  (https://github.com/zozlak/ZPD/issues/11)
+- Usunięcie błędnego mapowania kolumn w pobierz_uczniow(daneOsobowe = T)
+  (https://github.com/zozlak/ZPD/issues/10)
+
+--------------------
 Zmiany w ZPD 1.7.1 (2018-01-10)
 
 - Korekta kodowania znaków odczytywanych z bazy (RPostgres obsługuje to nieco
