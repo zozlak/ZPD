@@ -35,7 +35,6 @@ pobierz_wyniki_zrownywania = function(
   }
 
   tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), stats::runif(1))))
-  DBI::dbGetQuery(src$con, e(paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1")))
   query = sprintf(
     "SELECT zbuduj_widok_zrownywania(%s, %s, %d, %s, %s, %s, true)",
     dbplyr::escape(tmpName),

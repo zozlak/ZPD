@@ -26,12 +26,11 @@ pobierz_wyniki_testu = function(
   tests = pobierz_testy(src) %>% 
     collect() %>%
     filter_(~id_testu == idTestu)
-  if(nrow(tests) == 0){
+  if (nrow(tests) == 0) {
     stop(e('nie ma takiego testu'))
   }
   
   tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), stats::runif(1))))
-  DBI::dbGetQuery(src$con, e(paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1")))
   query = sprintf(
     "SELECT zbuduj_widok_testu('%s', %d, %s, %s, %s, true);",
     tmpName,

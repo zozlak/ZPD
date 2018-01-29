@@ -45,7 +45,6 @@ pobierz_wyniki_egzaminu = function(
   }
   
   tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), stats::runif(1))))
-  DBI::dbGetQuery(src$con, e(paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1")))
   query = sprintf(
     "SELECT zbuduj_widok_czesci_egzaminu('%s', %s, %s, %d, %s, %s, %s, %s, true);",
     tmpName,
