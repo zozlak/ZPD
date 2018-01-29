@@ -84,17 +84,17 @@ filtruj_przystapienia = function(
   tests = pobierz_testy(src) %>%
     select_('id_testu', 'rodzaj_egzaminu', 'czesc_egzaminu', 'dane_ewd') %>%
     filter_(~rodzaj_egzaminu == rodzajEgzaminu, ~dane_ewd == czyEwd)
-  if(length(czescEgzaminu) > 0){
+  if (length(czescEgzaminu) > 0) {
     czescEgzaminu = append(czescEgzaminu, '-1') # paskudne obejście błędnego mapowania dplyr-a na SQL-owe IN
     tests = tests %>% 
       filter_(~czesc_egzaminu %in% czescEgzaminu) 
   }
-  if(nrow(tests %>% collect()) == 0){
+  if (nrow(tests %>% collect()) == 0) {
     stop(e('Nie ma takiej części i/lub rodzaju egzaminu'))
   }
 
-  if(!is.null(obserwacje)){
-    if(is.vector(obserwacje)){
+  if (!is.null(obserwacje)) {
+    if (is.vector(obserwacje)) {
       obserwacje = data_frame('id_obserwacji' = obserwacje)
     }
     obserwacje = obserwacje %>%
@@ -106,7 +106,7 @@ filtruj_przystapienia = function(
     select_('id_obserwacji', 'id_testu', 'rok', 'pop_podejscie') %>%
     inner_join(tests)
   )
-  if(!is.null(obserwacje)){
+  if (!is.null(obserwacje)) {
     tob = suppressMessages(
       tob %>%
       inner_join(obserwacje, copy = T)
@@ -115,17 +115,17 @@ filtruj_przystapienia = function(
   tob = tob %>%
     group_by_('id_obserwacji', 'dane_ewd', 'rodzaj_egzaminu')
   
-  if(length(czescEgzaminu) > 0){
+  if (length(czescEgzaminu) > 0) {
     tob = tob %>%
       group_by_('czesc_egzaminu', add = TRUE)
   }
 
-  if(pierwsze){
+  if (pierwsze) {
     tob = tob %>%
-      summarize_(.dots = list(rok = 'min(rok)'))
-  }else{
+      summarize_(.dots = list(rok = 'min(rok, na.rm = TRUE)'))
+  } else {
     tob = tob %>%
-      summarize_(.dots = list(rok = 'max(rok)'))
+      summarize_(.dots = list(rok = 'max(rok, na.rm = TRUE)'))
   }
   
   tob = tob %>% 
