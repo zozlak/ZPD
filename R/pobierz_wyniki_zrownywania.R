@@ -11,11 +11,11 @@
 #' @export
 pobierz_wyniki_zrownywania = function(
   src,
-	rodzajEgzaminu, 
-	rok, 
-	punktuj = TRUE, 
-	idSkali = NULL,
-	skroc   = TRUE
+  rodzajEgzaminu, 
+  rok, 
+  punktuj = TRUE, 
+  idSkali = NULL,
+  skroc   = TRUE
 ){
   stopifnot(
     is.src(src),
@@ -27,16 +27,16 @@ pobierz_wyniki_zrownywania = function(
   )
   
   regExp = e(paste0('^zrównywanie;', rodzajEgzaminu, ';', rok, ';.*$'))
-	tests = pobierz_testy(src) %>% 
+  tests = pobierz_testy(src) %>% 
     collect() %>%
     filter_(~grepl(regExp, opis_testu))
-	if (nrow(tests) == 0) {
-		stop(e('w bazie nie ma takiego zrownywania'))
-	}
+  if (nrow(tests) == 0) {
+    stop(e('w bazie nie ma takiego zrownywania'))
+  }
 
-	tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), stats::runif(1))))
-	DBI::dbGetQuery(src$con, e(paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1")))
-	query = sprintf(
+  tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), stats::runif(1))))
+  DBI::dbGetQuery(src$con, e(paste0("CREATE TEMPORARY VIEW ", tmpName, " AS SELECT 1")))
+  query = sprintf(
     "SELECT zbuduj_widok_zrownywania(%s, %s, %d, %s, %s, %s, true)",
     dbplyr::escape(tmpName),
     dbplyr::escape(rodzajEgzaminu),
@@ -45,12 +45,12 @@ pobierz_wyniki_zrownywania = function(
     ifelse(is.null(idSkali), 'null', as.numeric(idSkali)),
     ifelse(skroc, 'true', 'false')
   )
-	DBI::dbGetQuery(src$con, e(query))
-	data = tbl(src, sql(e(paste0("SELECT * FROM ", tmpName))))
+  DBI::dbExecute(src$con, e(query))
+  data = tbl(src, sql(e(paste0("SELECT * FROM ", tmpName))))
 
-	attr(data, 'idSkali') = idSkali
+  attr(data, 'idSkali') = idSkali
   
-	return(data)
+  return(data)
 }
 attr(pobierz_wyniki_zrownywania, 'grupa') = 'wyniki'
 attr(pobierz_wyniki_zrownywania, 'testArgs') = list(

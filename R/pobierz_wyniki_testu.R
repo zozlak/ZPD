@@ -40,7 +40,7 @@ pobierz_wyniki_testu = function(
     ifelse(is.null(idSkali), 'null', as.numeric(idSkali)),
     ifelse(skroc, 'true', 'false')
   )
-  DBI::dbGetQuery(src$con, e(query))
+  DBI::dbExecute(src$con, e(query))
   data = tbl(src, sql(e(paste0("SELECT * FROM ", tmpName))))
   
   attr(data, 'idSkali') = idSkali
