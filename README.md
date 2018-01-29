@@ -42,12 +42,6 @@ git clone https://github.com/zozlak/ZPD.git
 R CMD INSTALL ZPD
 ```
 
-### Backend bazodanowy
-
-Pakiet ZPD może korzystać z dwóch różnych backendów do komunikacji z bazą danych: pakietu RPostgreSQL (domyślnie) lub pakietu RPostgres.
-
-Jeśli chcesz korzystać z pakietu RPostgres, musisz go najpierw zainstalować (`devtools::install_github('r-dbi/RPostgres')`), a następnie nawiązać połączenie funkcją `polacz(backend = 'RPostgres')`.
-
 ## Cytowanie
 
 Jeśli korzystasz z danych udostępnianych przez pakiet ZPD, jako źródło danych zacytuj proszę:
