@@ -22,7 +22,7 @@ zsumuj_punkty = function(
     groupCols = colNames[! colNames %in% c('kryterium', 'odpowiedz', 'ocena')]
     dane = dane %>% 
       group_by_(.dots = as.list(groupCols)) %>%
-      summarize_(.dots = list('wynik' = 'sum(ocena)')) %>%
+      summarize_(.dots = list('wynik' = 'sum(ocena, na.rm = TRUE)')) %>%
       ungroup()
   } else if(czy_postac_szeroka(dane)){
     # postać szeroka
