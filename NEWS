@@ -1,4 +1,11 @@
 --------------------
+Zmiany w ZPD 1.7.3 (2018-01-29)
+
+- Dostosowanie do dbplyr v1.4, który (co w sumie rozsądne) wymusza teraz
+  przekazanie połączenia bazy danych jako parametru funkcji `escape()`
+  (https://github.com/zozlak/ZPD/issues/15)
+
+--------------------
 Zmiany w ZPD 1.7.2 (2018-01-29)
 
 - Usunięcie ostrzeżeń generowanych przez RPostgres
