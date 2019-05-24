@@ -48,8 +48,8 @@ pobierz_wyniki_egzaminu = function(
   query = sprintf(
     "SELECT zbuduj_widok_czesci_egzaminu('%s', %s, %s, %d, %s, %s, %s, %s, true);",
     tmpName,
-    dbplyr::escape(rodzajEgzaminu),
-    dbplyr::escape(czescEgzaminu),
+    dbplyr::escape(rodzajEgzaminu, con = src$con),
+    dbplyr::escape(czescEgzaminu, con = src$con),
     rokEgzaminu,
     ifelse(czyEwd, 'true', 'false'),
     ifelse(punktuj, 'true', 'false'),

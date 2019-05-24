@@ -37,8 +37,8 @@ pobierz_wyniki_zrownywania = function(
   tmpName = sub('[.]', '_', paste0('t', as.numeric(Sys.time(), stats::runif(1))))
   query = sprintf(
     "SELECT zbuduj_widok_zrownywania(%s, %s, %d, %s, %s, %s, true)",
-    dbplyr::escape(tmpName),
-    dbplyr::escape(rodzajEgzaminu),
+    dbplyr::escape(tmpName, con = src$con),
+    dbplyr::escape(rodzajEgzaminu, con = src$con),
     rok,
     ifelse(punktuj, 'true', 'false'),
     ifelse(is.null(idSkali), 'null', as.numeric(idSkali)),
