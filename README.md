@@ -27,7 +27,7 @@ Instalacja możliwa jest w dwóch wariantach:
 ### Z użyciem pakietu devtools:
 ```r
 install.packages('devtools') # potrzbne tylko gdy nie jest jeszcze zainstalowany
-devtools::install_github('zozlak/ZPD')
+devtools::install_github('zozlak/ZPD', upgrade = 'ask') # jeśli padnie pytanie "These packages have more recent versions available. Which would you like to update?", właściwa odpowiedź brzmi "CRAN packages only"
 ```
 
 **Jeśli podczas instalacji napotkasz na błąd, a używasz linuksa** sprawdź, czy nie dotyczy Cię [ten problem](https://github.com/hadley/devtools/issues/650) lub przeprowadź "uczciwą instalację ze źródeł" (patrz niżej).
