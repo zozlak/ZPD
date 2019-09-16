@@ -1,4 +1,12 @@
 --------------------
+Zmiany w ZPD 1.7.4 (2019-09-16)
+
+- Dostosowanie do dbplyr v1.4, który ewaluuje teraz w kontekście bazy danych
+  wyrażenia postaci `zmienna$kolumna` i jeśli takie wyrażenie powinno być
+  ewaluowane lokalnie i tylko jego wynik przekazany do bazy danych, trzeba
+  to explicite wskazać.
+
+--------------------
 Zmiany w ZPD 1.7.3 (2018-01-29)
 
 - Dostosowanie do dbplyr v1.4, który (co w sumie rozsądne) wymusza teraz
