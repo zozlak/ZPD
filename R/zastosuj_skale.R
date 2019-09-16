@@ -130,10 +130,9 @@ zastosuj_skale_szeroka = function(
       i = as.list(doSkrocenia[i, ])
       i$kryterium_ss = paste0(i$kryterium_s, sufiks)
       tmp = skroty %>% 
-        filter_(~id_skrotu == i$id_skrotu) %>%
+        filter_(~id_skrotu == local(i$id_skrotu)) %>%
         select_('-id_skrotu') %>%
-        rename_(.dots = stats::setNames(list('wartosc'), i$kryterium_s)) %>%
-        rename_(.dots = stats::setNames(list('nowa_wartosc'), i$kryterium_ss)) %>% # ugly workaround for https://github.com/tidyverse/dplyr/issues/2943
+        rename_(.dots = stats::setNames(list('wartosc', 'nowa_wartosc'), c(i$kryterium_s, i$kryterium_ss))) %>%
         collect()
       dane = left_join(dane, tmp, copy = TRUE)
       przezwij = append(przezwij, stats::setNames(list(i$kryterium_ss), i$kryterium_s))
