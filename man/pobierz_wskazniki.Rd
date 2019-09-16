@@ -10,7 +10,8 @@ pobierz_wskazniki(src, doPrezentacji = TRUE, wszystkieKolumny = FALSE)
 \item{src}{uchwyt źródła danych dplyr-a}
 
 \item{doPrezentacji}{czy pobierać tylko wskaźniki oznaczone do publicznej
-prezentacji}
+prezentacji (TRUE - pobierz tylko publiczne, FALSE - tylko niepuliczne, NA
+- wszystkie)}
 
 \item{wszystkieKolumny}{czy pobierać także techniczne kolumny używane do
 prezentacji wskaźników na stronach WWW}

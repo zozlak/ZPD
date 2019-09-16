@@ -5,8 +5,8 @@
 \title{Normalizacja ekwikwantylowa.}
 \usage{
 normy_ekwikwantylowe(x, max = NULL, prog = 1e-06, srednia = 100,
-  os = 15, uzupLuki = TRUE, ekstrapolacja = FALSE, zaokraglij = FALSE,
-  nmin = NA_real_, nmax = NA_real_)
+  os = 15, uzupLuki = TRUE, ekstrapolacja = FALSE,
+  zaokraglij = FALSE, nmin = NA_real_, nmax = NA_real_)
 }
 \arguments{
 \item{x}{wektor nieujemnych liczb całkowitych, na podstawie którego ma zostać

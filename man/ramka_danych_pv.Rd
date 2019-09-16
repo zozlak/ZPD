@@ -4,8 +4,8 @@
 \alias{ramka_danych_pv}
 \title{Upewnia, że ramka danych z wartościami PV jest w postaci długiej.}
 \usage{
-ramka_danych_pv(dane, kolPV = "^[pP][vV]_[0-9]+|wynik$", kolNrPV = "nr_pv",
-  kolPozostale = NULL)
+ramka_danych_pv(dane, kolPV = "^[pP][vV]_[0-9]+|wynik$",
+  kolNrPV = "nr_pv", kolPozostale = NULL)
 }
 \arguments{
 \item{dane}{ramka danych z wartosciami PV}

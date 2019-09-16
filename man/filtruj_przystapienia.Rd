@@ -5,8 +5,8 @@
 \title{Zwraca pierwsze lub ostatnie przystąpienia do danego egzaminu w
   zadanych latach}
 \usage{
-filtruj_przystapienia(src, pierwsze, rodzajEgzaminu, czescEgzaminu = NULL,
-  czyEwd, obserwacje = NULL)
+filtruj_przystapienia(src, pierwsze, rodzajEgzaminu,
+  czescEgzaminu = NULL, czyEwd, obserwacje = NULL)
 }
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}
