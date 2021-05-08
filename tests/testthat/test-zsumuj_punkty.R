@@ -1,12 +1,10 @@
-context('zsumuj_punkty')
-
 src = polacz()
 
 test_that('zsumuj_punkty sumuje poprawnie', {
   daneSql = pobierz_wyniki_zrownywania(src, 'sprawdzian', 2014, TRUE)
   daneLok = daneSql %>% collect()
   testy   = unique(daneLok$id_testu)
-  daneDl  = pobierz_odpowiedzi(src) %>% filter_(~id_testu %in% testy)
+  daneDl  = pobierz_odpowiedzi(src) %>% filter(.data$id_testu %in% testy)
   daneDlL = daneDl %>% collect()
   
   sumy = rowSums(daneLok[, grep('^k_[0-9]+$', names(daneLok))])
@@ -20,10 +18,10 @@ test_that('zsumuj_punkty sumuje poprawnie', {
   dlLUsun = zsumuj_punkty(daneDlL)
   dlLDop  = zsumuj_punkty(daneDlL, FALSE)
   
-  expect_is(sqlUsun, 'tbl_sql')
-  expect_is(sqlDop, 'tbl_sql')
-  expect_is(dlUsun, 'tbl_sql')
-  expect_is(dlDop, 'tbl_sql')
+  expect_s3_class(sqlUsun, 'tbl_sql')
+  expect_s3_class(sqlDop, 'tbl_sql')
+  expect_s3_class(dlUsun, 'tbl_sql')
+  expect_s3_class(dlDop, 'tbl_sql')
   
   expect_equal(ncol(lokUsun), 5)
   expect_equal(ncol(lokDop), ncol(daneSql) + 1)

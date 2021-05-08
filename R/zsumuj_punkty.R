@@ -21,17 +21,17 @@ zsumuj_punkty = function(
     # postać długa
     groupCols = colNames[! colNames %in% c('kryterium', 'odpowiedz', 'ocena')]
     dane = dane %>% 
-      group_by_(.dots = as.list(groupCols)) %>%
-      summarize_(.dots = list('wynik' = 'sum(ocena, na.rm = TRUE)')) %>%
+      group_by(across({{groupCols}})) %>%
+      summarize(wynik = sum(.data$ocena, na.rm = TRUE)) %>%
       ungroup()
   } else if(czy_postac_szeroka(dane)){
     # postać szeroka
     sumCols = grep('^[pk]_[0-9]+$', colNames, value = T)
-    sumForm = list(wynik = paste0(sumCols, collapse = '+'))
+    sumForm = str2lang(paste0(sumCols, collapse = '+'))
     dane = dane %>% 
-      mutate_(.dots = sumForm)
+      mutate(wynik = !!sumForm)
     if(usunKryteria == TRUE){
-      dane = dane %>% select_(.dots = as.list(paste0('-', sumCols)))
+      dane = dane %>% select(-{{ sumCols }})
     }
   }
   

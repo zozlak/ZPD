@@ -39,8 +39,8 @@ agreguj_pwe = function(
 	#<-- liczenie
 	ilePV = length(unique(dane$nr_pv))
 	wynik = dane %>% 
-	  group_by_(.dots = as.list(kolGrupy)) %>%
-	  do_(~.oblicz_z_pv(., bladZrwn^2, wariancjaPop, ilePV))
+	  group_by(across({{kolGrupy}})) %>%
+	  do(.oblicz_z_pv(.data, bladZrwn^2, wariancjaPop, ilePV))
 	
 	return(wynik)
 	#-->
@@ -55,8 +55,8 @@ agreguj_pwe = function(
 .oblicz_z_pv = function(d, blZrwn2, varPop, ilePV){
   srednia = mean(d$wynik)
   d = d %>% 
-    group_by_('nr_pv') %>%
-    do_(~.oblicz_statystyki_pwe(.))
+    group_by(.data$nr_pv) %>%
+    do(.oblicz_statystyki_pwe(.data))
   d$var[is.na(d$var)] = 0
   if(varPop == 0){
     d$bs = sqrt((1 + 1 / ilePV) * stats::var(d$srednia) + mean(d$var) / mean(d$n) + blZrwn2)

@@ -20,6 +20,7 @@
 #' @param ... ew. parametry funkcji normy_ekwikwantylowe() (gdy normalizacja na
 #'   podstawie danych)
 #' @import dplyr
+#' @importFrom rlang :=
 #' @export
 normalizuj = function(
   dane,
@@ -54,11 +55,10 @@ normalizuj = function(
     skl = skalowanie
     grp = grupa
     normy = pobierz_normy(src) %>%
-      filter_(~id_skali == idSkali, ~skalowanie == skl, ~grupa == grp) %>%
-      select_('grupa', 'wartosc', 'wartosc_zr') %>%
+      filter(.data$id_skali == idSkali & .data$skalowanie == skl & .data$grupa == grp) %>%
+      select(.data$grupa, .data$wartosc, .data$wartosc_zr) %>%
       collect() %>%
-      rename_(.dots = stats::setNames(list('wartosc'), kolWynik)) %>%
-      rename_(.dots = stats::setNames(list('wartosc_zr'), kolWynikNazwa)) # ugly workaround for https://github.com/tidyverse/dplyr/issues/2943
+      rename({{ kolWynik }} := .data$wartosc, {{ kolWynikNazwa }} := .data$wartosc_zr)
     normyPobrane = normy %>% collect()
     if (nrow(normyPobrane) == 0) {
       stop(e(paste0(
@@ -77,7 +77,7 @@ normalizuj = function(
   }else{
     dane = as.data.frame(dane)
     normy = suppressMessages(normy_ekwikwantylowe(dane[, kolWynik], ...))
-    normy = data_frame(as.numeric(names(normy)), normy)
+    normy = tibble(as.numeric(names(normy)), normy)
     names(normy) = c(kolWynik, kolWynikNazwa)
   }
   

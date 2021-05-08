@@ -4,8 +4,11 @@
 \alias{oblicz_wariancje_populacji}
 \title{Oblicza wariancję wyników w populacji na podstawie PV}
 \usage{
-oblicz_wariancje_populacji(dane, kolPV = "^[pP][vV]_[0-9]+|wynik$",
-  kolNrPV = "nr_pv")
+oblicz_wariancje_populacji(
+  dane,
+  kolPV = "^[pP][vV]_[0-9]+|wynik$",
+  kolNrPV = "nr_pv"
+)
 }
 \arguments{
 \item{dane}{macierz z wartosciami PV}

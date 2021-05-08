@@ -34,13 +34,13 @@ pobierz_wyniki_egzaminu = function(
 
   tests = pobierz_testy(src) %>% 
     collect() %>%
-    filter_(~rodzaj_egzaminu == rodzajEgzaminu, ~czesc_egzaminu == czescEgzaminu, ~rok == rokEgzaminu) %>%
-    group_by_('dane_ewd') %>%
+    filter(.data$rodzaj_egzaminu == rodzajEgzaminu & .data$czesc_egzaminu == czescEgzaminu & .data$rok == rokEgzaminu) %>%
+    group_by(.data$dane_ewd) %>%
     summarize(n = n())
   if (nrow(tests) == 0) {
     stop(e('w bazie nie ma wyników takiego egzaminu'))
   }
-  if (nrow(tests %>% filter_(~dane_ewd == czyEwd)) == 0) {
+  if (nrow(tests %>% filter(.data$dane_ewd == czyEwd)) == 0) {
     stop(e('w bazie nie ma wyników takiego egzaminu, ale istnieją dla innego źródła danych (patrz parametr czyEwd)'))
   }
   

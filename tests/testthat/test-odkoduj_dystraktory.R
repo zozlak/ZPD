@@ -1,5 +1,3 @@
-context('odkoduj_dystraktory')
-
 src = polacz()
 
 test_that('odkoduj_dystraktory działa', {
@@ -8,15 +6,16 @@ test_that('odkoduj_dystraktory działa', {
     collect()
 
   dystr = odkoduj_dystraktory(dane, src)
-  expect_is(dystr, 'data.frame')
-  expect_is(dystr$odpowiedz, 'character')
+  expect_s3_class(dystr, 'data.frame')
+  expect_type(dystr$odpowiedz, 'character')
   expect_equal(all(dystr$odpowiedz %in% c('A', 'B', 'C', 'D', '-1', '-2') | is.na(dystr$odpowiedz)), TRUE)
 
-  dane = dane %>% reshape2::dcast(id_obserwacji + id_testu + id_szkoly + rok ~ kryterium, value.var = 'odpowiedz')
+  dane = dane %>% 
+    tidyr::pivot_wider(c('id_obserwacji', 'id_testu', 'id_szkoly', 'rok'), names_from = 'kryterium', values_from = 'odpowiedz')
   dystr = odkoduj_dystraktory(dane, src)
-  expect_is(dystr, 'data.frame')
-  expect_is(dystr$k_1000, 'character')
-  expect_is(dystr$k_1001, 'character')
+  expect_s3_class(dystr, 'data.frame')
+  expect_type(dystr$k_1000, 'character')
+  expect_type(dystr$k_1001, 'character')
   expect_equal(all(dystr$k_1000 %in% c('A', 'B', 'C', 'D', '-1', '-2') | is.na(dystr$k_1000)), TRUE)
   expect_equal(all(dystr$k_1001 %in% c('A', 'B', 'C', 'D', '-1', '-2') | is.na(dystr$k_1001)), TRUE)
 })

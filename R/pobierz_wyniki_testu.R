@@ -25,7 +25,7 @@ pobierz_wyniki_testu = function(
   
   tests = pobierz_testy(src) %>% 
     collect() %>%
-    filter_(~id_testu == idTestu)
+    filter(.data$id_testu == idTestu)
   if (nrow(tests) == 0) {
     stop(e('nie ma takiego testu'))
   }

@@ -9,10 +9,10 @@
 #' @export
 polacz = function(
   dbname = 'ewd',
-  host = '89.231.23.130',
+  host = '127.0.0.1',
   port = 5432,
-  user = 'ewd_baza',
-  password = 'CalEBo9'
+  user = 'mzoltak',
+  password = 'oT_us5f29YRQ'
 ){
   conn = DBI::dbConnect(RPostgres::Postgres(), dbname, host, port, password, user, check_interrupts = TRUE);
   conn = dbplyr::src_dbi(conn, auto_disconnect = TRUE)

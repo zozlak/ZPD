@@ -4,8 +4,14 @@
 \alias{pobierz_wyniki_zrownywania}
 \title{Pobiera wyniki testow zrownujacych}
 \usage{
-pobierz_wyniki_zrownywania(src, rodzajEgzaminu, rok, punktuj = TRUE,
-  idSkali = NULL, skroc = TRUE)
+pobierz_wyniki_zrownywania(
+  src,
+  rodzajEgzaminu,
+  rok,
+  punktuj = TRUE,
+  idSkali = NULL,
+  skroc = TRUE
+)
 }
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}

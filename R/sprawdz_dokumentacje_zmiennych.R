@@ -9,7 +9,7 @@
 ){
   stopifnot(is.src(src))
   
-  obj = objects('package:ZPD')
+  obj = setdiff(objects('package:ZPD'), c('%>%'))
 
   vars = c()
   grps = c()
@@ -34,13 +34,15 @@
       funcs = append(funcs, rep(fname, length(tmp)))
     }
   }
-  vars = data_frame('zmienna' = vars, 'grupa_danych' = grps, 'funkcja' = funcs)
+  vars = tibble('zmienna' = vars, 'grupa_danych' = grps, 'funkcja' = funcs)
   vars$pakiet = TRUE
   
-  missing = tbl(src, sql(e("SELECT zmienna, grupa_danych, funkcja, true AS baza FROM sl_wiki_zmienne"))) %>% 
+  missing = suppressMessages(
+    tbl(src, sql(e("SELECT zmienna, grupa_danych, funkcja, true AS baza FROM sl_wiki_zmienne"))) %>% 
     collect() %>%
     full_join(vars) %>%
-    filter_(~is.na(baza) | is.na(pakiet))
+    filter(is.na(.data$baza) | is.na(.data$pakiet))
+  )
   
   return(missing)
 }

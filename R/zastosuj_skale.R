@@ -11,6 +11,7 @@
 #' @param idSkali identyfikator skali, ktora ma zostac zastosowana do danych
 #' @param skroc czy stosować skróty skal
 #' @import dplyr
+#' @importFrom rlang :=
 #' @export
 zastosuj_skale = function(
   dane,
@@ -56,31 +57,35 @@ zastosuj_skale_dluga = function(
   skala,
   skroty
 ){
-  dane = dane %>% 
+  dane = suppressMessages(
+    dane %>% 
     inner_join(skala, copy = TRUE) %>%
-    select_('-kryterium') %>%
-    rename_('kryterium' = 'kryterium_s')
+    select(-.data$kryterium) %>%
+    rename(kryterium = .data$kryterium_s)
+  )
   kol = setdiff(colnames(dane), c('odpowiedz', 'ocena'))
   
   dane = dane %>% 
-    group_by_(.dots = kol) %>% 
-    summarize_(.dots = list('ocena' = 'sum(ocena)')) %>% 
+    group_by(across({{kol}})) %>% 
+    summarize(ocena = sum(.data$ocena)) %>% 
     ungroup()
   
   if (is.tbl(skroty)) {
-    przeksztalcenie = ifelse(
+    przeksztalcenie = str2lang(ifelse(
       any(class(dane) %in% 'tbl_sql'),
       'coalesce(nowa_wartosc, wartosc)',
       'ifelse(!is.na(nowa_wartosc), nowa_wartosc, wartosc)'
-    )
-    dane = dane %>% 
-      rename_('wartosc' = 'ocena') %>% 
+    ))
+    dane = suppressMessages(
+      dane %>% 
+      rename(wartosc = .data$ocena) %>% 
       left_join(skroty, copy = TRUE) %>% 
-      mutate_('ocena' = przeksztalcenie) %>%
-      select_('-wartosc', '-nowa_wartosc')
+      mutate(ocena = !!przeksztalcenie) %>%
+      select(-.data$wartosc, -.data$nowa_wartosc)
+    )
   }
   
-  return(dane %>% select_('-id_skrotu'))
+  return(dane %>% select(-.data$id_skrotu))
 }
 
 zastosuj_skale_szeroka = function(
@@ -90,9 +95,9 @@ zastosuj_skale_szeroka = function(
 ){
   zbuduj_przeksztalcenie = function(k, d){
     if (nrow(k) == 1) {
-      return(data_frame(mutate = NA_character_))
+      return(tibble(mutate = NA_character_))
     }
-    return(data_frame(
+    return(tibble(
       mutate = paste(k$kryterium, collapse = ' + ')
     ))
   }
@@ -100,46 +105,49 @@ zastosuj_skale_szeroka = function(
   kolUsun = grep('^[pk]_[0-9]+$', setdiff(colnames(dane), skala$kryterium), value = TRUE)
   if (length(kolUsun) > 0) {
     dane = dane %>%
-      select_(.dots = paste0('-', kolUsun))
+      select(-{{ kolUsun }})
   }
   skala = skala %>%
-    filter_(~kryterium %in% colnames(dane))
+    filter(.data$kryterium %in% colnames(dane))
   
   przekszt = skala %>% 
-    group_by_('kryterium_s') %>% 
-    do_(~zbuduj_przeksztalcenie(., dane)) %>%
-    filter_('!is.na(mutate)') %>%
+    group_by(.data$kryterium_s) %>% 
+    do(zbuduj_przeksztalcenie(.data, dane)) %>%
+    filter(!is.na(.data$mutate)) %>%
     collect()
   if (nrow(przekszt) > 0) {
-    przekszt = stats::setNames(as.list(przekszt$mutate), przekszt$kryterium_s)
-    usun = paste0('-', (skala %>% filter_(~kryterium_s %in% names(przekszt)))$kryterium)
+    for (i in seq_along(przekszt$mutate)) {
+      kolP = przekszt$kryterium_s[i]
+      rownanie = str2lang(przekszt$mutate[i])
+      dane = dane %>%
+        mutate({{kolP}} := !!rownanie)
+    }
+    usun = (skala %>% filter(.data$kryterium_s %in% przekszt$kryterium_s))$kryterium
     dane = dane %>%
-      mutate_(.dots = przekszt) %>%
-      select_(.dots = usun)
+      select(-{{usun}})
   }
   
   doSkrocenia = skala %>% 
-    select_('id_skrotu', 'kryterium_s') %>% 
+    select(.data$id_skrotu, .data$kryterium_s) %>% 
     distinct() %>% 
-    filter_(~!is.na(id_skrotu)) %>%
+    filter(!is.na(.data$id_skrotu)) %>%
     collect()
   if (is.tbl(skroty) & nrow(doSkrocenia) > 0) {
     sufiks = '__'
-    przezwij = c()
     for (i in seq_along(doSkrocenia$id_skrotu)) {
       i = as.list(doSkrocenia[i, ])
-      i$kryterium_ss = paste0(i$kryterium_s, sufiks)
+      kryterium_s = i$kryterium_s
+      kryterium_ss = paste0(kryterium_s, sufiks)
       tmp = skroty %>% 
-        filter_(~id_skrotu == local(i$id_skrotu)) %>%
-        select_('-id_skrotu') %>%
-        rename_(.dots = stats::setNames(list('wartosc', 'nowa_wartosc'), c(i$kryterium_s, i$kryterium_ss))) %>%
+        filter(.data$id_skrotu == local(i$id_skrotu)) %>%
+        select(-.data$id_skrotu) %>%
+        rename({{kryterium_s}} := .data$wartosc, {{kryterium_ss}} := .data$nowa_wartosc) %>%
         collect()
-      dane = left_join(dane, tmp, copy = TRUE)
-      przezwij = append(przezwij, stats::setNames(list(i$kryterium_ss), i$kryterium_s))
+      dane = suppressMessages(left_join(dane, tmp, copy = TRUE))
+      dane = dane %>%
+        select(-{{kryterium_s}}) %>%
+        rename({{kryterium_s}} := {{kryterium_ss}})
     }
-    dane = dane %>%
-      select_(.dots = paste0('-', names(przezwij))) %>%
-      rename_(.dots = przezwij)
   }
   
   return(dane)

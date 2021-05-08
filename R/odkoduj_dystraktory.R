@@ -20,6 +20,7 @@
 #' @param kolKryt wyrażenie regularne dopasowujęce nazwę kolumny z
 #'   identyfikatorem kryterium oceny (tylko dane w postaci długiej)
 #' @import dplyr
+#' @importFrom rlang :=
 #' @export
 odkoduj_dystraktory = function(
   dane,
@@ -53,22 +54,22 @@ odkoduj_dystraktory = function(
     # dane w postaci dlugiej
     dane = suppressMessages(
       dane %>%
-      left_join(schematy %>% rename_(.dots = stats::setNames(list('kolejnosc_dystr'), kolDystr))) %>%
-      mutate_(.dots = stats::setNames(list(paste0('ifelse(is.na(dystraktor), ', kolDystr, ', dystraktor)')), kolDystr)) %>%
-      select_('-dystraktor')
+      left_join(schematy %>% rename({{ kolDystr }} := .data$kolejnosc_dystr)) %>%
+      mutate({{ kolDystr }} := ifelse(is.na(.data$dystraktor), .data[[kolDystr]], .data$dystraktor)) %>%
+      select(-.data$dystraktor)
     )
   }else{
     # dane w postaci szerokiej
     for(kol in kolDystr[kolDystr %in% schematy$kryterium]){
       schemat = schematy %>%
-        filter_(~kryterium == kol) %>%
-        rename_(.dots = stats::setNames(list('kolejnosc_dystr'), kol)) %>%
-        select_('-kryterium')
+        filter(.data$kryterium == kol) %>%
+        rename({{ kol }} := .data$kolejnosc_dystr) %>%
+        select(-.data$kryterium)
       dane = suppressMessages(
         dane %>%
         left_join(schemat) %>%
-        mutate_(.dots = stats::setNames(list(paste0('ifelse(is.na(dystraktor), ', kol, ', dystraktor)')), kol)) %>%
-        select_('-dystraktor')
+        mutate({{kol}} := ifelse(is.na(.data$dystraktor), .data[[kol]], .data$dystraktor)) %>%
+        select(-.data$dystraktor)
       )
     }
     filtr = !kolDystr %in% schematy$kryterium

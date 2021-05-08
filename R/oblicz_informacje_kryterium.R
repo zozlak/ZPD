@@ -21,12 +21,12 @@ oblicz_informacje_kryterium = function(
     length(unique(parametry$model)) == 1, all(parametry$model %in% c('Rasch', '1PL', '2PL', '3PL', 'GRM'))
   )
   
-  a = (parametry %>% filter_(~parametr == 'a'))$wartosc
+  a = (parametry %>% filter(.data$parametr == 'a'))$wartosc
   if(length(a) == 0){
     a = 1
   }
-  b = (parametry %>% filter_(~grepl('^b[0-9]+$', parametr)) %>% arrange_('parametr'))$wartosc
-  c = (parametry %>% filter_(~parametr == 'c'))$wartosc
+  b = (parametry %>% filter(grepl('^b[0-9]+$', .data$parametr)) %>% arrange(.data$parametr))$wartosc
+  c = (parametry %>% filter(.data$parametr == 'c'))$wartosc
   if(length(c) == 0){
     c = 0
   }

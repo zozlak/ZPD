@@ -59,7 +59,7 @@ pobierz_odpowiedzi = function(
   if(!is.null(idSkali)){
     data = zastosuj_skale(data, src, idSkali, skroc)
   }else{
-    data = data %>% select_('id_obserwacji', 'id_testu', 'id_szkoly', 'rok', 'kryterium', 'odpowiedz', 'ocena')
+    data = data %>% select(.data$id_obserwacji, .data$id_testu, .data$id_szkoly, .data$rok, .data$kryterium, .data$odpowiedz, .data$ocena)
   }
 
   attr(data, 'idSkali') = idSkali

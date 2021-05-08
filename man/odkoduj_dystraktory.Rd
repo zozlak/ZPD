@@ -4,8 +4,12 @@
 \alias{odkoduj_dystraktory}
 \title{Zamienia liczbowe kody dystraktorów na kody literowe}
 \usage{
-odkoduj_dystraktory(dane, src, kolDystr = "^(odpowiedz|k_[0-9]+)$",
-  kolKryt = "^kryterium$")
+odkoduj_dystraktory(
+  dane,
+  src,
+  kolDystr = "^(odpowiedz|k_[0-9]+)$",
+  kolKryt = "^kryterium$"
+)
 }
 \arguments{
 \item{dane}{ramka danych z wynikami uczniów}

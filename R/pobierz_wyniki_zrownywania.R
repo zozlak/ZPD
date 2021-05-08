@@ -29,7 +29,7 @@ pobierz_wyniki_zrownywania = function(
   regExp = e(paste0('^zrównywanie;', rodzajEgzaminu, ';', rok, ';.*$'))
   tests = pobierz_testy(src) %>% 
     collect() %>%
-    filter_(~grepl(regExp, opis_testu))
+    filter(grepl(regExp, .data$opis_testu))
   if (nrow(tests) == 0) {
     stop(e('w bazie nie ma takiego zrownywania'))
   }

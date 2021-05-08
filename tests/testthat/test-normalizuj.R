@@ -1,5 +1,3 @@
-context('normalizuj')
-
 src = polacz()
 
 test_that('normalizuj działa', {

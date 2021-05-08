@@ -82,12 +82,12 @@ filtruj_przystapienia = function(
   )
 
   tests = pobierz_testy(src) %>%
-    select_('id_testu', 'rodzaj_egzaminu', 'czesc_egzaminu', 'dane_ewd') %>%
-    filter_(~rodzaj_egzaminu == rodzajEgzaminu, ~dane_ewd == czyEwd)
+    select(.data$id_testu, .data$rodzaj_egzaminu, .data$czesc_egzaminu, .data$dane_ewd) %>%
+    filter(.data$rodzaj_egzaminu == rodzajEgzaminu & .data$dane_ewd == czyEwd)
   if (length(czescEgzaminu) > 0) {
     czescEgzaminu = append(czescEgzaminu, '-1') # paskudne obejście błędnego mapowania dplyr-a na SQL-owe IN
     tests = tests %>% 
-      filter_(~czesc_egzaminu %in% czescEgzaminu) 
+      filter(.data$czesc_egzaminu %in% czescEgzaminu) 
   }
   if (nrow(tests %>% collect()) == 0) {
     stop(e('Nie ma takiej części i/lub rodzaju egzaminu'))
@@ -95,15 +95,15 @@ filtruj_przystapienia = function(
 
   if (!is.null(obserwacje)) {
     if (is.vector(obserwacje)) {
-      obserwacje = data_frame('id_obserwacji' = obserwacje)
+      obserwacje = tibble('id_obserwacji' = obserwacje)
     }
     obserwacje = obserwacje %>%
-      select_('id_obserwacji')
+      select(.data$id_obserwacji)
   }
     
   tob = suppressMessages(
     pobierz_dane_uczniowie_testy(src) %>%
-    select_('id_obserwacji', 'id_testu', 'rok', 'pop_podejscie') %>%
+    select(.data$id_obserwacji, .data$id_testu, .data$rok, .data$pop_podejscie) %>%
     inner_join(tests)
   )
   if (!is.null(obserwacje)) {
@@ -113,19 +113,19 @@ filtruj_przystapienia = function(
     )
   }
   tob = tob %>%
-    group_by_('id_obserwacji', 'dane_ewd', 'rodzaj_egzaminu')
+    group_by(.data$id_obserwacji, .data$dane_ewd, .data$rodzaj_egzaminu)
   
   if (length(czescEgzaminu) > 0) {
     tob = tob %>%
-      group_by_('czesc_egzaminu', add = TRUE)
+      group_by(.data$czesc_egzaminu, add = TRUE)
   }
 
   if (pierwsze) {
     tob = tob %>%
-      summarize_(.dots = list(rok = 'min(rok, na.rm = TRUE)'))
+      summarize(rok = min(.data$rok, na.rm = TRUE))
   } else {
     tob = tob %>%
-      summarize_(.dots = list(rok = 'max(rok, na.rm = TRUE)'))
+      summarize(rok = max(.data$rok, na.rm = TRUE))
   }
   
   tob = tob %>% 

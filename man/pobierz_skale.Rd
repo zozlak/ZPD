@@ -4,8 +4,13 @@
 \alias{pobierz_skale}
 \title{Pobiera informacje o skalach i skalowaniach}
 \usage{
-pobierz_skale(src, doPrezentacji = TRUE, czyKtt = FALSE,
-  skalowania = TRUE, grupy = TRUE)
+pobierz_skale(
+  src,
+  doPrezentacji = TRUE,
+  czyKtt = FALSE,
+  skalowania = TRUE,
+  grupy = TRUE
+)
 }
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}

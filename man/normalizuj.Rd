@@ -4,8 +4,15 @@
 \alias{normalizuj}
 \title{Normalizuje wyniki}
 \usage{
-normalizuj(dane, src = NULL, kolWynik = "wynik", idSkali = NULL,
-  skalowanie = NULL, grupa = NULL, ...)
+normalizuj(
+  dane,
+  src = NULL,
+  kolWynik = "wynik",
+  idSkali = NULL,
+  skalowanie = NULL,
+  grupa = NULL,
+  ...
+)
 }
 \arguments{
 \item{dane}{ramka danych zawierająca wyniki}

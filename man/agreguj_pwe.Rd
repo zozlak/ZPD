@@ -4,8 +4,14 @@
 \alias{agreguj_pwe}
 \title{Oblicza PWE na podstawie PV agregujac wg wskazanych zmiennych}
 \usage{
-agreguj_pwe(dane, kolGrupy, wariancjaPop = 0, bladZrwn = 0,
-  kolPV = "^[pP][vV]_[0-9]+|wynik$", kolNrPV = "nr_pv")
+agreguj_pwe(
+  dane,
+  kolGrupy,
+  wariancjaPop = 0,
+  bladZrwn = 0,
+  kolPV = "^[pP][vV]_[0-9]+|wynik$",
+  kolNrPV = "nr_pv"
+)
 }
 \arguments{
 \item{dane}{macierz z wartosciami PV do zagregowania}

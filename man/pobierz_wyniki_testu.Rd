@@ -4,8 +4,13 @@
 \alias{pobierz_wyniki_testu}
 \title{Pobiera wyniki testu}
 \usage{
-pobierz_wyniki_testu(src, idTestu, punktuj = TRUE, idSkali = NULL,
-  skroc = TRUE)
+pobierz_wyniki_testu(
+  src,
+  idTestu,
+  punktuj = TRUE,
+  idSkali = NULL,
+  skroc = TRUE
+)
 }
 \arguments{
 \item{src}{uchwyt źródła danych dplyr-a}

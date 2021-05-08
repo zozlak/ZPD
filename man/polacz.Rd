@@ -4,8 +4,13 @@
 \alias{polacz}
 \title{Zwraca połączenie dplyr-a z bazą danych ZPD}
 \usage{
-polacz(dbname = "ewd", host = "89.231.23.130", port = 5432,
-  user = "ewd_baza", password = "CalEBo9")
+polacz(
+  dbname = "ewd",
+  host = "127.0.0.1",
+  port = 5432,
+  user = "mzoltak",
+  password = "oT_us5f29YRQ"
+)
 }
 \arguments{
 \item{dbname}{nazwa bazy danych}

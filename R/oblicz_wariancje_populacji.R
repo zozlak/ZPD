@@ -20,11 +20,10 @@ oblicz_wariancje_populacji = function(
 	dane = ramka_danych_pv(dane, kolPV, kolNrPV)
 	
 	warPop = dane %>%
-	  group_by_('nr_pv') %>%
-	  do_('war' = ~var(.$wynik)) %>%
+	  group_by(.data$nr_pv) %>%
+	  summarize(war = stats::var(.data$wynik)) %>%
 	  ungroup() %>%
-	  mutate_('war' = ~unlist(war)) %>%
-	  summarize_('warPop' = ~mean(war))
+	  summarize(warPop = mean(.data$war))
 
 	return(as.numeric(warPop[1, 1]))
 }
