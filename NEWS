@@ -1,4 +1,10 @@
 --------------------
+Zmiany w ZPD 1.7.5 (2021-05-08)
+
+- polacz() używa wewnętrznie `DBI::dbConnect((...), check_interrupts = TRUE)`,
+  co pozwala na łatwiejsze przerywanie wykonywanych zapytań.
+
+--------------------
 Zmiany w ZPD 1.7.4 (2019-09-16)
 
 - Dostosowanie do dbplyr v1.4, który ewaluuje teraz w kontekście bazy danych

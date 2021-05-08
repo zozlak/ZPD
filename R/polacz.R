@@ -14,7 +14,7 @@ polacz = function(
   user = 'ewd_baza',
   password = 'CalEBo9'
 ){
-  conn = DBI::dbConnect(RPostgres::Postgres(), dbname, host, port, password, user);
+  conn = DBI::dbConnect(RPostgres::Postgres(), dbname, host, port, password, user, check_interrupts = TRUE);
   conn = dbplyr::src_dbi(conn, auto_disconnect = TRUE)
   DBI::dbExecute(conn$con, 'SET client_min_messages to WARNING')
   return(conn)
