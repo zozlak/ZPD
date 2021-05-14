@@ -81,15 +81,16 @@ filtruj_przystapienia = function(
       is.tbl(obserwacje) & sum(colnames(obserwacje) %in% 'id_obserwacji') == 1
   )
 
-  tests = pobierz_testy(src) %>%
+  testy = pobierz_testy(src) %>%
     select(.data$id_testu, .data$rodzaj_egzaminu, .data$czesc_egzaminu, .data$dane_ewd) %>%
     filter(.data$rodzaj_egzaminu == rodzajEgzaminu & .data$dane_ewd == czyEwd)
   if (length(czescEgzaminu) > 0) {
     czescEgzaminu = append(czescEgzaminu, '-1') # paskudne obejście błędnego mapowania dplyr-a na SQL-owe IN
-    tests = tests %>% 
+    testy = testy %>% 
       filter(.data$czesc_egzaminu %in% czescEgzaminu) 
   }
-  if (nrow(tests %>% collect()) == 0) {
+  testy = testy %>% collect()
+  if (nrow(testy) == 0) {
     stop(e('Nie ma takiej części i/lub rodzaju egzaminu'))
   }
 
@@ -104,12 +105,12 @@ filtruj_przystapienia = function(
   tob = suppressMessages(
     pobierz_dane_uczniowie_testy(src) %>%
     select(.data$id_obserwacji, .data$id_testu, .data$rok, .data$pop_podejscie) %>%
-    inner_join(tests)
+    inner_join(testy, copy = TRUE)
   )
   if (!is.null(obserwacje)) {
     tob = suppressMessages(
       tob %>%
-      inner_join(obserwacje, copy = T)
+      inner_join(obserwacje, copy = TRUE)
     )
   }
   tob = tob %>%
