@@ -1,19 +1,19 @@
 #' @title Zwraca połączenie dplyr-a z bazą danych ZPD
 #' @description 
 #' Zwraca połączenie dplyr-a z bazą danych ZPD
+#' @param user użytkownik
+#' @param password hasło
 #' @param dbname nazwa bazy danych
 #' @param host adres serwera bazy danych
 #' @param port port, na którym nasłuchuje serwer baz danych
-#' @param user użytkownik
-#' @param password hasło
 #' @param ... dodatkowe parametry do przekazania do DBI::dbConnect()
 #' @export
 polacz = function(
+  user = NULL,
+  password = NULL,
   dbname = 'ewd',
   host = '194.54.27.158',
   port = 5432,
-  user = 'ewd_baza',
-  password = 'CalEBo9',
   ...
 ){
   conn = DBI::dbConnect(RPostgres::Postgres(), dbname, host, port, password, user, ...);

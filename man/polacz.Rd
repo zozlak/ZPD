@@ -5,23 +5,26 @@
 \title{Zwraca połączenie dplyr-a z bazą danych ZPD}
 \usage{
 polacz(
+  user = NULL,
+  password = NULL,
   dbname = "ewd",
-  host = "127.0.0.1",
+  host = "194.54.27.158",
   port = 5432,
-  user = "mzoltak",
-  password = "oT_us5f29YRQ"
+  ...
 )
 }
 \arguments{
+\item{user}{użytkownik}
+
+\item{password}{hasło}
+
 \item{dbname}{nazwa bazy danych}
 
 \item{host}{adres serwera bazy danych}
 
 \item{port}{port, na którym nasłuchuje serwer baz danych}
 
-\item{user}{użytkownik}
-
-\item{password}{hasło}
+\item{...}{dodatkowe parametry do przekazania do DBI::dbConnect()}
 }
 \description{
 Zwraca połączenie dplyr-a z bazą danych ZPD

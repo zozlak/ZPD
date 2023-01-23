@@ -1,4 +1,11 @@
 --------------------
+Zmiany w ZPD 1.8.0 (2023-05-08)
+
+- Dodanie funkcji pobierz_kowariancje_elementow_skalowan()
+- Zmiana parametryzacji polacz() ułatwiająca wykorzystanie danych logowania
+  z ~/.pgpass
+
+--------------------
 Zmiany w ZPD 1.7.5 (2021-05-08)
 
 - polacz() przyjmuje dodatkowe parametry (...) które są przekazywane do 
