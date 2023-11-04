@@ -9,8 +9,6 @@
 #' @param punktuj wybor, czy dane maja byc pobrane w postaci dystraktorow, czy punktow
 #' @param idSkali identyfikator skali, ktora ma zostac zastosowana do danych
 #' @param skroc czy do danych zastosowac skrocenia skal opisane w skali
-#' @param arkuszRegex wyrażenie regularne dopasowujące kod arkusza (przydatne przy
-#'   kilku formułach tego samego egzaminu w jednym roku)
 #' @import dplyr
 #' @export
 pobierz_wyniki_egzaminu = function(
@@ -21,8 +19,7 @@ pobierz_wyniki_egzaminu = function(
   czyEwd,
   punktuj = TRUE,
   idSkali = NULL,
-  skroc   = TRUE,
-  arkuszRegex = ''
+  skroc   = TRUE
 ){
   stopifnot(
     is.src(src),
@@ -32,13 +29,12 @@ pobierz_wyniki_egzaminu = function(
     is.vector(czyEwd), is.logical(czyEwd), length(czyEwd) == 1, czyEwd %in% c(T, F),
     is.vector(punktuj), is.logical(punktuj), length(punktuj) == 1, punktuj %in% c(T, F),
     is.null(idSkali) | is.vector(idSkali) & is.numeric(idSkali) & length(idSkali) == 1,
-    is.vector(skroc), is.logical(skroc), length(skroc) == 1, skroc %in% c(T, F),
-    is.vector(arkuszRegex), is.character(arkuszRegex), length(arkuszRegex) == 1
+    is.vector(skroc), is.logical(skroc), length(skroc) == 1, skroc %in% c(T, F)
   )
 
   tests = pobierz_testy(src) %>% 
     collect() %>%
-    filter(.data$rodzaj_egzaminu == rodzajEgzaminu & .data$czesc_egzaminu == czescEgzaminu & .data$rok == rokEgzaminu & grepl(arkuszRegex, .data$arkusz)) %>%
+    filter(.data$rodzaj_egzaminu == rodzajEgzaminu & .data$czesc_egzaminu == czescEgzaminu & .data$rok == rokEgzaminu) %>%
     group_by(.data$dane_ewd) %>%
     summarize(n = n())
   if (nrow(tests) == 0) {

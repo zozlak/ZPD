@@ -1,10 +1,4 @@
 --------------------
-Zmiany w ZPD 1.9.0 (2023-11-03)
-
-- Dodanie parametru arkuszRegex do funkcji pobierz_wyniki_egzaminu(),
-  tak by dało się pobrać wyniki matury we wskazanej formule
-
---------------------
 Zmiany w ZPD 1.8.0 (2023-05-08)
 
 - Dodanie funkcji pobierz_kowariancje_elementow_skalowan()
