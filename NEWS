@@ -1,4 +1,9 @@
 --------------------
+Zmiany w ZPD 1.9.0 (2024-09-23)
+
+- pobierz_szkoly() zwraca także id_rspo
+
+--------------------
 Zmiany w ZPD 1.8.0 (2023-05-08)
 
 - Dodanie funkcji pobierz_kowariancje_elementow_skalowan()
