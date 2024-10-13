@@ -39,7 +39,7 @@ pobierz_wartosci_wskaznikow = function(
       g.nazwa AS gmina_jst, p.nazwa AS powiat_jst, w.nazwa AS wojewodztwo_jst,
       pomin, kategoria, k.wyswietlaj, k.komunikat,
       srednia, bs, q1, mediana, q3, min, max,
-      ww.ewd, bs_ewd, trend_ewd, bs_trend_ewd, korelacja,
+      ww.ewd, bs_ewd, trend_ewd, bs_trend_ewd, korelacja, srednia_we, bs_srednia_we,
       l.lu, l.lu_ewd, l.lu_wszyscy
     FROM 
       wartosci_wskaznikow ww

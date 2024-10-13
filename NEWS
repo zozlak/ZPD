@@ -1,4 +1,12 @@
 --------------------
+Zmiany w ZPD 1.10.0 (2024-10-13)
+
+- pobierz_wartosci_wskaznikow() zwraca także kolumny srednia_we i bs_srednia_we
+- pobierz_wartosci_wskaznikow_lu() zwraca także kolumnę `kategoria_lu`
+  i nie pomija rekordów z `czesc_egzaminu` będącą `NULL`
+  rekordy z tabeli `liczba_zdajacych`, które nie mapują się na część egzaminu
+  
+--------------------
 Zmiany w ZPD 1.9.0 (2024-09-23)
 
 - pobierz_szkoly() zwraca także id_rspo
